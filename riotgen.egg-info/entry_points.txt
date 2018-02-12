@@ -1,0 +1,3 @@
+[console_scripts]
+riotgen = riotgen:cli
+

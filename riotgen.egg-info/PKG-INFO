@@ -1,0 +1,22 @@
+Metadata-Version: 1.1
+Name: riotgen
+Version: 0.1.0.dev0
+Summary: riotgen: generator for RIOT application/driver/board code
+Home-page: https://github.com/aabadie/riot-generator
+Author: Alexandre Abadie
+Author-email: alexandre.abadie@inria.fr
+License: UNKNOWN
+Description-Content-Type: UNKNOWN
+Description: UNKNOWN
+Keywords: generator code
+Platform: any
+Classifier: Development Status :: 3 - Alpha
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Topic :: Utilities
