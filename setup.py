@@ -57,26 +57,6 @@ setup(
     platforms='any',
     packages=[PACKAGE],
     package_data={'templates': ['riotgen/templates/*']},
-    # package_data={'templates': ['templates/application/Makefile',
-    #                             'templates/application/main.c',
-    #                             'templates/application/README.md',
-
-    #                             'templates/board/Makefile',
-    #                             'templates/board/Makefile.dep',
-    #                             'templates/board/Makefile.features',
-    #                             'templates/board/Makefile.include',
-    #                             'templates/board/board.h',
-    #                             'templates/board/periph_conf.h',
-
-    #                             'templates/driver/Makefile',
-    #                             'templates/driver/driver.h',
-    #                             'templates/driver/driver.c',
-    #                             'templates/driver/driver_params.h',
-
-    #                             'templates/test/Makefile',
-    #                             'templates/test/main.c',
-    #                             'templates/test/README.md',
-    #                             ]},
     install_requires=['click'],
     entry_points={
         'console_scripts': [

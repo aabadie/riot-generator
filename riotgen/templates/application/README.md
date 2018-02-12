@@ -1,5 +1,5 @@
-{application_name}
-{application_name_underline}
+{name}
+{name_underline}
 
 Describe here what the application is about.
 

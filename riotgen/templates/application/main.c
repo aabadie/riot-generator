@@ -10,7 +10,7 @@
  * @{{
  *
  * @file
- * @brief       {desc}
+ * @brief       {brief}
  *
  * @author      {author_name} <{author_email}>
  *
@@ -21,6 +21,6 @@
 
 int main(void)
 {{
-    puts("A generated RIOT application");
+    puts("Generated RIOT application: '{name}'");
     return 0;
 }}

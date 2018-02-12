@@ -1,11 +1,11 @@
 # name of the application
-APPLICATION = {application_name}
+APPLICATION = {name}
 
 # If no BOARD is found in the environment, use this default:
 BOARD ?= {board}
 
 # This has to be the absolute path to the RIOT base directory:
-RIOTBASE ?= $(CURDIR)/../..
+RIOTBASE ?= {riotbase}
 
 # required modules
 {includes}
