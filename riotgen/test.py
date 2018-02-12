@@ -8,12 +8,13 @@ from click import MissingParameter
 
 from .helpers import _get_usermail, _get_username
 from .helpers import TEMPLATES_DIR
-from .helpers import _read_config
+from .helpers import _read_config, _parse_list_option
 from .helpers import _prompt_common_information, _check_common_params
+from .helpers import write_application_source
 
 
 def _read_test_config(filename):
-    """Read the application specific configuration file."""
+    """Read the test specific configuration file."""
     params = _read_config(filename, section='test')
     if 'name' not in params or not params['name']:
         raise MissingParameter(param_type='test name')
@@ -29,11 +30,6 @@ def _read_test_config(filename):
         else:
             params[param] = _parse_list_option(params[param])
     return params
-
-
-def _parse_list_option(opt):
-    """Split list element separated by a comma."""
-    return opt.split(',')
 
 
 def _prompt_test_params():
@@ -81,17 +77,12 @@ def test(config):
     _check_test_params(params)
     _check_common_params(params)
 
-    app_dir = os.path.join(TEMPLATES_DIR, 'test')
     tests_dir = os.path.join(os.path.expanduser(params['riotbase']), 'tests')
     test_dir = os.path.join(tests_dir, params['name'])
     os.makedirs(test_dir)
 
-    files = {os.path.join(app_dir, f_name): os.path.join(test_dir, f_name)
-             for f_name in ['main.c', 'Makefile', 'README.md']}
+    output_dir = os.path.expanduser(test_dir)
+    write_application_source(output_dir, params, template_dir='test')
 
-    for file_in, file_out in files.items():
-        with open(file_in, 'r') as f_in:
-            with open(file_out, 'w') as f_out:
-                f_out.write(f_in.read().format(**params))
-
-    click.echo(click.style('Test application generated!', bold=True))
+    click.echo(click.style('Test application \'{name}\' generated!'
+                           .format(**params), bold=True))

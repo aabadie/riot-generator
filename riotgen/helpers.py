@@ -12,6 +12,11 @@ PKG_DIR = os.path.abspath(os.path.dirname(__file__))
 TEMPLATES_DIR = os.path.join(PKG_DIR, 'templates')
 
 
+def _parse_list_option(opt):
+    """Split list element separated by a comma."""
+    return opt.split(',')
+
+
 def _get_username():
     try:
         name = check_output(
@@ -38,7 +43,7 @@ def _check_riotbase(path):
     if os.path.isfile(coc):
         first_line = open(coc, 'r').readline()[:-1]
         if first_line == 'RIOT-OS Code of Conduct':
-            return path
+            return os.path.expanduser(path)
     raise MissingParameter(param_type='RIOT base directory')
 
 
@@ -79,9 +84,12 @@ def _read_config(filename, section=None):
     return config
 
 
-def _read_board_config(filename):
-    return _read_config(filename, section='board')
+def write_application_source(output_dir, params, template_dir='application'):
+    app_dir = os.path.join(TEMPLATES_DIR, template_dir)
+    files = {os.path.join(app_dir, f_name): os.path.join(output_dir, f_name)
+             for f_name in ['main.c', 'Makefile', 'README.md']}
 
-
-def _read_driver_config(filename):
-    return _read_config(filename, section='driver')
+    for file_in, file_out in files.items():
+        with open(file_in, 'r') as f_in:
+            with open(file_out, 'w') as f_out:
+                f_out.write(f_in.read().format(**params))

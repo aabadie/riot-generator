@@ -1,5 +1,5 @@
 /*
- * Copyright (C) {year} {copyright_group}
+ * Copyright (C) {year} {organization}
  *
  * This file is subject to the terms and conditions of the GNU Lesser
  * General Public License v2.1. See the file LICENSE in the top level
@@ -7,15 +7,13 @@
  */
 
 /**
- * @defgroup    boards_{board} {board_name}
- * @ingroup     boards
- * @brief       Support for the {board_name} board.
- * @{
+ * @ingroup     boards_{name}
+ * @{{
  *
  * @file
- * @brief       Board specific definitions for the {board_name}
+ * @brief       Board specific definitions for the {displayed_name}
  *
- * @author      Alexandre Abadie <alexandre.abadie@inria.fr>
+ * @author      {author_name} <{author_email}>
  */
 
 #ifndef BOARD_H
@@ -26,12 +24,8 @@
 #include "periph_cpu.h"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C" {{
 #endif
-
-{xtimer_config}
-{led_defs}
-{btn_defs}
 
 /**
  * @brief   Initialize board specific hardware
@@ -39,8 +33,8 @@ extern "C" {
 void board_init(void);
 
 #ifdef __cplusplus
-}
+}}
 #endif
 
 #endif /* BOARD_H */
-/** @} */
+/** @}} */

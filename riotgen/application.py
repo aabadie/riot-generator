@@ -8,8 +8,9 @@ from click import MissingParameter
 
 from .helpers import _get_usermail, _get_username
 from .helpers import TEMPLATES_DIR
-from .helpers import _read_config
+from .helpers import _read_config, _parse_list_option
 from .helpers import _prompt_common_information, _check_common_params
+from .helpers import write_application_source
 
 
 def _read_application_config(filename):
@@ -29,11 +30,6 @@ def _read_application_config(filename):
         else:
             params[param] = _parse_list_option(params[param])
     return params
-
-
-def _parse_list_option(opt):
-    """Split list element separated by a comma."""
-    return opt.split(',')
 
 
 def _prompt_application_params():
@@ -82,15 +78,10 @@ def application(output_dir, config):
         params = _prompt_application_params()
     _check_application_params(params)
     _check_common_params(params)
-
-    app_dir = os.path.join(TEMPLATES_DIR, 'application')
     output_dir = os.path.expanduser(output_dir)
-    files = {os.path.join(app_dir, f_name): os.path.join(output_dir, f_name)
-             for f_name in ['main.c', 'Makefile', 'README.md']}
+    write_application_source(output_dir, params)
 
-    for file_in, file_out in files.items():
-        with open(file_in, 'r') as f_in:
-            with open(file_out, 'w') as f_out:
-                f_out.write(f_in.read().format(**params))
-
-    click.echo(click.style('Application generated!', bold=True))
+    click.echo(click.style('Application \'{name}\' generated with success!'
+                           .format(**params), bold=True))
+    click.echo('\nTo build the application, use')
+    click.echo('\n     make -C {}\n'.format(output_dir))

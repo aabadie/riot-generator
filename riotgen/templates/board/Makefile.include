@@ -1,0 +1,5 @@
+# define the cpu used by {displayed_name} board
+export CPU = {cpu}
+export CPU_MODEL = {cpu_model}
+
+# write here the flasher tool directives
