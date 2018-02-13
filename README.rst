@@ -20,7 +20,7 @@ Install ``riotgen`` using ``pip``::
 The package is not yet available on PyPI.
 
 Usage
-....
+.....
 
 RIOT code generator uses subcommands for generating the code for applications,
 tests and board support.
