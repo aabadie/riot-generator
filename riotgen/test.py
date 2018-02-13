@@ -79,7 +79,13 @@ def test(config):
 
     tests_dir = os.path.join(os.path.expanduser(params['riotbase']), 'tests')
     test_dir = os.path.join(tests_dir, params['name'])
-    os.makedirs(test_dir)
+    if not os.path.exists(test_dir):
+        os.makedirs(test_dir)
+    elif not click.prompt('\'{name}\' test directory already exists, '
+                          'overwrite (y/N)?'.format(**params),
+                          default=False, show_default=False):
+        click.echo('Abort')
+        return
 
     output_dir = os.path.expanduser(test_dir)
     write_application_source(output_dir, params, template_dir='test')

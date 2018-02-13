@@ -76,9 +76,16 @@ def board(config):
     tpl_dir = os.path.join(TEMPLATES_DIR, 'board')
     boards_dir = os.path.join(os.path.expanduser(params['riotbase']), 'boards')
     board_dir = os.path.join(boards_dir, params['name'])
-    os.makedirs(board_dir)
     board_include_dir = os.path.join(board_dir, 'include')
-    os.makedirs(board_include_dir)
+    if not os.path.exists(board_dir):
+        os.makedirs(board_dir)
+        os.makedirs(board_include_dir)
+    elif not click.prompt('\'{name}\' board directory already exists, '
+                          'overwrite (y/N)?'.format(**params),
+                          default=False, show_default=False):
+        click.echo('Abort')
+        return
+
     files = {os.path.join(tpl_dir, f_name): os.path.join(board_dir, f_name)
              for f_name in ['board.c', 'doc.txt', 'Makefile', 'Makefile.dep',
                             'Makefile.features', 'Makefile.include']}
