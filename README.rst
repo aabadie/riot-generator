@@ -14,7 +14,10 @@ Clone this repository::
 
 Install ``riotgen`` using ``pip``::
 
-    pip install riot-generator
+    cd riot-generator
+    pip install .
+
+The packages is not yet available on PyPI.
 
 Usage
 -----
