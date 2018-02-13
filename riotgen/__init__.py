@@ -9,6 +9,4 @@ It can be used to generate:
 
 __version__ = '0.1.0-dev0'
 
-import os.path
-
 from .generator import cli

@@ -3,7 +3,6 @@ import click
 
 from .application import application
 from .board import board
-from .driver import driver
 from .test import test
 
 logging.basicConfig(level=logging.DEBUG,
@@ -19,5 +18,4 @@ def cli():
 # register subcommands
 cli.add_command(application)
 cli.add_command(board)
-cli.add_command(driver)
 cli.add_command(test)
