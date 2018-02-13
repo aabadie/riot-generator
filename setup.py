@@ -56,7 +56,12 @@ setup(
     keywords='generator code',
     platforms='any',
     packages=[PACKAGE],
-    package_data={'templates': ['riotgen/templates/*']},
+    include_package_data=True,
+    package_dir={'riotgen': 'riotgen'},
+    package_data={'riotgen': ['templates/application/*',
+                              'templates/board/*',
+                              'templates/driver/*',
+                              'templates/test/*']},
     install_requires=['click'],
     entry_points={
         'console_scripts': [
