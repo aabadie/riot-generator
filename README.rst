@@ -8,16 +8,21 @@ support and test applications.
 Installation
 ............
 
+Install ``riotgen`` using ``pip``::
+
+    pip install riogen
+
+Installing from source
+......................
+
 Clone this repository::
 
     git clone git://github.com/aabadie/riot-generator.git
 
-Install ``riotgen`` using ``pip``::
+Install using ``pip`` from the source directory::
 
     cd riot-generator
     pip install .
-
-The package is not yet available on PyPI.
 
 Usage
 .....
