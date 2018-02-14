@@ -1,0 +1,5 @@
+recursive-include riotgen/templates *.txt
+recursive-include riotgen/templates *.h
+recursive-include riotgen/templates *.c
+recursive-include riotgen/templates *.md
+recursive-include riotgen/templates Makefile*

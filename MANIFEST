@@ -1,5 +1,0 @@
-include *.txt
-include *.h
-include *.c
-include *.md
-include Makefile*
