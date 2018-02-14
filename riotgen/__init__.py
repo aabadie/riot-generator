@@ -7,6 +7,6 @@ It can be used to generate:
 - a new test
 """
 
-__version__ = '0.1.0-dev0'
+__version__ = '0.1.2'
 
 from .generator import cli
