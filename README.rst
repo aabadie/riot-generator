@@ -10,7 +10,7 @@ Installation
 
 Install ``riotgen`` using ``pip``::
 
-    pip install riogen
+    pip install riotgen
 
 Installing from source
 ......................
