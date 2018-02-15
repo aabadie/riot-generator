@@ -1,12 +1,13 @@
 """Internal helper functions"""
 
+import os
 import os.path
 import datetime
 from configparser import ConfigParser
 from subprocess import check_output
 
 import click
-from click import MissingParameter
+from click import MissingParameter, BadParameter
 
 PKG_DIR = os.path.abspath(os.path.dirname(__file__))
 TEMPLATES_DIR = os.path.join(PKG_DIR, 'templates')
@@ -39,15 +40,23 @@ def _get_usermail():
 
 def _check_riotbase(path, from_prompt=True):
     """Check the given path is a valid RIOTBASE directory."""
+    missing = False
+    if not path:
+        missing = True
+
     coc = os.path.join(os.path.expanduser(path), 'CODE_OF_CONDUCT.md')
     if os.path.isfile(coc):
         first_line = open(coc, 'r').readline()[:-1]
         if first_line == 'RIOT-OS Code of Conduct':
             return os.path.expanduser(path)
-    if from_prompt:
-        raise MissingParameter('RIOT base directory')
+    error_message = 'RIOT base directory'
+    if not missing:
+        raise BadParameter('{} (\'{}\')'.format(error_message,
+                                                path.split(' ')[0]))
+    elif from_prompt:
+        raise MissingParameter(error_message)
     else:
-        raise MissingParameter(param_type='RIOT base directory')
+        raise MissingParameter(param_type=error_message)
 
 
 def _check_common_params(params):
@@ -73,8 +82,13 @@ def _prompt_common_information():
         text='Author email', default=_get_usermail())
     params['organization'] = click.prompt(
         text='Organization', default=_get_username())
-    params['riotbase'] = click.prompt(
-        text='RIOT base directory', value_proc=_check_riotbase)
+
+    riotbase = os.getenv('RIOTBASE')
+    if riotbase is None:
+        params['riotbase'] = click.prompt(
+            text='RIOT base directory', value_proc=_check_riotbase)
+    else:
+        params['riotbase'] = _check_riotbase(riotbase, from_prompt=False)
     return params
 
 
