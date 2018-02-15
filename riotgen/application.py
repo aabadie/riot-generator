@@ -67,15 +67,12 @@ def _check_application_params(params):
         params['includes'] += 'FEATURES_REQUIRED += {}\n'.format(feature)
 
 
-@click.command()
-@click.argument('output_dir', type=click.Path(exists=True))
-@click.option('--config', type=click.File(mode='r'))
-def application(output_dir, config):
-    # Use config file if it's set
-    if config is not None:
-        params = _read_application_config(config)
-    else:
+def generate_application(output_dir, config=None):
+    # Start wizard if config is not set
+    if config is None:
         params = _prompt_application_params()
+    else:
+        params = _read_application_config(config)
     _check_application_params(params)
     _check_common_params(params)
     output_dir = os.path.expanduser(output_dir)

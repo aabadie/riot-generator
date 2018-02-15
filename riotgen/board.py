@@ -62,14 +62,12 @@ def _check_board_params(params):
             'FEATURES_PROVIDED += periph_{}\n'.format(feature)
 
 
-@click.command()
-@click.option('--config', type=click.File(mode='r'))
-def board(config):
-    # Use config file if it's set
-    if config is not None:
-        params = _read_board_config(config)
-    else:
+def generate_board(config=None):
+    # Start wizard if config is not set
+    if config is None:
         params = _prompt_board_params()
+    else:
+        params = _read_board_config(config)
     _check_board_params(params)
     _check_common_params(params)
 

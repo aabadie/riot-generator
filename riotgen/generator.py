@@ -1,9 +1,9 @@
 import logging
 import click
 
-from .application import application
-from .board import board
-from .test import test
+from riotgen.application import generate_application
+from riotgen.board import generate_board
+from riotgen.test import generate_test
 
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s - %(name)14s - '
@@ -15,7 +15,28 @@ logger = logging.getLogger("riotgen.generator")
 def cli():
     pass
 
-# register subcommands
-cli.add_command(application)
-cli.add_command(board)
-cli.add_command(test)
+
+@cli.command(help='Bootstrap a RIOT application')
+@click.argument('output_dir', type=click.Path(exists=True))
+@click.option('--config', type=click.File(mode='r'),
+              help='Application initial configuration file')
+def application(output_dir, config):
+    generate_application(output_dir, config)
+
+
+@cli.command(help='Bootstrap a RIOT board support')
+@click.option('--config', type=click.File(mode='r'),
+              help='Board support initial configuration file')
+def board(config):
+    generate_board(config)
+
+
+@cli.command(help='Bootstrap a RIOT test application')
+@click.option('--config', type=click.File(mode='r'),
+              help='Test application initial configuration file')
+def test(config):
+    generate_test(config)
+
+
+if __name__ == '__main__':
+    cli()

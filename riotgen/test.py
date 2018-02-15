@@ -66,14 +66,12 @@ def _check_test_params(params):
         params['includes'] += 'FEATURES_REQUIRED += {}\n'.format(feature)
 
 
-@click.command()
-@click.option('--config', type=click.File(mode='r'))
-def test(config):
-    # Use config file if it's set
-    if config is not None:
-        params = _read_test_config(config)
-    else:
+def generate_test(config=None):
+    # Start wizard if config is not set
+    if config is None:
         params = _prompt_test_params()
+    else:
+        params = _read_test_config(config)
     _check_test_params(params)
     _check_common_params(params)
 
