@@ -37,14 +37,17 @@ def _get_usermail():
     return email
 
 
-def _check_riotbase(path):
+def _check_riotbase(path, from_prompt=True):
     """Check the given path is a valid RIOTBASE directory."""
     coc = os.path.join(os.path.expanduser(path), 'CODE_OF_CONDUCT.md')
     if os.path.isfile(coc):
         first_line = open(coc, 'r').readline()[:-1]
         if first_line == 'RIOT-OS Code of Conduct':
             return os.path.expanduser(path)
-    raise MissingParameter(param_type='RIOT base directory')
+    if from_prompt:
+        raise MissingParameter('RIOT base directory')
+    else:
+        raise MissingParameter(param_type='RIOT base directory')
 
 
 def _check_common_params(params):
@@ -58,7 +61,7 @@ def _check_common_params(params):
         params['organization'] = _get_username()
     if 'riotbase' not in params:
         params['riotbase'] = ''
-    params['riotbase'] = _check_riotbase(params['riotbase'])
+    params['riotbase'] = _check_riotbase(params['riotbase'], from_prompt=False)
 
 
 def _prompt_common_information():
