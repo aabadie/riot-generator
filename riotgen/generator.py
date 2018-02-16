@@ -2,6 +2,7 @@ import logging
 import click
 
 from riotgen.application import generate_application
+from riotgen.example import generate_example
 from riotgen.board import generate_board
 from riotgen.test import generate_test
 
@@ -29,6 +30,13 @@ def application(output_dir, config):
               help='Board support initial configuration file')
 def board(config):
     generate_board(config)
+
+
+@cli.command(help='Bootstrap a RIOT example application')
+@click.option('--config', type=click.File(mode='r'),
+              help='Example application initial configuration file')
+def example(config):
+    generate_example(config)
 
 
 @cli.command(help='Bootstrap a RIOT test application')
