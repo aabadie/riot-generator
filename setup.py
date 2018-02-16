@@ -61,6 +61,7 @@ setup(
     package_data={'riotgen': ['templates/application/*',
                               'templates/board/*',
                               'templates/driver/*',
+                              'templates/example/*',
                               'templates/test/*']},
     install_requires=['click'],
     entry_points={
