@@ -7,6 +7,6 @@ It can be used to bootstrap:
 - a new test application
 """
 
-__version__ = '0.1.3'
+__version__ = '0.1.4'
 
 from .generator import cli
