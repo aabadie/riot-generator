@@ -1,6 +1,12 @@
 RIOT code generator
 -------------------
 
+|PyPi|
+
+.. |PyPi| image:: https://badge.fury.io/py/riotgen.svg
+    :target: https://badge.fury.io/py/riotgen
+    :alt: riotgen version
+
 RIOT generator is a command line interface helper that initiates `RIOT
 <http://github.com/RIOT-OS/RIOT>`_ source files for applications, boards
 support and test applications.
