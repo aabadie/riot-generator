@@ -101,8 +101,9 @@ def _read_config(filename, section=None):
     return config
 
 
-def write_application_source(output_dir, params, template_dir='application'):
+def write_application_source(params, template_dir='application'):
     app_dir = os.path.join(TEMPLATES_DIR, template_dir)
+    output_dir = params['output_dir']
     files = {os.path.join(app_dir, f_name): os.path.join(output_dir, f_name)
              for f_name in ['main.c', 'Makefile', 'README.md']}
 

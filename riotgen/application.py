@@ -75,10 +75,11 @@ def generate_application(output_dir, config=None):
         params = _read_application_config(config)
     _check_application_params(params)
     _check_common_params(params)
-    output_dir = os.path.expanduser(output_dir)
-    write_application_source(output_dir, params)
 
-    click.echo(click.style('Application \'{name}\' generated with success!'
-                           .format(**params), bold=True))
+    params['output_dir'] = os.path.expanduser(output_dir)
+    write_application_source(params)
+
+    click.echo(click.style('Application \'{name}\' generated in {output_dir} '
+                           'with success!'.format(**params), bold=True))
     click.echo('\nTo build the application, use')
-    click.echo('\n     make -C {}\n'.format(output_dir))
+    click.echo('\n     make -C {output_dir}\n'.format(**params))

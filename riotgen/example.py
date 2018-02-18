@@ -79,6 +79,12 @@ def generate_example(config=None):
     examples_dir = os.path.join(os.path.expanduser(params['riotbase']),
                                                    'examples')
     example_dir = os.path.join(examples_dir, params['name'])
+    riotbase = os.path.abspath(os.path.expanduser(params['riotbase']))
+    if os.path.abspath(os.path.curdir) == riotbase:
+        params['output_dir'] = os.path.join('examples', params['name'])
+    else:
+        params['output_dir'] = os.path.expanduser(example_dir)
+
     if not os.path.exists(example_dir):
         os.makedirs(example_dir)
     elif not click.prompt('\'{name}\' example directory already exists, '
@@ -87,7 +93,7 @@ def generate_example(config=None):
         click.echo('Abort')
         return
 
-    write_application_source(example_dir, params, template_dir='example')
+    write_application_source(params, template_dir='example')
 
-    click.echo(click.style('Application \'{name}\' generated with success!'
-                           .format(**params), bold=True))
+    click.echo(click.style('Application \'{name}\' generated in {output_dir} '
+                           'with success!'.format(**params), bold=True))

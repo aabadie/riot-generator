@@ -77,6 +77,13 @@ def generate_test(config=None):
 
     tests_dir = os.path.join(os.path.expanduser(params['riotbase']), 'tests')
     test_dir = os.path.join(tests_dir, params['name'])
+
+    riotbase = os.path.abspath(os.path.expanduser(params['riotbase']))
+    if os.path.abspath(os.path.curdir) == riotbase:
+        params['output_dir'] = os.path.join('tests', params['name'])
+    else:
+        params['output_dir'] = os.path.expanduser(test_dir)
+
     if not os.path.exists(test_dir):
         os.makedirs(test_dir)
     elif not click.prompt('\'{name}\' test directory already exists, '
@@ -85,8 +92,8 @@ def generate_test(config=None):
         click.echo('Abort')
         return
 
-    output_dir = os.path.expanduser(test_dir)
-    write_application_source(output_dir, params, template_dir='test')
+    write_application_source(params, template_dir='test')
 
-    click.echo(click.style('Test application \'{name}\' generated!'
+    click.echo(click.style('Test application \'{name}\' generated in '
+                           '{output_dir} with success!'
                            .format(**params), bold=True))
