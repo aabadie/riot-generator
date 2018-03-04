@@ -5,8 +5,9 @@ It can be used to bootstrap:
 - a new external application
 - a new RIOT example application
 - a new test application
+- a new package for RIOT
 """
 
-__version__ = '0.1.4'
+__version__ = '0.2.0'
 
 from .generator import cli

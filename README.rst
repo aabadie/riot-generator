@@ -9,7 +9,7 @@ RIOT code generator
 
 RIOT generator is a command line interface helper that initiates `RIOT
 <http://github.com/RIOT-OS/RIOT>`_ source files for applications, boards
-support and test applications.
+support, packages and test applications.
 
 Installation
 ............
@@ -34,7 +34,7 @@ Usage
 .....
 
 RIOT code generator uses subcommands for generating the code for applications,
-tests and board support.
+tests, packages and board support.
 
 The ``application`` subcommand requires a ``<path>`` argument to set the
 directory where the application code will be generated::
@@ -48,9 +48,11 @@ Once complete, the new application can be built using::
 
     make -C <output directory>
 
-``test`` and ``board`` subcommands can just be called without parameters,
-the code is generated directly in the RIOT base directory::
+``example``, ``pkg``, ``test`` and ``board`` subcommands can just be called
+without parameters, the code is generated directly in the RIOT base directory::
 
+    riotgen example
+    riotgen pkg
     riotgen board
     riotgen test
 
