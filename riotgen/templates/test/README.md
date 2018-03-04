@@ -1,7 +1,7 @@
 ## About
 
-Describe what the test application is about
+Describe here what the test application is about
 
 ## Usage
 
-Describe how to use the application
+Describe here how to use the application
