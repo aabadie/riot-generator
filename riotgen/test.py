@@ -1,5 +1,6 @@
 """RIOT test generator module."""
 
+import os
 import os.path
 import datetime
 
@@ -49,6 +50,8 @@ def _prompt_test_params():
     params['features'] = click.prompt(
         text='Required board features (comma separated)', default='',
         value_proc=_parse_list_option)
+    params['use_testrunner'] = click.prompt(
+        text='Use testrunner script (y/N)?', default=False, show_default=False)
 
     params.update(_prompt_common_information())
     return params
@@ -91,6 +94,20 @@ def generate_test(config=None):
                           default=False, show_default=False):
         click.echo('Abort')
         return
+
+    params['testrunner'] = ''
+    if params['use_testrunner']:
+        testrunner_dir = os.path.join(test_dir, 'tests')
+        tpl_dir = os.path.join(TEMPLATES_DIR, 'test')
+        if not os.path.exists(testrunner_dir):
+            os.makedirs(testrunner_dir)
+        script_in = os.path.join(tpl_dir, '01-run.py')
+        script_out = os.path.join(testrunner_dir, '01-run.py')
+        with open(script_in, 'r') as f_in:
+            with open(script_out, 'w') as f_out:
+                f_out.write(f_in.read().format(**params))
+        os.chmod(script_out, 0o755)
+        params['testrunner'] = "\ntest:\n\ttests/01-run.py\n"
 
     write_application_source(params, template_dir='test')
 
