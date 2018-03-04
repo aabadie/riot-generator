@@ -96,7 +96,7 @@ def generate_test(config=None):
         return
 
     params['testrunner'] = ''
-    if params['use_testrunner']:
+    if 'use_testrunner' in params and params['use_testrunner']:
         testrunner_dir = os.path.join(test_dir, 'tests')
         tpl_dir = os.path.join(TEMPLATES_DIR, 'test')
         if not os.path.exists(testrunner_dir):
