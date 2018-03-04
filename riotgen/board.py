@@ -7,7 +7,7 @@ import click
 from click import MissingParameter
 
 from .helpers import _get_usermail, _get_username
-from .helpers import TEMPLATES_DIR
+from .helpers import TEMPLATES_DIR, generate_file
 from .helpers import _read_config, _parse_list_option
 from .helpers import _prompt_common_information, _check_common_params
 
@@ -92,8 +92,6 @@ def generate_board(config=None):
                   for f_name in ['board.h', 'periph_conf.h']})
 
     for file_in, file_out in files.items():
-        with open(file_in, 'r') as f_in:
-            with open(file_out, 'w') as f_out:
-                f_out.write(f_in.read().format(**params))
+        generate_file(params, file_in, file_out)
 
     click.echo(click.style('Board support generated!', bold=True))

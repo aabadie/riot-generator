@@ -10,7 +10,7 @@ from .helpers import _get_usermail, _get_username
 from .helpers import TEMPLATES_DIR
 from .helpers import _read_config, _parse_list_option
 from .helpers import _prompt_common_information, _check_common_params
-from .helpers import write_application_source
+from .helpers import generate_application_source
 
 
 def _read_application_config(filename):
@@ -77,7 +77,7 @@ def generate_application(output_dir, config=None):
     _check_common_params(params)
 
     params['output_dir'] = os.path.expanduser(output_dir)
-    write_application_source(params)
+    generate_application_source(params)
 
     click.echo(click.style('Application \'{name}\' generated in {output_dir} '
                            'with success!'.format(**params), bold=True))

@@ -11,7 +11,7 @@ from .helpers import _get_usermail, _get_username
 from .helpers import TEMPLATES_DIR
 from .helpers import _read_config, _parse_list_option
 from .helpers import _prompt_common_information, _check_common_params
-from .helpers import write_application_source
+from .helpers import generate_application_source, generate_file
 
 
 def _read_test_config(filename):
@@ -103,13 +103,11 @@ def generate_test(config=None):
             os.makedirs(testrunner_dir)
         script_in = os.path.join(tpl_dir, '01-run.py')
         script_out = os.path.join(testrunner_dir, '01-run.py')
-        with open(script_in, 'r') as f_in:
-            with open(script_out, 'w') as f_out:
-                f_out.write(f_in.read().format(**params))
+        generate_file(params, script_in, script_out)
         os.chmod(script_out, 0o755)
         params['testrunner'] = "\ntest:\n\ttests/01-run.py\n"
 
-    write_application_source(params, template_dir='test')
+    generate_application_source(params, template_dir='test')
 
     click.echo(click.style('Test application \'{name}\' generated in '
                            '{output_dir} with success!'

@@ -101,13 +101,24 @@ def _read_config(filename, section=None):
     return config
 
 
-def write_application_source(params, template_dir='application'):
-    app_dir = os.path.join(TEMPLATES_DIR, template_dir)
+def generate_file(params, template, out):
+    """Generate a file from an input template and a dict of parameters."""
+    with open(template, 'r') as f_in:
+        with open(out, 'w') as f_out:
+            f_out.write(f_in.read().format(**params))
+
+
+def generate_source(params, template_dir, input_files):
+    """Generate a list of files given from an input template directory."""
+    tpl_dir = os.path.join(TEMPLATES_DIR, template_dir)
     output_dir = params['output_dir']
-    files = {os.path.join(app_dir, f_name): os.path.join(output_dir, f_name)
-             for f_name in ['main.c', 'Makefile', 'README.md']}
+    files = {os.path.join(tpl_dir, f_name): os.path.join(output_dir, f_name)
+             for f_name in input_files}
 
     for file_in, file_out in files.items():
-        with open(file_in, 'r') as f_in:
-            with open(file_out, 'w') as f_out:
-                f_out.write(f_in.read().format(**params))
+        generate_file(params, file_in, file_out)
+
+
+def generate_application_source(params, template_dir='application'):
+    """Generate source files of an application."""
+    generate_source(params, template_dir, ['main.c', 'Makefile', 'README.md'])

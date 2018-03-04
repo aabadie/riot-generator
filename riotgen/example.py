@@ -10,7 +10,7 @@ from .helpers import _get_usermail, _get_username
 from .helpers import TEMPLATES_DIR
 from .helpers import _read_config, _parse_list_option
 from .helpers import _prompt_common_information, _check_common_params
-from .helpers import write_application_source
+from .helpers import generate_application_source
 
 
 def _read_example_config(filename):
@@ -93,7 +93,7 @@ def generate_example(config=None):
         click.echo('Abort')
         return
 
-    write_application_source(params, template_dir='example')
+    generate_application_source(params, template_dir='example')
 
     click.echo(click.style('Application \'{name}\' generated in {output_dir} '
                            'with success!'.format(**params), bold=True))
