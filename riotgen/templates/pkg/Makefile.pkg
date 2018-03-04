@@ -1,0 +1,9 @@
+MODULE={name}
+
+# Add compiler flags if required
+CFLAGS += 
+
+# List the source files that should be built in the generated package
+SRC := 
+
+include $(RIOTBASE)/Makefile.base

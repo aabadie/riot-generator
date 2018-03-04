@@ -4,6 +4,7 @@ import click
 from riotgen.application import generate_application
 from riotgen.example import generate_example
 from riotgen.board import generate_board
+from riotgen.pkg import generate_pkg
 from riotgen.test import generate_test
 
 logging.basicConfig(level=logging.DEBUG,
@@ -37,6 +38,13 @@ def board(config):
               help='Example application initial configuration file')
 def example(config):
     generate_example(config)
+
+
+@cli.command(help='Bootstrap a RIOT external package')
+@click.option('--config', type=click.File(mode='r'),
+              help='Package initial configuration file')
+def pkg(config):
+    generate_pkg(config)
 
 
 @cli.command(help='Bootstrap a RIOT test application')

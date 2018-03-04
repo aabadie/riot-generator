@@ -1,0 +1,16 @@
+/**
+ * @defgroup pkg_{name}   {displayed_name}
+ * @ingroup  pkg
+ * @ingroup  sys
+ * @brief    {description}
+ *
+ * # Introduction
+ *
+ * Put an introduction of the package here 
+ *
+ * # License
+ * 
+ * Licensed under {license}.
+ *
+ * @see      {url}
+ */
