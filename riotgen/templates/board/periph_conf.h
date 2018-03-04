@@ -28,7 +28,18 @@
 extern "C" {{
 #endif
 
-/* put here the board peripherals definitions */
+/* put here the board peripherals definitions:
+- Available clocks
+- Timers
+- UARTs
+- PWMs
+- SPIs
+- I2C
+- ADC
+- RTC
+- RTT
+etc
+ */
 
 #ifdef __cplusplus
 }}
