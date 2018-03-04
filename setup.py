@@ -62,6 +62,7 @@ setup(
                               'templates/board/*',
                               'templates/driver/*',
                               'templates/example/*',
+                              'templates/pkg/*',
                               'templates/test/*']},
     install_requires=['click'],
     entry_points={
