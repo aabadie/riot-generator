@@ -8,6 +8,6 @@ It can be used to bootstrap:
 - a new package for RIOT
 """
 
-__version__ = '0.2.0'
+__version__ = '0.2.1'
 
 from .generator import cli
