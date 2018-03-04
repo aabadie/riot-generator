@@ -66,7 +66,7 @@ def generate_pkg(config=None):
 
     riotbase = os.path.abspath(os.path.expanduser(params['riotbase']))
     if os.path.abspath(os.path.curdir) == riotbase:
-        params['output_dir'] = os.path.join('tests', params['name'])
+        params['output_dir'] = os.path.join('pkg', params['name'])
     else:
         params['output_dir'] = os.path.expanduser(pkg_dir)
 
