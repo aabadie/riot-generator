@@ -57,14 +57,17 @@ setup(
     platforms='any',
     packages=[PACKAGE],
     include_package_data=True,
-    package_dir={'riotgen': 'riotgen'},
-    package_data={'riotgen': ['templates/application/*',
-                              'templates/board/*',
-                              'templates/driver/*',
-                              'templates/example/*',
-                              'templates/pkg/*',
-                              'templates/test/*']},
-    install_requires=['click'],
+    package_dir={
+        'riotgen': 'riotgen'
+    },
+    package_data={
+        'riotgen': [
+            'templates/*/*',
+        ]
+    },
+    install_requires=[
+        'click',
+    ],
     entry_points={
         'console_scripts': [
             '{}=riotgen:cli'.format(PACKAGE),
