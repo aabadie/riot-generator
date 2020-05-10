@@ -52,7 +52,3 @@ def pkg(config):
               help='Test application initial configuration file')
 def test(config):
     generate_test(config)
-
-
-if __name__ == '__main__':
-    cli()
