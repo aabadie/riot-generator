@@ -1,20 +1,18 @@
 """RIOT example application generator module."""
 
-import os.path
-import datetime
+import os
 
 import click
 from click import MissingParameter
 
-from .helpers import _get_usermail, _get_username
-from .helpers import _read_config, _parse_list_option
-from .helpers import _prompt_common_information, _check_common_params
-from .helpers import render_source
+from .common import render_source
+from .common import prompt_common_information, check_common_params
+from .utils import read_config, parse_list_option
 
 
 def _read_example_config(filename):
     """Read the application specific configuration file."""
-    params = _read_config(filename, section='example')
+    params = read_config(filename, section='example')
     if 'name' not in params or not params['name']:
         raise MissingParameter(param_type='example application name')
     if 'brief' not in params:
@@ -27,7 +25,7 @@ def _read_example_config(filename):
         if param not in params:
             params[param] = ''
         else:
-            params[param] = _parse_list_option(params[param])
+            params[param] = parse_list_option(params[param])
     return params
 
 
@@ -41,15 +39,15 @@ def _prompt_example_params():
     params['board'] = click.prompt(text='Target board', default='native')
     params['modules'] = click.prompt(
         text='Required modules (comma separated)', default='',
-        value_proc=_parse_list_option)
+        value_proc=parse_list_option)
     params['packages'] = click.prompt(
         text='Required packages (comma separated)', default='',
-        value_proc=_parse_list_option)
+        value_proc=parse_list_option)
     params['features'] = click.prompt(
         text='Required board features (comma separated)', default='',
-        value_proc=_parse_list_option)
+        value_proc=parse_list_option)
 
-    params.update(_prompt_common_information())
+    params.update(prompt_common_information())
     return params
 
 
@@ -65,10 +63,11 @@ def generate_example(config=None):
     else:
         params = _read_example_config(config)
     _check_example_params(params)
-    _check_common_params(params)
+    check_common_params(params)
 
-    examples_dir = os.path.join(os.path.expanduser(params['riotbase']),
-                                                   'examples')
+    examples_dir = os.path.join(
+        os.path.expanduser(params['riotbase']), 'examples'
+    )
     example_dir = os.path.join(examples_dir, params['name'])
     riotbase = os.path.abspath(os.path.expanduser(params['riotbase']))
     if os.path.abspath(os.path.curdir) == riotbase:

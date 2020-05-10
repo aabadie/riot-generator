@@ -1,20 +1,18 @@
 """RIOT application generator module."""
 
-import os.path
-import datetime
+import os
 
 import click
 from click import MissingParameter
 
-from .helpers import _get_usermail, _get_username
-from .helpers import render_source
-from .helpers import _read_config, _parse_list_option
-from .helpers import _prompt_common_information, _check_common_params
+from .common import render_source
+from .common import prompt_common_information, check_common_params
+from .utils import read_config, parse_list_option
 
 
 def _read_board_config(filename):
     """Read the board specific configuration file."""
-    params = _read_config(filename, section='board')
+    params = read_config(filename, section='board')
     if 'name' not in params or not params['name']:
         raise MissingParameter(param_type='board name')
     if 'displayed_name' not in params or not params['displayed_name']:
@@ -28,7 +26,7 @@ def _read_board_config(filename):
     if 'features' not in params:
         params['features'] = ''
     else:
-        params['features'] = _parse_list_option(params['features'])
+        params['features'] = parse_list_option(params['features'])
     return params
 
 
@@ -45,9 +43,9 @@ def _prompt_board_params():
         text='CPU model name')
     params['features'] = click.prompt(
         text='Features provided by this board (comma separated)', default='',
-        value_proc=_parse_list_option)
+        value_proc=parse_list_option)
 
-    params.update(_prompt_common_information())
+    params.update(prompt_common_information())
     return params
 
 
@@ -63,7 +61,7 @@ def generate_board(config=None):
     else:
         params = _read_board_config(config)
     _check_board_params(params)
-    _check_common_params(params)
+    check_common_params(params)
 
     boards_dir = os.path.join(os.path.expanduser(params['riotbase']), 'boards')
     board_dir = os.path.join(boards_dir, params['name'])

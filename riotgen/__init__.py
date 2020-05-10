@@ -10,4 +10,4 @@ It can be used to bootstrap:
 
 __version__ = '0.2.2'
 
-from .generator import cli
+from .generator import cli  # noqa

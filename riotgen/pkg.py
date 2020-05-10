@@ -1,21 +1,18 @@
 """RIOT pkg generator module."""
 
 import os
-import os.path
-import datetime
 
 import click
 from click import MissingParameter
 
-from .helpers import _get_usermail, _get_username
-from .helpers import _read_config, _parse_list_option
-from .helpers import _prompt_common_information, _check_common_params
-from .helpers import render_source, render_file
+from .common import render_source, render_file
+from .common import prompt_common_information, check_common_params
+from .utils import read_config, parse_list_option
 
 
 def _read_pkg_config(filename):
     """Read the pkg specific configuration file."""
-    params = _read_config(filename, section='pkg')
+    params = read_config(filename, section='pkg')
     if 'name' not in params or not params['name']:
         raise MissingParameter(param_type='package name')
     if 'displayed_name' not in params or not params['displayed_name']:
@@ -28,6 +25,11 @@ def _read_pkg_config(filename):
         raise MissingParameter(param_type='package license')
     if 'description' not in params:
         params['description'] = ''
+    for param in ['modules', 'packages', 'features']:
+        if param not in params:
+            params[param] = ''
+        else:
+            params[param] = parse_list_option(params[param])
     return params
 
 
@@ -41,8 +43,17 @@ def _prompt_pkg_params():
     params['hash'] = click.prompt(text='Package version hash')
     params['license'] = click.prompt(text='Package license')
     params['description'] = click.prompt(text='Package short description')
+    params['modules'] = click.prompt(
+        text='Required modules (comma separated)', default='',
+        value_proc=parse_list_option)
+    params['packages'] = click.prompt(
+        text='Required packages (comma separated)', default='',
+        value_proc=parse_list_option)
+    params['features'] = click.prompt(
+        text='Required board features (comma separated)', default='',
+        value_proc=parse_list_option)
 
-    params.update(_prompt_common_information())
+    params.update(prompt_common_information())
     return params
 
 
@@ -58,7 +69,7 @@ def generate_pkg(config=None):
     else:
         params = _read_pkg_config(config)
     _check_pkg_params(params)
-    _check_common_params(params)
+    check_common_params(params)
 
     pkgs_dir = os.path.join(os.path.expanduser(params['riotbase']), 'pkg')
     pkg_dir = os.path.join(pkgs_dir, params['name'])

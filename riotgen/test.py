@@ -1,21 +1,18 @@
 """RIOT test generator module."""
 
 import os
-import os.path
-import datetime
 
 import click
 from click import MissingParameter
 
-from .helpers import _get_usermail, _get_username
-from .helpers import _read_config, _parse_list_option
-from .helpers import _prompt_common_information, _check_common_params
-from .helpers import render_source
+from .common import render_source
+from .common import prompt_common_information, check_common_params
+from .utils import read_config, parse_list_option
 
 
 def _read_test_config(filename):
     """Read the test specific configuration file."""
-    params = _read_config(filename, section='test')
+    params = read_config(filename, section='test')
     if 'name' not in params or not params['name']:
         raise MissingParameter(param_type='test name')
     if 'brief' not in params:
@@ -28,7 +25,7 @@ def _read_test_config(filename):
         if param not in params:
             params[param] = ''
         else:
-            params[param] = _parse_list_option(params[param])
+            params[param] = parse_list_option(params[param])
     return params
 
 
@@ -42,17 +39,17 @@ def _prompt_test_params():
     params['board'] = click.prompt(text='Target board', default='native')
     params['modules'] = click.prompt(
         text='Required modules (comma separated)', default='',
-        value_proc=_parse_list_option)
+        value_proc=parse_list_option)
     params['packages'] = click.prompt(
         text='Required packages (comma separated)', default='',
-        value_proc=_parse_list_option)
+        value_proc=parse_list_option)
     params['features'] = click.prompt(
         text='Required board features (comma separated)', default='',
-        value_proc=_parse_list_option)
+        value_proc=parse_list_option)
     params['use_testrunner'] = click.prompt(
         text='Use testrunner script (y/N)?', default=False, show_default=False)
 
-    params.update(_prompt_common_information())
+    params.update(prompt_common_information())
     return params
 
 
@@ -75,7 +72,7 @@ def generate_test(config=None):
     else:
         params = _read_test_config(config)
     _check_test_params(params)
-    _check_common_params(params)
+    check_common_params(params)
 
     tests_dir = os.path.join(os.path.expanduser(params['riotbase']), 'tests')
     test_dir = os.path.join(tests_dir, params['name'])
@@ -98,7 +95,7 @@ def generate_test(config=None):
         testrunner_dir = os.path.join(test_dir, 'tests')
         if not os.path.exists(testrunner_dir):
             os.makedirs(testrunner_dir)
-        render_source({'test': params},'test', ['01-run.py'], testrunner_dir)
+        render_source({'test': params}, 'test', ['01-run.py'], testrunner_dir)
         os.chmod(os.path.join(testrunner_dir, '01-run.py'), 0o755)
 
     files = ['main.c', 'Makefile', 'README.md']

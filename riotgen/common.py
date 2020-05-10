@@ -1,37 +1,12 @@
-"""Internal helper functions"""
+"""Common generator module."""
 
 import os
-import os.path
 import datetime
-from configparser import ConfigParser
-from subprocess import check_output
 
-import click
-from click import MissingParameter, BadParameter
+from jinja2 import Environment, FileSystemLoader
+from click import prompt, MissingParameter, BadParameter
 
-from jinja2 import Environment, FileSystemLoader, select_autoescape
-
-
-def _parse_list_option(opt):
-    """Split list element separated by a comma."""
-    return sorted(opt.split(','))
-
-
-def _get_git_config(config):
-    try:
-        config = check_output(
-            ['git', 'config', '--get', config]).decode()[:-1]
-    except:
-        config = ''
-
-    return config
-
-def _get_username():
-    return _get_git_config('user.name')
-
-
-def _get_usermail():
-    return _get_git_config('user.email')
+from .utils import get_usermail, get_username
 
 
 def _check_riotbase(path, from_prompt=True):
@@ -55,46 +30,37 @@ def _check_riotbase(path, from_prompt=True):
         raise MissingParameter(param_type=error_message)
 
 
-def _check_common_params(params):
+def check_common_params(params):
     if 'year' not in params:
         params['year'] = datetime.datetime.now().year
     if 'author_name' not in params:
-        params['author_name'] = _get_username()
+        params['author_name'] = get_username()
     if 'author_email' not in params:
-        params['author_email'] = _get_usermail()
+        params['author_email'] = get_usermail()
     if 'organization' not in params:
-        params['organization'] = _get_username()
+        params['organization'] = get_username()
     if 'riotbase' not in params:
         params['riotbase'] = ''
     params['riotbase'] = _check_riotbase(params['riotbase'], from_prompt=False)
 
 
-def _prompt_common_information():
+def prompt_common_information():
     params = {}
     params['year'] = datetime.datetime.now().year
-    params['author_name'] = click.prompt(
-        text='Author name', default=_get_username())
-    params['author_email'] = click.prompt(
-        text='Author email', default=_get_usermail())
-    params['organization'] = click.prompt(
-        text='Organization', default=_get_username())
+    params['author_name'] = prompt(
+        text='Author name', default=get_username())
+    params['author_email'] = prompt(
+        text='Author email', default=get_usermail())
+    params['organization'] = prompt(
+        text='Organization', default=get_username())
 
     riotbase = os.getenv('RIOTBASE')
     if riotbase is None:
-        params['riotbase'] = click.prompt(
+        params['riotbase'] = prompt(
             text='RIOT base directory', value_proc=_check_riotbase)
     else:
         params['riotbase'] = _check_riotbase(riotbase, from_prompt=False)
     return params
-
-
-def _read_config(filename, section=None):
-    parser = ConfigParser()
-    parser.readfp(filename)
-    config = dict(parser.items('common'))
-    if section is not None:
-        config.update(dict(parser.items(section)))
-    return config
 
 
 def render_file(context, template_dir, source, dest):
