@@ -1,0 +1,9 @@
+PKG_NAME={{ context.pkg.name }}
+PKG_URL={{ context.pkg.url }}
+PKG_VERSION={{ context.pkg.hash }}
+PKG_LICENSE={{ context.pkg.license }}
+
+include $(RIOTBASE)/pkg/pkg.mk
+
+all:
+	"$(MAKE)" -f $(PKG_BUILDDIR)/$(PKG_NAME).mk -C $(PKG_BUILDDIR)

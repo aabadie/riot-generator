@@ -7,10 +7,9 @@ import click
 from click import MissingParameter
 
 from .helpers import _get_usermail, _get_username
-from .helpers import TEMPLATES_DIR
 from .helpers import _read_config, _parse_list_option
 from .helpers import _prompt_common_information, _check_common_params
-from .helpers import generate_application_source
+from .helpers import render_source
 
 
 def _read_example_config(filename):
@@ -57,14 +56,6 @@ def _prompt_example_params():
 def _check_example_params(params):
     application_name = params['name'].replace(' ', '_')
     params['name'] = application_name
-    params['name_underline'] = '=' * len(application_name)
-    params['includes'] = ''
-    for module in params['modules']:
-        params['includes'] += 'USEMODULE += {}\n'.format(module)
-    for package in params['packages']:
-        params['includes'] += 'USEPKG += {}\n'.format(package)
-    for feature in params['features']:
-        params['includes'] += 'FEATURES_REQUIRED += {}\n'.format(feature)
 
 
 def generate_example(config=None):
@@ -81,9 +72,9 @@ def generate_example(config=None):
     example_dir = os.path.join(examples_dir, params['name'])
     riotbase = os.path.abspath(os.path.expanduser(params['riotbase']))
     if os.path.abspath(os.path.curdir) == riotbase:
-        params['output_dir'] = os.path.join('examples', params['name'])
+        output_dir = os.path.join('examples', params['name'])
     else:
-        params['output_dir'] = os.path.expanduser(example_dir)
+        output_dir = os.path.expanduser(example_dir)
 
     if not os.path.exists(example_dir):
         os.makedirs(example_dir)
@@ -93,7 +84,14 @@ def generate_example(config=None):
         click.echo('Abort')
         return
 
-    generate_application_source(params, template_dir='example')
+    render_source(
+        {'example': params}, 'example',
+        ['main.c', 'Makefile', 'README.md'],
+        output_dir
+    )
 
-    click.echo(click.style('Application \'{name}\' generated in {output_dir} '
-                           'with success!'.format(**params), bold=True))
+    click.echo(click.style(
+        'Example \'{name}\' generated in {output_dir} with success!'
+        .format(name=params['name'], output_dir=output_dir),
+        bold=True
+    ))

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) {year} {organization}
+ * Copyright (C) {{ context.test.year }} {{ context.test.organization }}
  *
  * This file is subject to the terms and conditions of the GNU Lesser
  * General Public License v2.1. See the file LICENSE in the top level
@@ -8,21 +8,21 @@
 
 /**
  * @ingroup tests
- * @{{
+ * @{
  *
  * @file
- * @brief       {brief}
+ * @brief       {{ context.test.brief }}
  *
- * @author      {author_name} <{author_email}>
+ * @author      {{ context.test.author_name }} <{{ context.test.author_email }}>
  *
- * @}}
+ * @}
  */
 
 #include <stdio.h>
 
 int main(void)
-{{
+{
     puts("Generated RIOT test application");
 
     return 0;
-}}
+}

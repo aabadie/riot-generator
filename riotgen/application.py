@@ -7,10 +7,9 @@ import click
 from click import MissingParameter
 
 from .helpers import _get_usermail, _get_username
-from .helpers import TEMPLATES_DIR
 from .helpers import _read_config, _parse_list_option
 from .helpers import _prompt_common_information, _check_common_params
-from .helpers import generate_application_source
+from .helpers import render_source
 
 
 def _read_application_config(filename):
@@ -57,14 +56,6 @@ def _prompt_application_params():
 def _check_application_params(params):
     application_name = params['name'].replace(' ', '_')
     params['name'] = application_name
-    params['name_underline'] = '=' * len(application_name)
-    params['includes'] = ''
-    for module in params['modules']:
-        params['includes'] += 'USEMODULE += {}\n'.format(module)
-    for package in params['packages']:
-        params['includes'] += 'USEPKG += {}\n'.format(package)
-    for feature in params['features']:
-        params['includes'] += 'FEATURES_REQUIRED += {}\n'.format(feature)
 
 
 def generate_application(output_dir, config=None):
@@ -76,10 +67,17 @@ def generate_application(output_dir, config=None):
     _check_application_params(params)
     _check_common_params(params)
 
-    params['output_dir'] = os.path.expanduser(output_dir)
-    generate_application_source(params)
+    output_dir = os.path.expanduser(output_dir)
+    render_source(
+        {'application': params}, 'application',
+        ['main.c', 'Makefile', 'README.md'],
+        output_dir
+    )
 
-    click.echo(click.style('Application \'{name}\' generated in {output_dir} '
-                           'with success!'.format(**params), bold=True))
+    click.echo(click.style(
+        'Application \'{name}\' generated in {output_dir} with success!'
+        .format(name=params['name'], output_dir=output_dir),
+        bold=True
+    ))
     click.echo('\nTo build the application, use')
-    click.echo('\n     make -C {output_dir}\n'.format(**params))
+    click.echo('\n     make -C {output_dir}\n'.format(output_dir=output_dir))

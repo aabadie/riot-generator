@@ -67,6 +67,7 @@ setup(
     },
     install_requires=[
         'click',
+        'Jinja2',
     ],
     entry_points={
         'console_scripts': [

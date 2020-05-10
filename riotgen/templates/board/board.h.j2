@@ -1,5 +1,5 @@
 /*
- * Copyright (C) {year} {organization}
+ * Copyright (C) {{ context.board.year }} {{ context.board.organization }}
  *
  * This file is subject to the terms and conditions of the GNU Lesser
  * General Public License v2.1. See the file LICENSE in the top level
@@ -7,13 +7,13 @@
  */
 
 /**
- * @ingroup     boards_{name}
- * @{{
+ * @ingroup     boards_{{ context.board.name }}
+ * @{
  *
  * @file
- * @brief       Board specific definitions for the {displayed_name}
+ * @brief       Board specific definitions for the {{ context.board.displayed_name }}
  *
- * @author      {author_name} <{author_email}>
+ * @author      {{ context.board.author_name }} <{{ context.board.author_email }}>
  */
 
 #ifndef BOARD_H
@@ -24,7 +24,7 @@
 #include "periph_cpu.h"
 
 #ifdef __cplusplus
-extern "C" {{
+extern "C" {
 #endif
 
 /* Put here board specific definitions:
@@ -39,8 +39,8 @@ extern "C" {{
 void board_init(void);
 
 #ifdef __cplusplus
-}}
+}
 #endif
 
 #endif /* BOARD_H */
-/** @}} */
+/** @} */

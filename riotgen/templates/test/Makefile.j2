@@ -1,0 +1,26 @@
+include ../Makefile.tests_common
+
+# dependencies
+{% if context.test.modules|length > 0 %}
+
+# required modules
+{% for module in context.test.modules %}
+USEMODULE += {{ module }}
+{% endfor %}
+{% endif %}
+{% if context.test.features|length > 0 %}
+
+# required features
+{% for feature in context.test.features %}
+FEATURES_REQUIRED += {{ feature }}
+{% endfor %}
+{% endif %}
+{% if context.test.packages|length > 0 %}
+
+# required packages
+{% for package in context.test.packages %}
+USE_PKG += {{ package }}
+{% endfor %}
+{% endif %}
+
+include $(RIOTBASE)/Makefile.include

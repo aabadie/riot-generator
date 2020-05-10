@@ -7,7 +7,7 @@ import click
 from click import MissingParameter
 
 from .helpers import _get_usermail, _get_username
-from .helpers import TEMPLATES_DIR, generate_file
+from .helpers import render_source
 from .helpers import _read_config, _parse_list_option
 from .helpers import _prompt_common_information, _check_common_params
 
@@ -56,10 +56,6 @@ def _prompt_board_params():
 def _check_board_params(params):
     board_name = params['name'].replace(' ', '_')
     params['name'] = board_name
-    params['features_provided'] = ''
-    for feature in sorted(params['features']):
-        params['features_provided'] += \
-            'FEATURES_PROVIDED += periph_{}\n'.format(feature)
 
 
 def generate_board(config=None):
@@ -71,7 +67,6 @@ def generate_board(config=None):
     _check_board_params(params)
     _check_common_params(params)
 
-    tpl_dir = os.path.join(TEMPLATES_DIR, 'board')
     boards_dir = os.path.join(os.path.expanduser(params['riotbase']), 'boards')
     board_dir = os.path.join(boards_dir, params['name'])
     board_include_dir = os.path.join(board_dir, 'include')
@@ -84,14 +79,24 @@ def generate_board(config=None):
         click.echo('Abort')
         return
 
-    files = {os.path.join(tpl_dir, f_name): os.path.join(board_dir, f_name)
-             for f_name in ['board.c', 'doc.txt', 'Makefile', 'Makefile.dep',
-                            'Makefile.features', 'Makefile.include']}
-    files.update({os.path.join(tpl_dir, f_name):
-                               os.path.join(board_include_dir, f_name)
-                  for f_name in ['board.h', 'periph_conf.h']})
+    context = {'board': params}
+    render_source(
+        context, 'board',
+        [
+            'board.c', 'doc.txt', 'Makefile', 'Makefile.dep',
+            'Makefile.features', 'Makefile.include'
+        ],
+        board_dir
+    )
 
-    for file_in, file_out in files.items():
-        generate_file(params, file_in, file_out)
+    render_source(
+        context, 'board',
+        ['board.h', 'periph_conf.h'],
+        board_dir, output_subdir='include'
+    )
 
-    click.echo(click.style('Board support generated!', bold=True))
+    click.echo(click.style(
+        'Support for board \'{board}\' generated!'.format(
+            board=params['displayed_name']
+        ),
+        bold=True))

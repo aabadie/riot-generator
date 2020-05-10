@@ -8,10 +8,9 @@ import click
 from click import MissingParameter
 
 from .helpers import _get_usermail, _get_username
-from .helpers import TEMPLATES_DIR
 from .helpers import _read_config, _parse_list_option
 from .helpers import _prompt_common_information, _check_common_params
-from .helpers import generate_application_source, generate_file
+from .helpers import render_source
 
 
 def _read_test_config(filename):
@@ -83,9 +82,9 @@ def generate_test(config=None):
 
     riotbase = os.path.abspath(os.path.expanduser(params['riotbase']))
     if os.path.abspath(os.path.curdir) == riotbase:
-        params['output_dir'] = os.path.join('tests', params['name'])
+        output_dir = os.path.join('tests', params['name'])
     else:
-        params['output_dir'] = os.path.expanduser(test_dir)
+        output_dir = os.path.expanduser(test_dir)
 
     if not os.path.exists(test_dir):
         os.makedirs(test_dir)
@@ -95,20 +94,17 @@ def generate_test(config=None):
         click.echo('Abort')
         return
 
-    params['testrunner'] = ''
     if 'use_testrunner' in params and params['use_testrunner']:
         testrunner_dir = os.path.join(test_dir, 'tests')
-        tpl_dir = os.path.join(TEMPLATES_DIR, 'test')
         if not os.path.exists(testrunner_dir):
             os.makedirs(testrunner_dir)
-        script_in = os.path.join(tpl_dir, '01-run.py')
-        script_out = os.path.join(testrunner_dir, '01-run.py')
-        generate_file(params, script_in, script_out)
-        os.chmod(script_out, 0o755)
-        params['testrunner'] = "\ntest:\n\ttests/01-run.py\n"
+        render_source({'test': params},'test', ['01-run.py'], testrunner_dir)
+        os.chmod(os.path.join(testrunner_dir, '01-run.py'), 0o755)
 
-    generate_application_source(params, template_dir='test')
+    files = ['main.c', 'Makefile', 'README.md']
+    render_source({'test': params}, 'test', files, output_dir)
 
     click.echo(click.style('Test application \'{name}\' generated in '
                            '{output_dir} with success!'
-                           .format(**params), bold=True))
+                           .format(name=params['name'], output_dir=output_dir),
+                           bold=True))

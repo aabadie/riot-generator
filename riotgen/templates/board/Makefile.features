@@ -1,3 +1,0 @@
-# Put defined MCU peripherals here (in alphabetical order)
-{features_provided}
--include $(RIOTCPU)/{cpu}/Makefile.features

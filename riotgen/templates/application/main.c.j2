@@ -1,0 +1,26 @@
+/*
+ * Copyright (C) {{ context.application.year }} {{ context.application.organization }}
+ *
+ * This file is subject to the terms and conditions of the GNU Lesser
+ * General Public License v2.1. See the file LICENSE in the top level
+ * directory for more details.
+ */
+
+/**
+ * @{
+ *
+ * @file
+ * @brief       {{ context.application.brief }}
+ *
+ * @author      {{ context.application.author_name }} <{{ context.application.author_email }}>
+ *
+ * @}
+ */
+
+#include <stdio.h>
+
+int main(void)
+{
+    puts("Generated RIOT application: '{{ context.application.name }}'");
+    return 0;
+}

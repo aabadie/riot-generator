@@ -8,10 +8,9 @@ import click
 from click import MissingParameter
 
 from .helpers import _get_usermail, _get_username
-from .helpers import TEMPLATES_DIR
 from .helpers import _read_config, _parse_list_option
 from .helpers import _prompt_common_information, _check_common_params
-from .helpers import generate_source, generate_file
+from .helpers import render_source, render_file
 
 
 def _read_pkg_config(filename):
@@ -20,7 +19,7 @@ def _read_pkg_config(filename):
     if 'name' not in params or not params['name']:
         raise MissingParameter(param_type='package name')
     if 'displayed_name' not in params or not params['displayed_name']:
-        raise MissingParameter(param_type='board displayed name')
+        raise MissingParameter(param_type='package displayed name')
     if 'url' not in params or not params['url']:
         raise MissingParameter(param_type='package source url')
     if 'hash' not in params or not params['hash']:
@@ -66,9 +65,9 @@ def generate_pkg(config=None):
 
     riotbase = os.path.abspath(os.path.expanduser(params['riotbase']))
     if os.path.abspath(os.path.curdir) == riotbase:
-        params['output_dir'] = os.path.join('pkg', params['name'])
+        output_dir = os.path.join('pkg', params['name'])
     else:
-        params['output_dir'] = os.path.expanduser(pkg_dir)
+        output_dir = os.path.expanduser(pkg_dir)
 
     if not os.path.exists(pkg_dir):
         os.makedirs(pkg_dir)
@@ -78,16 +77,21 @@ def generate_pkg(config=None):
         click.echo('Abort')
         return
 
-    generate_source(params, 'pkg', ['doc.txt',
-                                    'Makefile',
-                                    'Makefile.dep',
-                                    'Makefile.include'])
+    context = {'pkg': params}
+    render_source(
+        context, 'pkg',
+        ['doc.txt', 'Makefile', 'Makefile.dep', 'Makefile.include'],
+        output_dir
+    )
 
-    makefile_pkg_in = os.path.join(TEMPLATES_DIR, 'pkg', 'Makefile.pkg')
-    makefile_pkg_out = os.path.join(params['output_dir'],
-                                    'Makefile.{}'.format(params['name']))
-    generate_file(params, makefile_pkg_in, makefile_pkg_out)
+    template_dir = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), 'templates', 'pkg'
+    )
+    makefile_pkg_out = os.path.join(output_dir,
+                                    '{}.mk'.format(params['name']))
+    render_file(context, template_dir, 'pkg.mk.j2', makefile_pkg_out)
 
     click.echo(click.style('Package \'{name}\' generated in '
                            '{output_dir} with success!'
-                           .format(**params), bold=True))
+                           .format(name=params['name'], output_dir=output_dir),
+                           bold=True))

@@ -1,5 +1,5 @@
 /*
- * Copyright (C)  {year} {organization}
+ * Copyright (C)  {{ context.board.year }} {{ context.board.organization }}
  *
  * This file is subject to the terms and conditions of the GNU Lesser
  * General Public License v2.1. See the file LICENSE in the top level
@@ -7,15 +7,15 @@
  */
 
 /**
- * @ingroup     boards_{name}
- * @{{
+ * @ingroup     boards_{{ context.board.name }}
+ * @{
  *
  * @file
- * @brief       Board specific implementations for the {displayed_name} board
+ * @brief       Board specific implementations for the {{ context.board.displayed_name }} board
  *
- * @author      {author_name} <{author_email}>
+ * @author      {{ context.board.author_name }} <{{ context.board.author_email }}>
  *
- * @}}
+ * @}
  */
 
 #include "cpu.h"
@@ -23,7 +23,7 @@
 #include "periph/gpio.h"
 
 void board_init(void)
-{{
+{
     /* initialize the CPU */
     cpu_init();
-}}
+}

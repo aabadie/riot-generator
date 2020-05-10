@@ -9,33 +9,29 @@ from subprocess import check_output
 import click
 from click import MissingParameter, BadParameter
 
-PKG_DIR = os.path.abspath(os.path.dirname(__file__))
-TEMPLATES_DIR = os.path.join(PKG_DIR, 'templates')
+from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 
 def _parse_list_option(opt):
     """Split list element separated by a comma."""
-    return opt.split(',')
+    return sorted(opt.split(','))
 
+
+def _get_git_config(config):
+    try:
+        config = check_output(
+            ['git', 'config', '--get', config]).decode()[:-1]
+    except:
+        config = ''
+
+    return config
 
 def _get_username():
-    try:
-        name = check_output(
-            ['git', 'config', '--get', 'user.name']).decode()[:-1]
-    except:
-        name = ''
-
-    return name
+    return _get_git_config('user.name')
 
 
 def _get_usermail():
-    try:
-        email = check_output(
-            ['git', 'config', '--get', 'user.email']).decode()[:-1]
-    except:
-        email = ''
-
-    return email
+    return _get_git_config('user.email')
 
 
 def _check_riotbase(path, from_prompt=True):
@@ -101,24 +97,33 @@ def _read_config(filename, section=None):
     return config
 
 
-def generate_file(params, template, out):
+def render_file(context, template_dir, source, dest):
     """Generate a file from an input template and a dict of parameters."""
-    with open(template, 'r') as f_in:
-        with open(out, 'w') as f_out:
-            f_out.write(f_in.read().format(**params))
+    loader = FileSystemLoader(searchpath=template_dir)
+    env = Environment(loader=loader,
+                      trim_blocks=True,
+                      lstrip_blocks=True,
+                      keep_trailing_newline=True)
+    env.globals.update(zip=zip)
+    template = env.get_template(source)
+    render = template.render(context=context)
+    with open(dest, 'w') as f_dest:
+        f_dest.write(render)
 
 
-def generate_source(params, template_dir, input_files):
+def render_source(context, template_dir, input_files, output_dir,
+                  output_subdir=""):
     """Generate a list of files given from an input template directory."""
-    tpl_dir = os.path.join(TEMPLATES_DIR, template_dir)
-    output_dir = params['output_dir']
-    files = {os.path.join(tpl_dir, f_name): os.path.join(output_dir, f_name)
-             for f_name in input_files}
+    template_dir = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), 'templates', template_dir
+    )
+    if output_subdir:
+        output_dir = os.path.join(output_dir, output_subdir)
 
-    for file_in, file_out in files.items():
-        generate_file(params, file_in, file_out)
+    files = {
+        filename + '.j2': os.path.join(output_dir, filename)
+        for filename in input_files
+    }
 
-
-def generate_application_source(params, template_dir='application'):
-    """Generate source files of an application."""
-    generate_source(params, template_dir, ['main.c', 'Makefile', 'README.md'])
+    for source, dest in files.items():
+        render_file(context, template_dir, source, dest)
