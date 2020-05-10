@@ -36,7 +36,7 @@ def _prompt_test_params():
     """Request test specific variables."""
     params = {}
     params['name'] = click.prompt(
-        text='Application name (no space)')
+        text='Test name (no space)')
     params['brief'] = click.prompt(
         text='Test brief description', default='')
     params['board'] = click.prompt(text='Target board', default='native')
