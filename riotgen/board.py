@@ -33,7 +33,7 @@ def _read_board_config(filename):
 
 
 def _prompt_board_params():
-    """Request application specific variables."""
+    """Request board specific variables."""
     params = {}
     params['name'] = click.prompt(
         text='Board name (no space)')
@@ -43,8 +43,6 @@ def _prompt_board_params():
         text='CPU name')
     params['cpu_model'] = click.prompt(
         text='CPU model name')
-    params['description'] = click.prompt(
-        text='Application detailed description', default='')
     params['features'] = click.prompt(
         text='Features provided by this board (comma separated)', default='',
         value_proc=_parse_list_option)
