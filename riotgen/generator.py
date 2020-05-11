@@ -1,5 +1,4 @@
 import os
-import logging
 import click
 
 from .application import generate_application
@@ -7,11 +6,6 @@ from .example import generate_example
 from .board import generate_board
 from .pkg import generate_pkg
 from .test import generate_test
-
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s - %(name)14s - '
-                           '%(levelname)5s - %(message)s')
-logger = logging.getLogger("riotgen.generator")
 
 
 @click.group()
