@@ -1,22 +1,22 @@
 # Put the package dependencies here
-{% if context.pkg.modules|length > 0 %}
+{% if pkg.modules|length > 0 %}
 
 # required modules
-{% for module in context.pkg.modules %}
+{% for module in pkg.modules %}
 USEMODULE += {{ module }}
 {% endfor %}
 {% endif %}
-{% if context.pkg.features|length > 0 %}
+{% if pkg.features|length > 0 %}
 
 # required features
-{% for feature in context.pkg.features %}
+{% for feature in pkg.features %}
 FEATURES_REQUIRED += {{ feature }}
 {% endfor %}
 {% endif %}
-{% if context.pkg.packages|length > 0 %}
+{% if pkg.packages|length > 0 %}
 
 # required packages
-{% for package in context.pkg.packages %}
+{% for package in pkg.packages %}
 USE_PKG += {{ package }}
 {% endfor %}
 {% endif %}

@@ -1,29 +1,29 @@
 # name of the application
-APPLICATION = {{ context.example.name }}
+APPLICATION = {{ example.name }}
 
 # If no BOARD is found in the environment, use this default:
-BOARD ?= {{ context.example.board }}
+BOARD ?= {{ example.board }}
 
 # This has to be the absolute path to the RIOT base directory:
 RIOTBASE ?= $(CURDIR)/../..
-{% if context.example.modules|length > 0 %}
+{% if example.modules|length > 0 %}
 
 # required modules
-{% for module in context.example.modules %}
+{% for module in example.modules %}
 USEMODULE += {{ module }}
 {% endfor %}
 {% endif %}
-{% if context.example.features|length > 0 %}
+{% if example.features|length > 0 %}
 
 # required features
-{% for feature in context.example.features %}
+{% for feature in example.features %}
 FEATURES_REQUIRED += {{ feature }}
 {% endfor %}
 {% endif %}
-{% if context.example.packages|length > 0 %}
+{% if example.packages|length > 0 %}
 
 # required packages
-{% for package in context.example.packages %}
+{% for package in example.packages %}
 USE_PKG += {{ package }}
 {% endfor %}
 {% endif %}

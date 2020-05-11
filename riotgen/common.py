@@ -4,52 +4,34 @@ import os
 import datetime
 
 from jinja2 import Environment, FileSystemLoader
-from click import prompt, MissingParameter, BadParameter
+from click import prompt, MissingParameter
 
 from .utils import get_usermail, get_username, parse_list_option
 
 
-def _check_riotbase(path, from_prompt=True):
+def check_riotbase(riotbase):
     """Check the given path is a valid RIOTBASE directory."""
-    missing = False
-    if not path:
-        missing = True
-
-    coc = os.path.join(os.path.expanduser(path), 'CODE_OF_CONDUCT.md')
-    if os.path.isfile(coc):
-        first_line = open(coc, 'r').readline()[:-1]
-        if first_line == 'RIOT-OS Code of Conduct':
-            return os.path.expanduser(path)
-    error_message = 'RIOT base directory'
-    if not missing:
-        raise BadParameter('{} (\'{}\')'.format(error_message,
-                                                path.split(' ')[0]))
-    elif from_prompt:
-        raise MissingParameter(error_message)
-    else:
-        raise MissingParameter(param_type=error_message)
+    if riotbase is None or not riotbase:
+        raise MissingParameter(param_type='riotbase directory')
 
 
 def check_common_params(params):
-    if 'year' not in params or not params['year']:
-        params['year'] = datetime.datetime.now().year
-    if 'author_name' not in params or not params['author_name']:
-        params['author_name'] = get_username()
-    if 'author_email' not in params or not params['author_email']:
-        params['author_email'] = get_usermail()
-    if 'organization' not in params or not params['organization']:
-        params['organization'] = get_username()
-    check_param(params, 'author_name')
-    check_param(params, 'author_email')
-    check_param(params, 'organization')
-
-    if 'riotbase' not in params:
-        params['riotbase'] = ''
-    params['riotbase'] = _check_riotbase(params['riotbase'], from_prompt=False)
+    _params = params['common']
+    if 'year' not in _params or not _params['year']:
+        _params['year'] = datetime.datetime.now().year
+    if 'author_name' not in _params or not _params['author_name']:
+        _params['author_name'] = get_username()
+    if 'author_email' not in _params or not _params['author_email']:
+        _params['author_email'] = get_usermail()
+    if 'organization' not in _params or not _params['organization']:
+        _params['organization'] = get_username()
+    check_param(_params, 'author_name')
+    check_param(_params, 'author_email')
+    check_param(_params, 'organization')
 
 
 def check_param(params, param):
-    if param not in params or not params[param]:
+    if param not in params or params[param] == '':
         raise MissingParameter(param_type=param.replace('_', ' '))
 
 
@@ -68,23 +50,14 @@ def prompt_param_list(params, param, text):
 
 
 def prompt_common_params(params):
-    if 'year' not in params or not params['year']:
-        params['year'] = datetime.datetime.now().year
-    prompt_param(params, 'author_name', 'Author name', default=get_username())
+    _params = params['common']
+    if 'year' not in params or not _params['year']:
+        _params['year'] = datetime.datetime.now().year
+    prompt_param(_params, 'author_name', 'Author name', default=get_username())
     prompt_param(
-        params, 'author_email', 'Author email', default=get_usermail())
+        _params, 'author_email', 'Author email', default=get_usermail())
     prompt_param(
-        params, 'organization', 'Organization', default=get_username())
-
-    if 'riotbase' not in params:
-        riotbase = os.getenv('RIOTBASE')
-        if riotbase is None:
-            params['riotbase'] = prompt(
-                text='RIOT base directory', value_proc=_check_riotbase)
-        else:
-            params['riotbase'] = _check_riotbase(riotbase, from_prompt=False)
-
-    return params
+        _params, 'organization', 'Organization', default=get_username())
 
 
 def render_file(context, template_dir, source, dest):
@@ -96,7 +69,7 @@ def render_file(context, template_dir, source, dest):
                       keep_trailing_newline=True)
     env.globals.update(zip=zip)
     template = env.get_template(source)
-    render = template.render(context=context)
+    render = template.render(**context)
     with open(dest, 'w') as f_dest:
         f_dest.write(render)
 

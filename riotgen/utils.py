@@ -1,7 +1,8 @@
 """Utility functions"""
 
+import shlex
 from configparser import ConfigParser
-from subprocess import check_output, CalledProcessError
+from subprocess import check_output, check_call, CalledProcessError
 
 
 def parse_list_option(opt):
@@ -12,9 +13,9 @@ def parse_list_option(opt):
 
 
 def _get_git_config(config):
+    cmd = 'git config --get {config}'.format(config=config)
     try:
-        config = check_output(
-            ['git', 'config', '--get', config]).decode()[:-1]
+        config = check_output(shlex.split(cmd)).decode()[:-1]
     except CalledProcessError:
         config = ''
 
@@ -29,10 +30,14 @@ def get_usermail():
     return _get_git_config('user.email')
 
 
-def read_config(filename, section=None):
+def clone_repository(url, version, dest):
+    cmd = 'git clone --depth=1 -b {version} {url} {dest}'.format(
+        dest=dest, url=url, version=version
+    )
+    return check_call(shlex.split(cmd))
+
+
+def read_config(filename):
     parser = ConfigParser()
     parser.readfp(filename)
-    config = dict(parser.items('common'))
-    if section is not None:
-        config.update(dict(parser.items(section)))
-    return config
+    return parser.items()

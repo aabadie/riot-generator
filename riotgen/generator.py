@@ -12,43 +12,59 @@ from .test import generate_test
 def cli():
     pass
 
+
 @cli.command(help='Bootstrap a RIOT application')
 @click.option(
     '-d', '--output_dir', type=click.Path(exists=True), default=os.getcwd())
 @click.option('-i', '--interactive', is_flag=True, help='Use interactive mode')
 @click.option('--config', type=click.File(mode='r'),
               help='Configuration file for application')
-def application(output_dir, interactive, config):
-    generate_application(output_dir, interactive, config)
+@click.option(
+    '-r', '--riotbase', type=click.Path(exists=True),
+    default=os.getenv('RIOTBASE'))
+def application(output_dir, interactive, config, riotbase):
+    generate_application(output_dir, interactive, config, riotbase)
 
 
 @cli.command(help='Bootstrap a RIOT board support')
 @click.option('-i', '--interactive', is_flag=True, help='Use interactive mode')
 @click.option('--config', type=click.File(mode='r'),
               help='Configuration file for board')
-def board(interactive, config):
-    generate_board(interactive, config)
+@click.option(
+    '-r', '--riotbase', type=click.Path(exists=True),
+    default=os.getenv('RIOTBASE'))
+def board(interactive, config, riotbase):
+    generate_board(interactive, config, riotbase)
 
 
 @cli.command(help='Bootstrap a RIOT example application')
 @click.option('-i', '--interactive', is_flag=True, help='Use interactive mode')
 @click.option('--config', type=click.File(mode='r'),
               help='Configuration file for example application')
-def example(interactive, config):
-    generate_example(interactive, config)
+@click.option(
+    '-r', '--riotbase', type=click.Path(exists=True),
+    default=os.getenv('RIOTBASE'))
+def example(interactive, config, riotbase):
+    generate_example(interactive, config, riotbase)
 
 
 @cli.command(help='Bootstrap a RIOT external package')
 @click.option('-i', '--interactive', is_flag=True, help='Use interactive mode')
 @click.option('--config', type=click.File(mode='r'),
               help='Configuration file for package')
-def pkg(interactive, config):
-    generate_pkg(interactive, config)
+@click.option(
+    '-r', '--riotbase', type=click.Path(exists=True),
+    default=os.getenv('RIOTBASE'))
+def pkg(interactive, config, riotbase):
+    generate_pkg(interactive, config, riotbase)
 
 
 @cli.command(help='Bootstrap a RIOT test application')
 @click.option('-i', '--interactive', is_flag=True, help='Use interactive mode')
 @click.option('--config', type=click.File(mode='r'),
               help='Configuration file for test application')
-def test(interactive, config):
-    generate_test(interactive, config)
+@click.option(
+    '-r', '--riotbase', type=click.Path(exists=True),
+    default=os.getenv('RIOTBASE'))
+def test(interactive, config, riotbase):
+    generate_test(interactive, config, riotbase)

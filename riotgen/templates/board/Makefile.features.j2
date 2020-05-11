@@ -1,7 +1,7 @@
-CPU = {{ context.board.cpu }}
-CPU_MODEL = {{ context.board.cpu_model }}
+CPU = {{ board.cpu }}
+CPU_MODEL = {{ board.cpu_model }}
 
 # Put defined MCU peripherals here (in alphabetical order)
-{% for feature in context.board.features %}
+{% for feature in board.features %}
 FEATURES_PROVIDED += {{ feature }}
 {% endfor %}

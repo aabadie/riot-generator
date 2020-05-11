@@ -1,5 +1,5 @@
 /*
- * Copyright (C) {{ context.example.year }} {{ context.example.organization }}
+ * Copyright (C) {{ common.year }} {{ common.organization }}
  *
  * This file is subject to the terms and conditions of the GNU Lesser
  * General Public License v2.1. See the file LICENSE in the top level
@@ -11,9 +11,9 @@
  * @{
  *
  * @file
- * @brief       {{ context.example.brief }}
+ * @brief       {{ example.brief }}
  *
- * @author      {{ context.example.author_name }} <{{ context.example.author_email }}>
+ * @author      {{ common.author_name }} <{{ common.author_email }}>
  *
  * @}
  */
@@ -22,6 +22,6 @@
 
 int main(void)
 {
-    puts("Generated RIOT example: '{{ context.example.name }}'");
+    puts("Generated RIOT example: '{{ example.name }}'");
     return 0;
 }
