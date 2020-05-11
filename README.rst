@@ -34,7 +34,7 @@ Usage
 .....
 
 RIOT code generator uses subcommands for generating the code for applications,
-tests, packages and board support.
+tests, packages and board support::
 
     riotgen --help
     Usage: riotgen [OPTIONS] COMMAND [ARGS]...
@@ -54,11 +54,11 @@ Examples
 ........
 
 Generate an application in the current directory that build against the RIOT
-source located in /opt/RIOT and using the interactive wizzard:
+source located in /opt/RIOT and using the interactive wizzard::
 
     riotgen application -i -r /opt/RIOT
 
-or
+or::
 
     RIOTBASE=/opt/RIOT riotgen application -i
 
@@ -67,7 +67,7 @@ application: target board, RIOT base directory, author name, etc.
 
 Generate an application using a configuration file (see the
 `samples <https://github.com/aabadie/riot-generator/tree/master/riotgen/samples>`_
-provided in the source code::):
+provided in the source code)::
 
     riotgen application --riotbase /opt/RIOT --config path/to/config/file.cfg
 
