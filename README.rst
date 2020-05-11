@@ -36,29 +36,50 @@ Usage
 RIOT code generator uses subcommands for generating the code for applications,
 tests, packages and board support.
 
-The ``application`` subcommand requires a ``<path>`` argument to set the
-directory where the application code will be generated::
+    riotgen --help
+    Usage: riotgen [OPTIONS] COMMAND [ARGS]...
 
-    riotgen application <output directory>
+    Options:
+      --help  Show this message and exit.
 
-Then this command starts a command line wizard with questions about the new
+    Commands:
+      application  Bootstrap a RIOT application
+      board        Bootstrap a RIOT board support
+      example      Bootstrap a RIOT example application
+      pkg          Bootstrap a RIOT external package
+      test         Bootstrap a RIOT test application
+
+
+Examples
+........
+
+Generate an application in the current directory that build against the RIOT
+source located in /opt/RIOT and using the interactive wizzard:
+
+    riotgen application -i -r /opt/RIOT
+
+or
+
+    RIOTBASE=/opt/RIOT riotgen application -i
+
+The command line wizard will ask for questions about the new
 application: target board, RIOT base directory, author name, etc.
 
-Once complete, the new application can be built using::
+Generate an application using a configuration file (see the
+`samples <https://github.com/aabadie/riot-generator/tree/master/riotgen/samples>`_
+provided in the source code::):
 
-    make -C <output directory>
+    riotgen application --riotbase /opt/RIOT --config path/to/config/file.cfg
 
-``example``, ``pkg``, ``test`` and ``board`` subcommands can just be called
-without parameters, the code is generated directly in the RIOT base directory::
 
-    riotgen example
-    riotgen pkg
-    riotgen board
-    riotgen test
+In both cases, once complete, the new application can be built using::
 
-Use ``--config`` option to pass a configuration file with predefined parameters
-to ``riotgen``.
-`Samples <https://github.com/aabadie/riot-generator/tree/master/riotgen/samples>`_
-are provided in the source code::
+    make
 
-    riotgen board --config path/to/config/file.cfg
+``example``, ``pkg``, ``test`` and ``board`` will generated the skeleton code
+directly in the RIOT base directory::
+
+    riotgen example --riotbase /opt/RIOT -i
+    riotgen pkg --riotbase /opt/RIOT -i
+    riotgen board --riotbase /opt/RIOT -i
+    riotgen test --riotbase /opt/RIOT -i
