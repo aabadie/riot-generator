@@ -21,6 +21,7 @@ def get_version():
             if line.startswith('__version__'):
                 return eval(line.split('=')[-1])
 
+
 setup(
     name=PACKAGE,
     version=get_version(),
