@@ -31,14 +31,18 @@ def _check_riotbase(path, from_prompt=True):
 
 
 def check_common_params(params):
-    if 'year' not in params:
+    if 'year' not in params or not params['year']:
         params['year'] = datetime.datetime.now().year
-    if 'author_name' not in params:
+    if 'author_name' not in params or not params['author_name']:
         params['author_name'] = get_username()
-    if 'author_email' not in params:
+    if 'author_email' not in params or not params['author_email']:
         params['author_email'] = get_usermail()
-    if 'organization' not in params:
+    if 'organization' not in params or not params['organization']:
         params['organization'] = get_username()
+    check_param(params, 'author_name')
+    check_param(params, 'author_email')
+    check_param(params, 'organization')
+
     if 'riotbase' not in params:
         params['riotbase'] = ''
     params['riotbase'] = _check_riotbase(params['riotbase'], from_prompt=False)
@@ -62,14 +66,15 @@ def prompt_param_list(params, param, text):
             text=text, default='', value_proc=parse_list_option
         )
 
+
 def prompt_common_params(params):
-    params['year'] = datetime.datetime.now().year
-    params['author_name'] = prompt(
-        text='Author name', default=get_username())
-    params['author_email'] = prompt(
-        text='Author email', default=get_usermail())
-    params['organization'] = prompt(
-        text='Organization', default=get_username())
+    if 'year' not in params or not params['year']:
+        params['year'] = datetime.datetime.now().year
+    prompt_param(params, 'author_name', 'Author name', default=get_username())
+    prompt_param(
+        params, 'author_email', 'Author email', default=get_usermail())
+    prompt_param(
+        params, 'organization', 'Organization', default=get_username())
 
     if 'riotbase' not in params:
         riotbase = os.getenv('RIOTBASE')
