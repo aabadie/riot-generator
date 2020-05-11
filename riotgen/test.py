@@ -84,7 +84,7 @@ def generate_test(interactive, config, riotbase):
         click.echo('Abort')
         return
 
-    if 'use_testrunner' in _params and _params['use_testrunner']:
+    if 'use_testrunner' in _params and _params['use_testrunner'] == "True":
         testrunner_dir = os.path.join(test_dir, 'tests')
         if not os.path.exists(testrunner_dir):
             os.makedirs(testrunner_dir)
