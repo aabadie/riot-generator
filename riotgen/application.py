@@ -13,11 +13,12 @@ from .utils import read_config, parse_list_option
 def read_application_config(filename):
     """Read the application specific configuration file."""
     params = read_config(filename)
+    _params = params['application']
     for param in ['modules', 'packages', 'features']:
-        if param not in params:
-            params[param] = []
+        if param not in _params:
+            _params[param] = []
         else:
-            params[param] = parse_list_option(params[param])
+            _params[param] = parse_list_option(_params[param])
     return params
 
 
