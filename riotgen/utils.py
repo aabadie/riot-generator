@@ -40,4 +40,4 @@ def clone_repository(url, version, dest):
 def read_config(filename):
     parser = ConfigParser()
     parser.readfp(filename)
-    return parser.items()
+    return parser._sections
