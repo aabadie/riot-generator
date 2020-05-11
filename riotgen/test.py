@@ -5,8 +5,8 @@ import os
 import click
 
 from .common import render_source
-from .common import check_param, check_riotbase
-from .common import prompt_param, prompt_param_list
+from .common import check_common_params, check_param, check_riotbase
+from .common import prompt_common_params, prompt_param, prompt_param_list
 from .utils import read_config, parse_list_option
 
 
@@ -61,8 +61,10 @@ def generate_test(interactive, config, riotbase):
 
     if interactive:
         prompt_test_params(params)
+        prompt_common_params(params)
 
     check_test_params(params)
+    check_common_params(params)
     _params = params['test']
 
     riotbase = os.path.abspath(os.path.expanduser(riotbase))
@@ -77,7 +79,7 @@ def generate_test(interactive, config, riotbase):
     if not os.path.exists(test_dir):
         os.makedirs(test_dir)
     elif not click.prompt('\'{name}\' test directory already exists, '
-                          'overwrite (y/N)?'.format(_params['name']),
+                          'overwrite (y/N)?'.format(name=_params['name']),
                           default=False, show_default=False):
         click.echo('Abort')
         return
