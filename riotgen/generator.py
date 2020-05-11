@@ -1,3 +1,4 @@
+import os
 import logging
 import click
 
@@ -18,7 +19,8 @@ def cli():
     pass
 
 @cli.command(help='Bootstrap a RIOT application')
-@click.argument('output_dir', type=click.Path(exists=True))
+@click.option(
+    '-d', '--output_dir', type=click.Path(exists=True), default=os.getcwd())
 @click.option('-i', '--interactive', is_flag=True, help='Use interactive mode')
 @click.option('--config', type=click.File(mode='r'),
               help='Application initial configuration file')
