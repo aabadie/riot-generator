@@ -6,6 +6,8 @@ from subprocess import check_output, CalledProcessError
 
 def parse_list_option(opt):
     """Split list element separated by a comma."""
+    if not opt:
+        return []
     return sorted(opt.split(','))
 
 

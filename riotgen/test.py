@@ -6,71 +6,58 @@ import click
 from click import MissingParameter
 
 from .common import render_source
-from .common import prompt_common_information, check_common_params
+from .common import check_common_params, check_param
+from .common import prompt_common_params, prompt_param, prompt_param_list
 from .utils import read_config, parse_list_option
 
 
 def _read_test_config(filename):
     """Read the test specific configuration file."""
     params = read_config(filename, section='test')
-    if 'name' not in params or not params['name']:
-        raise MissingParameter(param_type='test name')
-    if 'brief' not in params:
-        params['brief'] = ''
-    if 'board' not in params:
-        params['board'] = 'native'
-    else:
-        params['board'] = params['board']
     for param in ['modules', 'packages', 'features']:
-        if param not in params:
-            params[param] = ''
-        else:
-            params[param] = parse_list_option(params[param])
+        params[param] = parse_list_option(params[param])
     return params
 
 
-def _prompt_test_params():
+def _prompt_test_params(params):
     """Request test specific variables."""
-    params = {}
-    params['name'] = click.prompt(
-        text='Test name (no space)')
-    params['brief'] = click.prompt(
-        text='Test brief description', default='')
-    params['board'] = click.prompt(text='Target board', default='native')
-    params['modules'] = click.prompt(
-        text='Required modules (comma separated)', default='',
-        value_proc=parse_list_option)
-    params['packages'] = click.prompt(
-        text='Required packages (comma separated)', default='',
-        value_proc=parse_list_option)
-    params['features'] = click.prompt(
-        text='Required board features (comma separated)', default='',
-        value_proc=parse_list_option)
-    params['use_testrunner'] = click.prompt(
-        text='Use testrunner script (y/N)?', default=False, show_default=False)
+    prompt_param(params, 'name', 'Test name')
+    prompt_param(params, 'brief', 'Test brief description')
+    prompt_param(params, 'board', 'Target board', default='native')
+    prompt_param_list(
+        params, 'modules', 'Required modules (comma separated)')
+    prompt_param_list(
+        params, 'packages', 'Required packages (comma separated)')
+    prompt_param_list(
+        params, 'features', 'Required features (comma separated)')
+    prompt_param(
+        params, 'use_testrunner', 'Use testrunner script (y/N)?',
+        default=False, show_default=False)
 
-    params.update(prompt_common_information())
+    prompt_common_params(params)
     return params
 
 
 def _check_test_params(params):
-    test_name = params['name'].replace(' ', '_')
-    params['name'] = test_name
-    params['includes'] = ''
-    for module in params['modules']:
-        params['includes'] += 'USEMODULE += {}\n'.format(module)
-    for package in params['packages']:
-        params['includes'] += 'USEPKG += {}\n'.format(package)
-    for feature in params['features']:
-        params['includes'] += 'FEATURES_REQUIRED += {}\n'.format(feature)
+    for param in ['name', 'board', 'brief', 'use_testrunner']:
+        check_param(params, param)
+    params['name'] = params['name'].replace(' ', '_')
 
 
-def generate_test(config=None):
+def generate_test(interactive, config):
+    if not interactive and config is None:
+        raise click.MissingParameter(
+            param_type='--interactive and/or --config options'
+        )
+
+    params = {}
     # Start wizard if config is not set
-    if config is None:
-        params = _prompt_test_params()
-    else:
+    if config is not None:
         params = _read_test_config(config)
+
+    if interactive:
+        _prompt_test_params(params)
+
     _check_test_params(params)
     check_common_params(params)
 

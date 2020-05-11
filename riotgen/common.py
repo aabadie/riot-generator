@@ -6,7 +6,7 @@ import datetime
 from jinja2 import Environment, FileSystemLoader
 from click import prompt, MissingParameter, BadParameter
 
-from .utils import get_usermail, get_username
+from .utils import get_usermail, get_username, parse_list_option
 
 
 def _check_riotbase(path, from_prompt=True):
@@ -44,8 +44,25 @@ def check_common_params(params):
     params['riotbase'] = _check_riotbase(params['riotbase'], from_prompt=False)
 
 
-def prompt_common_information():
-    params = {}
+def check_param(params, param):
+    if param not in params or not params[param]:
+        raise MissingParameter(param_type=param.replace('_', ' '))
+
+
+def prompt_param(params, param, text, default=None, show_default=True):
+    if param not in params or not params[param]:
+        params[param] = prompt(
+            text=text, default=default, show_default=show_default
+        )
+
+
+def prompt_param_list(params, param, text):
+    if param not in params or not params[param]:
+        params[param] = prompt(
+            text=text, default='', value_proc=parse_list_option
+        )
+
+def prompt_common_params(params):
     params['year'] = datetime.datetime.now().year
     params['author_name'] = prompt(
         text='Author name', default=get_username())
@@ -54,12 +71,14 @@ def prompt_common_information():
     params['organization'] = prompt(
         text='Organization', default=get_username())
 
-    riotbase = os.getenv('RIOTBASE')
-    if riotbase is None:
-        params['riotbase'] = prompt(
-            text='RIOT base directory', value_proc=_check_riotbase)
-    else:
-        params['riotbase'] = _check_riotbase(riotbase, from_prompt=False)
+    if 'riotbase' not in params:
+        riotbase = os.getenv('RIOTBASE')
+        if riotbase is None:
+            params['riotbase'] = prompt(
+                text='RIOT base directory', value_proc=_check_riotbase)
+        else:
+            params['riotbase'] = _check_riotbase(riotbase, from_prompt=False)
+
     return params
 
 

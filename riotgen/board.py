@@ -6,60 +6,56 @@ import click
 from click import MissingParameter
 
 from .common import render_source
-from .common import prompt_common_information, check_common_params
+from .common import check_common_params, check_param
+from .common import prompt_common_params, prompt_param, prompt_param_list
 from .utils import read_config, parse_list_option
 
 
 def _read_board_config(filename):
     """Read the board specific configuration file."""
     params = read_config(filename, section='board')
-    if 'name' not in params or not params['name']:
-        raise MissingParameter(param_type='board name')
-    if 'displayed_name' not in params or not params['displayed_name']:
-        raise MissingParameter(param_type='board displayed name')
-    if 'cpu' not in params:
-        raise MissingParameter(param_type='cpu name')
-    if 'cpu_model' not in params:
-        raise MissingParameter(param_type='cpu model name')
-    if 'description' not in params:
-        params['description'] = ''
-    if 'features' not in params:
-        params['features'] = ''
-    else:
-        params['features'] = parse_list_option(params['features'])
+    params['features'] = parse_list_option(params['features'])
     return params
 
 
-def _prompt_board_params():
+def _prompt_board_params(params):
     """Request board specific variables."""
-    params = {}
-    params['name'] = click.prompt(
-        text='Board name (no space)')
-    params['displayed_name'] = click.prompt(
-        text='Board displayed name (for doxygen documentation)')
-    params['cpu'] = click.prompt(
-        text='CPU name')
-    params['cpu_model'] = click.prompt(
-        text='CPU model name')
-    params['features'] = click.prompt(
-        text='Features provided by this board (comma separated)', default='',
-        value_proc=parse_list_option)
+    prompt_param(params, 'name', 'Board name')
+    prompt_param(
+        params, 'displayed_name',
+        'Board displayed name (for doxygen documentation)')
+    prompt_param(params, 'cpu', 'CPU name')
+    prompt_param(params, 'cpu_model', 'CPU model name')
+    prompt_param_list(
+        params,
+        'features',
+        'Features provided by this board (comma separated)'
+    )
 
-    params.update(prompt_common_information())
+    prompt_common_params(params)
     return params
 
 
 def _check_board_params(params):
-    board_name = params['name'].replace(' ', '_')
-    params['name'] = board_name
+    for param in ['name', 'cpu', 'cpu_model', 'displayed_name']:
+        check_param(params, param)
+    params['name'] = params['name'].replace(' ', '_')
 
 
-def generate_board(config=None):
+def generate_board(interactive, config):
+    if not interactive and config is None:
+        raise click.MissingParameter(
+            param_type='--interactive and/or --config options'
+        )
+
+    params = {}
     # Start wizard if config is not set
-    if config is None:
-        params = _prompt_board_params()
-    else:
+    if config is not None:
         params = _read_board_config(config)
+
+    if interactive:
+        _prompt_board_params(params)
+
     _check_board_params(params)
     check_common_params(params)
 

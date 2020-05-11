@@ -6,68 +6,60 @@ import click
 from click import MissingParameter
 
 from .common import render_source, render_file
-from .common import prompt_common_information, check_common_params
+from .common import check_common_params, check_param
+from .common import prompt_common_params, prompt_param, prompt_param_list
 from .utils import read_config, parse_list_option
 
 
 def _read_pkg_config(filename):
     """Read the pkg specific configuration file."""
     params = read_config(filename, section='pkg')
-    if 'name' not in params or not params['name']:
-        raise MissingParameter(param_type='package name')
-    if 'displayed_name' not in params or not params['displayed_name']:
-        raise MissingParameter(param_type='package displayed name')
-    if 'url' not in params or not params['url']:
-        raise MissingParameter(param_type='package source url')
-    if 'hash' not in params or not params['hash']:
-        raise MissingParameter(param_type='package version hash')
-    if 'license' not in params or not params['license']:
-        raise MissingParameter(param_type='package license')
-    if 'description' not in params:
-        params['description'] = ''
     for param in ['modules', 'packages', 'features']:
-        if param not in params:
-            params[param] = ''
-        else:
-            params[param] = parse_list_option(params[param])
+        params[param] = parse_list_option(params[param])
     return params
 
 
-def _prompt_pkg_params():
+def _prompt_pkg_params(params):
     """Request pkg specific variables."""
-    params = {}
-    params['name'] = click.prompt(text='Package name (no space)')
-    params['displayed_name'] = click.prompt(
-        text='Package displayed name (for doxygen documentation)')
-    params['url'] = click.prompt(text='Package source url')
-    params['hash'] = click.prompt(text='Package version hash')
-    params['license'] = click.prompt(text='Package license')
-    params['description'] = click.prompt(text='Package short description')
-    params['modules'] = click.prompt(
-        text='Required modules (comma separated)', default='',
-        value_proc=parse_list_option)
-    params['packages'] = click.prompt(
-        text='Required packages (comma separated)', default='',
-        value_proc=parse_list_option)
-    params['features'] = click.prompt(
-        text='Required board features (comma separated)', default='',
-        value_proc=parse_list_option)
+    prompt_param(params, 'name', 'Package name')
+    prompt_param(
+        params, 'displayed_name',
+        'Package displayed name (for doxygen documentation)')
+    prompt_param(params, 'url', 'Package source url')
+    prompt_param(params, 'hash', 'Package version hash')
+    prompt_param(params, 'license', 'Package license')
+    prompt_param(params, 'description', 'Package short description')
+    prompt_param_list(
+        params, 'modules', 'Required modules (comma separated)')
+    prompt_param_list(
+        params, 'packages', 'Required packages (comma separated)')
+    prompt_param_list(
+        params, 'features', 'Required features (comma separated)')
 
-    params.update(prompt_common_information())
+    prompt_common_params(params)
     return params
 
 
 def _check_pkg_params(params):
-    test_name = params['name'].replace(' ', '_')
-    params['name'] = test_name
+    for param in ['name', 'displayed_name', 'url', 'hash', 'license']:
+        check_param(params, param)
+    params['name'] = params['name'].replace(' ', '_')
 
 
-def generate_pkg(config=None):
+def generate_pkg(interactive, config):
+    if not interactive and config is None:
+        raise click.MissingParameter(
+            param_type='--interactive and/or --config options'
+        )
+
+    params = {}
     # Start wizard if config is not set
-    if config is None:
-        params = _prompt_pkg_params()
-    else:
+    if config is not None:
         params = _read_pkg_config(config)
+
+    if interactive:
+        _prompt_pkg_params(params)
+
     _check_pkg_params(params)
     check_common_params(params)
 
