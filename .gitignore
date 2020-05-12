@@ -1,5 +1,7 @@
 riotgen.egg-info/*
-*/__pycache__/*
+*.pyc
 build/*
 dist/*
 .vscode/
+.tox/
+.coverage
