@@ -29,14 +29,17 @@ def _get_git_config(config):
 
 
 def get_username():
+    """Get the user name from git config."""
     return _get_git_config('user.name')
 
 
 def get_usermail():
+    """Get the user email from git config."""
     return _get_git_config('user.email')
 
 
 def clone_repository(url, version, dest):
+    """Clone a git repository."""
     cmd = 'git clone --depth=1 -b {version} {url} {dest}'.format(
         dest=dest, url=url, version=version
     )
@@ -44,6 +47,7 @@ def clone_repository(url, version, dest):
 
 
 def read_config(filename):
+    """Read a configuration file and return the content as a dict."""
     parser = ConfigParser()
     parser.read_file(filename)
     return parser._sections
