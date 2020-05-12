@@ -10,4 +10,4 @@ It can be used to bootstrap:
 
 __version__ = '0.3.2-dev'
 
-from .main import cli  # noqa
+from .main import riotgen  # noqa

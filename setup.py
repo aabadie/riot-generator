@@ -73,7 +73,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            '{}=riotgen:cli'.format(PACKAGE),
+            '{}=riotgen:riotgen'.format(PACKAGE),
         ],
     },
 )
