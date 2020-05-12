@@ -17,7 +17,7 @@ def cli():
 @click.option(
     '-d', '--output_dir', type=click.Path(exists=True), default=os.getcwd())
 @click.option('-i', '--interactive', is_flag=True, help='Use interactive mode')
-@click.option('--config', type=click.File(mode='r'),
+@click.option('-c', '--config', type=click.File(mode='r'),
               help='Configuration file for application')
 @click.option(
     '-r', '--riotbase', type=click.Path(exists=True),
@@ -28,7 +28,7 @@ def application(output_dir, interactive, config, riotbase):
 
 @cli.command(help='Bootstrap a RIOT board support')
 @click.option('-i', '--interactive', is_flag=True, help='Use interactive mode')
-@click.option('--config', type=click.File(mode='r'),
+@click.option('-c', '--config', type=click.File(mode='r'),
               help='Configuration file for board')
 @click.option(
     '-r', '--riotbase', type=click.Path(exists=True),
@@ -39,7 +39,7 @@ def board(interactive, config, riotbase):
 
 @cli.command(help='Bootstrap a RIOT example application')
 @click.option('-i', '--interactive', is_flag=True, help='Use interactive mode')
-@click.option('--config', type=click.File(mode='r'),
+@click.option('-c', '--config', type=click.File(mode='r'),
               help='Configuration file for example application')
 @click.option(
     '-r', '--riotbase', type=click.Path(exists=True),
@@ -50,7 +50,7 @@ def example(interactive, config, riotbase):
 
 @cli.command(help='Bootstrap a RIOT external package')
 @click.option('-i', '--interactive', is_flag=True, help='Use interactive mode')
-@click.option('--config', type=click.File(mode='r'),
+@click.option('-c', '--config', type=click.File(mode='r'),
               help='Configuration file for package')
 @click.option(
     '-r', '--riotbase', type=click.Path(exists=True),
@@ -61,7 +61,7 @@ def pkg(interactive, config, riotbase):
 
 @cli.command(help='Bootstrap a RIOT test application')
 @click.option('-i', '--interactive', is_flag=True, help='Use interactive mode')
-@click.option('--config', type=click.File(mode='r'),
+@click.option('-c', '--config', type=click.File(mode='r'),
               help='Configuration file for test application')
 @click.option(
     '-r', '--riotbase', type=click.Path(exists=True),
