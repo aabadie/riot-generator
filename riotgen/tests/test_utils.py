@@ -1,7 +1,6 @@
 """Utils tests."""
 
 import subprocess
-import pytest
 from mock import patch
 
 from riotgen.utils import get_usermail, get_username, clone_repository

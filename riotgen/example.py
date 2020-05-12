@@ -7,7 +7,6 @@ import click
 from .common import render_source, read_config_file
 from .common import check_common_params, check_param, check_riotbase
 from .common import prompt_common_params, prompt_param, prompt_param_list
-from .utils import parse_list_option
 
 
 def prompt_example_params(params):
