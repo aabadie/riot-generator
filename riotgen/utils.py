@@ -15,32 +15,32 @@ def parse_list_option(opt):
     """
     if not opt:
         return []
-    return sorted(opt.split(','))
+    return sorted(opt.split(","))
 
 
 def _get_git_config(config):
-    cmd = 'git config --get {config}'.format(config=config)
+    cmd = "git config --get {config}".format(config=config)
     try:
         config = subprocess.check_output(shlex.split(cmd)).decode()[:-1]
     except subprocess.CalledProcessError:
-        config = ''
+        config = ""
 
     return config
 
 
 def get_username():
     """Get the user name from git config."""
-    return _get_git_config('user.name')
+    return _get_git_config("user.name")
 
 
 def get_usermail():
     """Get the user email from git config."""
-    return _get_git_config('user.email')
+    return _get_git_config("user.email")
 
 
 def clone_repository(url, version, dest):
     """Clone a git repository."""
-    cmd = 'git clone --depth=1 -b {version} {url} {dest}'.format(
+    cmd = "git clone --depth=1 -b {version} {url} {dest}".format(
         dest=dest, url=url, version=version
     )
     return subprocess.check_call(shlex.split(cmd))
