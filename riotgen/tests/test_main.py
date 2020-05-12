@@ -5,7 +5,6 @@ import os
 import pytest
 from mock import patch
 
-import click
 from click.testing import CliRunner
 
 from riotgen import riotgen
