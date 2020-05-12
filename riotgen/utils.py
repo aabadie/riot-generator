@@ -1,12 +1,18 @@
 """Utility functions"""
 
 import shlex
+import subprocess
 from configparser import ConfigParser
-from subprocess import check_output, check_call, CalledProcessError
 
 
 def parse_list_option(opt):
-    """Split list element separated by a comma."""
+    """Split list element separated by a comma.
+
+    >>> parse_list_option('')
+    []
+    >>> parse_list_option('opt1,opt2,opt3')
+    ['opt1', 'opt2', 'opt3']
+    """
     if not opt:
         return []
     return sorted(opt.split(','))
@@ -15,8 +21,8 @@ def parse_list_option(opt):
 def _get_git_config(config):
     cmd = 'git config --get {config}'.format(config=config)
     try:
-        config = check_output(shlex.split(cmd)).decode()[:-1]
-    except CalledProcessError:
+        config = subprocess.check_output(shlex.split(cmd)).decode()[:-1]
+    except subprocess.CalledProcessError:
         config = ''
 
     return config
@@ -34,10 +40,10 @@ def clone_repository(url, version, dest):
     cmd = 'git clone --depth=1 -b {version} {url} {dest}'.format(
         dest=dest, url=url, version=version
     )
-    return check_call(shlex.split(cmd))
+    return subprocess.check_call(shlex.split(cmd))
 
 
 def read_config(filename):
     parser = ConfigParser()
-    parser.readfp(filename)
+    parser.read_file(filename)
     return parser._sections
