@@ -4,22 +4,10 @@ import os
 
 import click
 
-from .common import render_source
+from .common import read_config_file, render_source
 from .common import check_common_params, check_param, check_riotbase
 from .common import prompt_common_params, prompt_param, prompt_param_list
-from .utils import read_config, parse_list_option
-
-
-def read_application_config(filename):
-    """Read the application specific configuration file."""
-    params = read_config(filename)
-    _params = params["application"]
-    for param in ["modules", "packages", "features"]:
-        if param not in _params:
-            _params[param] = []
-        else:
-            _params[param] = parse_list_option(_params[param])
-    return params
+from .utils import parse_list_option
 
 
 def prompt_application_params(params):
@@ -52,7 +40,7 @@ def generate_application(output_dir, interactive, config, riotbase):
     }
 
     if config is not None:
-        params = read_application_config(config)
+        params = read_config_file(config, "application")
 
     if interactive:
         prompt_application_params(params)

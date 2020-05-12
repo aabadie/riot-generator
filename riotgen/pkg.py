@@ -4,19 +4,10 @@ import os
 
 import click
 
-from .common import render_source, render_file
+from .common import render_source, render_file, read_config_file
 from .common import check_param, prompt_param, prompt_param_list
 from .common import check_riotbase
 from .utils import read_config, parse_list_option
-
-
-def read_pkg_config(filename):
-    """Read the pkg specific configuration file."""
-    params = read_config(filename)
-    _params = params["pkg"]
-    for param in ["modules", "packages", "features"]:
-        _params[param] = parse_list_option(_params[param])
-    return params
 
 
 def prompt_pkg_params(params):
@@ -51,7 +42,7 @@ def generate_pkg(interactive, config, riotbase):
     params = {"pkg": {}}
 
     if config is not None:
-        params = read_pkg_config(config)
+        params = read_config_file(config, "board")
 
     if interactive:
         prompt_pkg_params(params)

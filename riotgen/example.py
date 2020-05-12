@@ -4,19 +4,10 @@ import os
 
 import click
 
-from .common import render_source
+from .common import render_source, read_config_file
 from .common import check_common_params, check_param, check_riotbase
 from .common import prompt_common_params, prompt_param, prompt_param_list
 from .utils import read_config, parse_list_option
-
-
-def read_example_config(filename):
-    """Read the application specific configuration file."""
-    params = read_config(filename)
-    _params = params["example"]
-    for param in ["modules", "packages", "features"]:
-        _params[param] = parse_list_option(_params[param])
-    return params
 
 
 def prompt_example_params(params):
@@ -46,7 +37,7 @@ def generate_example(interactive, config, riotbase):
     params = {"common": {}, "example": {}}
 
     if config is not None:
-        params = read_example_config(config)
+        params = read_config_file(config, "example")
 
     if interactive:
         prompt_example_params(params)

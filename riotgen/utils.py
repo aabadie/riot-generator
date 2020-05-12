@@ -13,6 +13,7 @@ def parse_list_option(opt):
     >>> parse_list_option('opt1,opt2,opt3')
     ['opt1', 'opt2', 'opt3']
     """
+    print(opt)
     if not opt:
         return []
     return sorted(opt.split(","))
@@ -46,8 +47,8 @@ def clone_repository(url, version, dest):
     return subprocess.check_call(shlex.split(cmd))
 
 
-def read_config(filename):
+def read_config(config_file):
     """Read a configuration file and return the content as a dict."""
     parser = ConfigParser()
-    parser.read_file(filename)
+    parser.read_file(config_file)
     return parser._sections

@@ -4,19 +4,10 @@ import os
 
 import click
 
-from .common import render_source
+from .common import render_source, read_config_file
 from .common import check_common_params, check_param, check_riotbase
 from .common import prompt_common_params, prompt_param, prompt_param_list
 from .utils import read_config, parse_list_option
-
-
-def read_test_config(filename):
-    """Read the test specific configuration file."""
-    params = read_config(filename)
-    _params = params["test"]
-    for param in ["modules", "packages", "features"]:
-        _params[param] = parse_list_option(_params[param])
-    return params
 
 
 def prompt_test_params(params):
@@ -53,7 +44,7 @@ def generate_test(interactive, config, riotbase):
     params = {"common": {}, "test": {}}
 
     if config is not None:
-        params = read_test_config(config)
+        params = read_config_file(config, "board")
 
     if interactive:
         prompt_test_params(params)

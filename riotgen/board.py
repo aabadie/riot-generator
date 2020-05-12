@@ -4,21 +4,10 @@ import os
 
 import click
 
-from .common import render_source
+from .common import render_source, read_config_file
 from .common import check_common_params, check_param, check_riotbase
 from .common import prompt_common_params, prompt_param, prompt_param_list
 from .utils import read_config, parse_list_option
-
-
-def read_board_config(filename):
-    """Read the board specific configuration file."""
-    params = read_config(filename)
-    _params = params["board"]
-    if "features" not in _params:
-        _params["features"] = []
-    else:
-        _params["features"] = parse_list_option(_params["features"])
-    return params
 
 
 def prompt_board_params(params):
@@ -51,7 +40,7 @@ def generate_board(interactive, config, riotbase):
     params = {"common": {}, "board": {}}
 
     if config is not None:
-        params = read_board_config(config)
+        params = read_config_file(config, "board")
 
     if interactive:
         prompt_board_params(params)

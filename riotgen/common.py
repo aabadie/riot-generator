@@ -6,8 +6,19 @@ import datetime
 from jinja2 import Environment, FileSystemLoader
 from click import prompt, MissingParameter
 
-from .utils import get_usermail, get_username, parse_list_option
+from .utils import get_usermail, get_username, parse_list_option, read_config
 
+
+def read_config_file(config_file, *command_args):
+    params = read_config(config_file)
+    for command in command_args:
+        _params = params[command]
+        for param in ["modules", "packages", "features"]:
+            if param not in _params:
+                _params[param] = []
+            else:
+                _params[param] = parse_list_option(_params[param])
+    return params
 
 def check_riotbase(riotbase):
     """Check the given path is a valid RIOTBASE directory."""
