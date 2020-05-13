@@ -86,11 +86,14 @@ def render_file(context, template_dir, source, dest):
         f_dest.write(render)
 
 
+TEMPLATE_BASE_DIR = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "templates"
+)
+
+
 def render_source(context, template_dir, input_files, output_dir, output_subdir=""):
     """Generate a list of files given from an input template directory."""
-    template_dir = os.path.join(
-        os.path.dirname(os.path.abspath(__file__)), "templates", template_dir
-    )
+    template_dir = os.path.join(TEMPLATE_BASE_DIR, template_dir)
     if output_subdir:
         output_dir = os.path.join(output_dir, output_subdir)
 
