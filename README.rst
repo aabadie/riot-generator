@@ -40,7 +40,8 @@ tests, packages and board support::
     Usage: riotgen [OPTIONS] COMMAND [ARGS]...
 
     Options:
-      --help  Show this message and exit.
+      --version  Show the version and exit.
+      --help     Show this message and exit.
 
     Commands:
       application  Bootstrap a RIOT application

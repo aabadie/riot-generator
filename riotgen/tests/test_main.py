@@ -7,13 +7,14 @@ from mock import patch
 
 from click.testing import CliRunner
 
-from riotgen import riotgen
+from riotgen import riotgen, __version__
 
 
 HELP_OUTPUT = """Usage: riotgen [OPTIONS] COMMAND [ARGS]...
 
 Options:
-  --help  Show this message and exit.
+  --version  Show the version and exit.
+  --help     Show this message and exit.
 
 Commands:
   application  Bootstrap a RIOT application
@@ -42,6 +43,12 @@ def test_help():
     assert result.exit_code == 0
     assert result.output == HELP_OUTPUT
 
+
+def test_version():
+    runner = CliRunner()
+    result = runner.invoke(riotgen, ["--version"])
+    assert result.exit_code == 0
+    assert result.output == f"riotgen, version {__version__}\n"
 
 @pytest.mark.parametrize("command", COMMANDS)
 def test_missing_param(command):

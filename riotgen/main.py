@@ -6,9 +6,11 @@ from .example import generate_example
 from .board import generate_board
 from .pkg import generate_pkg
 from .test import generate_test
+from . import __version__
 
 
 @click.group()
+@click.version_option(version=__version__)
 def riotgen():
     pass
 
