@@ -4,14 +4,16 @@ import os
 import datetime
 import pytest
 
-from click import MissingParameter
+from click import MissingParameter, BadParameter
 
 from mock import patch
 
 from riotgen import common
-from riotgen.common import read_config_file, check_riotbase, check_param
-from riotgen.common import check_common_params, prompt_param, prompt_param_list
-from riotgen.common import prompt_common_params, render_file, render_source
+from riotgen.common import read_config_file, check_riotbase
+from riotgen.common import _check_param, check_params
+from riotgen.common import check_common_params, _prompt_param, prompt_params
+from riotgen.common import prompt_common_params, prompt_params_list
+from riotgen.common import render_file, render_source
 from riotgen.utils import parse_list_option
 
 
@@ -22,6 +24,11 @@ name=test_board
 features=feature1,feature2
 modules=
 """
+
+TEST_PARAMS = {
+    "name": {"args": ["name description"], "kwargs": {}},
+    "board": {"args": ["board description"], "kwargs": {"default": "test"}},
+}
 
 
 @pytest.fixture()
@@ -60,40 +67,77 @@ def test_check_riotbase():
 
 
 def test_check_param():
-    """Test the check_param function."""
+    """Test the _check_param function."""
     with pytest.raises(MissingParameter):
-        check_param({}, "test")
+        _check_param({}, "test")
 
     with pytest.raises(MissingParameter):
-        check_param({"test": ""}, "test")
+        _check_param({"test": ""}, "test")
 
-    check_param({"test": "test"}, "test")
+    _check_param({"test": "test"}, "test")
+
+
+def test_check_params():
+    """Test the _check_params function."""
+    with pytest.raises(BadParameter):
+        check_params({}, ["test"], "test")
+
+    params = {"test": {"name": "test name", "board": "test_board"}}
+    check_params(params, params["test"].keys(), "test")
+    assert params["test"]["name"] == "test_name"
+    assert params["test"]["board"] == "test_board"
+
+    params = {"test": {"name": "test name", "board": ""}}
+    with pytest.raises(MissingParameter):
+        check_params(params, params["test"].keys(), "test")
 
 
 @patch("riotgen.common.prompt")
 def test_prompt_param(m_prompt):
-    """Test the prompt_param function."""
-    prompt_param({"test": "test"}, "test", "Test text")
+    """Test the _prompt_param function."""
+    _prompt_param({"test": "test"}, "test", "Test text")
     assert m_prompt.call_count == 0
-    prompt_param({"test": ""}, "test", "Test text")
+    _prompt_param({"test": ""}, "test", "Test text")
     m_prompt.assert_called_with(text="Test text", default=None, show_default=True)
-    prompt_param({}, "test", "Test text")
+    _prompt_param({}, "test", "Test text")
     m_prompt.assert_called_with(text="Test text", default=None, show_default=True)
 
 
 @patch("riotgen.common.prompt")
-def test_prompt_param_list(m_prompt):
-    """Test the prompt_param function."""
-    prompt_param_list({"test": "test"}, "test", "Test text")
+def test_prompt_params(m_prompt):
+    """Test the prompt_params function."""
+    params = {"test": {"name": "test_name", "board": "test_board"}}
+    prompt_params(params, TEST_PARAMS, "test")
     assert m_prompt.call_count == 0
-    prompt_param_list({"test": ""}, "test", "Test text")
+    params = {"test": {"name": "test_name", "board": ""}}
+    prompt_params(params, TEST_PARAMS, "test")
+    assert m_prompt.call_count == 1
+    m_prompt.assert_called_with(text="board description",
+                                default="test", show_default=True)
+    m_prompt.call_count = 0
+    params = {"test": {"name": "", "board": ""}}
+    prompt_params(params, TEST_PARAMS, "test")
+    assert m_prompt.call_count == 2
+
+
+@patch("riotgen.common.prompt")
+def test_prompt_params_list(m_prompt):
+    """Test the prompt_params_list function."""
+    params = {"test": {"test1": "test", "test2": "test3", "test3": "test3"}}
+    prompt_params_list(params, "test", "test1", "test2", "test3")
+    assert m_prompt.call_count == 0
+    params = {"test": {"test1": "test", "test2": "test3"}}
+    prompt_params_list(params, "test", "test1", "test2", "test3")
+    assert m_prompt.call_count == 1  # for missing test3
     m_prompt.assert_called_with(
-        text="Test text", default="", value_proc=parse_list_option
+        text="Required test3 (comma separated)",
+        default="", value_proc=parse_list_option
     )
-    prompt_param_list({}, "test", "Test text")
-    m_prompt.assert_called_with(
-        text="Test text", default="", value_proc=parse_list_option
-    )
+
+    m_prompt.call_count = 0
+    params = {"test": {}}
+    prompt_params_list(params, "test", "test1", "test2", "test3")
+    assert m_prompt.call_count == 3
 
 
 @pytest.fixture
@@ -103,7 +147,7 @@ def mock_utils(monkeypatch):
     monkeypatch.setattr(common, "get_usermail", lambda: "test_mail")
 
 
-@patch("riotgen.common.check_param", lambda x, y: None)
+@patch("riotgen.common._check_param", lambda x, y: None)
 def test_check_common_params(mock_utils):
     """Test the check_common_params function."""
     test_params = {"common": {}}
