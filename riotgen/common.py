@@ -7,7 +7,7 @@ import datetime
 from configparser import ConfigParser
 
 from jinja2 import Environment, FileSystemLoader
-from click import prompt, echo, MissingParameter, BadParameter
+from click import prompt, echo, MissingParameter, BadParameter, Abort
 
 from .utils import get_usermail, get_username, parse_list_option
 
@@ -168,14 +168,14 @@ def generate(
     name = params[group]["name"]
     if in_riot_dir is not None:
         output_dir = os.path.join(riotbase, in_riot_dir, name)
-        if os.path.exists(output_dir) and not prompt(
-            "'{name}' {group} directory already exists, "
-            "overwrite (y/N)?".format(name=name, group=group),
-            default=False,
-            show_default=False,
-        ):
-            echo("Abort")
-            sys.exit(0)
+        if os.path.exists(output_dir):
+            reply = prompt(
+                "'{name}' {group} directory already exists, "
+                "overwrite (y/N)?".format(name=name, group=group),
+                default=False,
+                show_default=False)
+            if not reply or reply == "N":
+                raise Abort()
 
     output_dir = os.path.abspath(os.path.expanduser(output_dir))
     render_source(params, group, files, output_dir)
