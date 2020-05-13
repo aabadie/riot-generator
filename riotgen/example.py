@@ -3,6 +3,7 @@
 import click
 
 from .common import generate
+from .application import APPLICATION_FILES, APPLICATION_PARAMS_LIST
 
 
 APPLICATION_PARAMS = {
@@ -10,10 +11,6 @@ APPLICATION_PARAMS = {
     "brief": {"args": ["Example application brief description"], "kwargs": {}},
     "board": {"args": ["Target board"], "kwargs": {"default": "native"}},
 }
-
-APPLICATION_PARAMS_LIST = ["modules", "packages", "features"]
-
-APPLICATION_FILES = ["main.c", "Makefile", "README.md"]
 
 
 def generate_example(interactive, config, riotbase):
