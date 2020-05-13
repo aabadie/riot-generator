@@ -97,6 +97,9 @@ def render_source(context, template_dir, input_files, output_dir, output_subdir=
     if output_subdir:
         output_dir = os.path.join(output_dir, output_subdir)
 
+    if not os.path.isdir(output_dir):
+        os.makedirs(output_dir)
+
     files = {
         filename + ".j2": os.path.join(output_dir, filename) for filename in input_files
     }
