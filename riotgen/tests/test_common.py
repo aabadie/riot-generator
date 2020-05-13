@@ -112,8 +112,9 @@ def test_prompt_params(m_prompt):
     params = {"test": {"name": "test_name", "board": ""}}
     prompt_params(params, TEST_PARAMS, "test")
     assert m_prompt.call_count == 1
-    m_prompt.assert_called_with(text="board description",
-                                default="test", show_default=True)
+    m_prompt.assert_called_with(
+        text="board description", default="test", show_default=True
+    )
     m_prompt.call_count = 0
     params = {"test": {"name": "", "board": ""}}
     prompt_params(params, TEST_PARAMS, "test")
@@ -131,7 +132,8 @@ def test_prompt_params_list(m_prompt):
     assert m_prompt.call_count == 1  # for missing test3
     m_prompt.assert_called_with(
         text="Required test3 (comma separated)",
-        default="", value_proc=parse_list_option
+        default="",
+        value_proc=parse_list_option,
     )
 
     m_prompt.call_count = 0

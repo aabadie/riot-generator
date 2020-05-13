@@ -1,12 +1,13 @@
 """Common generator module."""
 
 import os
+import sys
 import datetime
 
 from configparser import ConfigParser
 
 from jinja2 import Environment, FileSystemLoader
-from click import prompt, MissingParameter, BadParameter
+from click import prompt, echo, MissingParameter, BadParameter
 
 from .utils import get_usermail, get_username, parse_list_option
 
@@ -71,7 +72,7 @@ def _prompt_param(params, param, text, default=None, show_default=True):
 
 def prompt_params(params, params_dict, group):
     for param, values in params_dict.items():
-        _prompt_param(params[group], param, *values['args'], **values['kwargs'])
+        _prompt_param(params[group], param, *values["args"], **values["kwargs"])
 
 
 def prompt_params_list(params, group, *param_list):
@@ -79,7 +80,9 @@ def prompt_params_list(params, group, *param_list):
         if param not in params[group] or not params[group][param]:
             params[group][param] = prompt(
                 text="Required {} (comma separated)".format(param),
-                default="", value_proc=parse_list_option)
+                default="",
+                value_proc=parse_list_option,
+            )
 
 
 def prompt_common_params(params):
@@ -124,3 +127,57 @@ def render_source(context, template_dir, input_files, output_dir, output_subdir=
 
     for source, dest in files.items():
         render_file(context, template_dir, source, dest)
+
+
+def generate(
+    group,
+    params_descriptor,
+    params_as_list,
+    files,
+    interactive,
+    config,
+    riotbase,
+    output_dir=None,
+    in_riot_dir=None,
+):
+    if not interactive and config is None:
+        raise MissingParameter(param_type="--interactive and/or --config options")
+
+    check_riotbase(riotbase)
+    riotbase = os.path.abspath(os.path.expanduser(riotbase))
+
+    params = {
+        "common": {},
+        group: {},
+    }
+
+    if in_riot_dir is None:
+        params.update({group: {"riotbase": riotbase}})
+
+    if config is not None:
+        params = read_config_file(config, group)
+
+    if interactive:
+        prompt_params(params, params_descriptor, group)
+        prompt_params_list(params, group, *params_as_list)
+        prompt_common_params(params)
+
+    check_params(params, params_descriptor.keys(), group)
+    check_common_params(params)
+
+    name = params[group]["name"]
+    if in_riot_dir is not None:
+        output_dir = os.path.join(riotbase, in_riot_dir, name)
+        if os.path.exists(output_dir) and not prompt(
+            "'{name}' {group} directory already exists, "
+            "overwrite (y/N)?".format(name=name, group=group),
+            default=False,
+            show_default=False,
+        ):
+            echo("Abort")
+            sys.exit(0)
+
+    output_dir = os.path.abspath(os.path.expanduser(output_dir))
+    render_source(params, group, files, output_dir)
+
+    return params, output_dir
