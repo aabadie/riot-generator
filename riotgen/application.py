@@ -5,26 +5,17 @@ import os
 import click
 
 from .common import read_config_file, render_source
-from .common import check_common_params, check_param, check_riotbase
-from .common import prompt_common_params, prompt_param, prompt_param_list
+from .common import check_common_params, check_params, check_riotbase
+from .common import prompt_common_params, prompt_params, prompt_params_list
 
 
-def prompt_application_params(params):
-    """Request application specific variables."""
-    _params = params["application"]
-    prompt_param(_params, "name", "Application name")
-    prompt_param(_params, "brief", "Application brief description")
-    prompt_param(_params, "board", "Target board", default="native")
-    prompt_param_list(_params, "modules", "Required modules (comma separated)")
-    prompt_param_list(_params, "packages", "Required packages (comma separated)")
-    prompt_param_list(_params, "features", "Required features (comma separated)")
+APPLICATION_PARAMS = {
+    "name": {"args": ["Application name"], "kwargs": {}},
+    "brief": {"args": ["Application brief description"], "kwargs": {}},
+    "board": {"args": ["Target board"], "kwargs": {"default": "native"}},
+}
 
-
-def check_application_params(params):
-    _params = params["application"]
-    for param in ["name", "board", "brief"]:
-        check_param(_params, param)
-    _params["name"] = _params["name"].replace(" ", "_")
+APPLICATION_PARAMS_LIST = ["modules", "packages", "features"]
 
 
 def generate_application(output_dir, interactive, config, riotbase):
@@ -42,10 +33,11 @@ def generate_application(output_dir, interactive, config, riotbase):
         params = read_config_file(config, "application")
 
     if interactive:
-        prompt_application_params(params)
+        prompt_params(params, APPLICATION_PARAMS, "application")
+        prompt_params_list(params, "application", *APPLICATION_PARAMS_LIST)
         prompt_common_params(params)
 
-    check_application_params(params)
+    check_params(params, APPLICATION_PARAMS.keys() ,"application")
     check_common_params(params)
 
     output_dir = os.path.expanduser(output_dir)

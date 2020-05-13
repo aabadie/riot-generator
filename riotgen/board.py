@@ -5,29 +5,21 @@ import os
 import click
 
 from .common import render_source, read_config_file
-from .common import check_common_params, check_param, check_riotbase
-from .common import prompt_common_params, prompt_param, prompt_param_list
+from .common import check_common_params, check_params, check_riotbase
+from .common import prompt_common_params, prompt_params, prompt_params_list
 
 
-def prompt_board_params(params):
-    """Request board specific variables."""
-    _params = params["board"]
-    prompt_param(_params, "name", "Board name")
-    prompt_param(
-        _params, "displayed_name", "Board displayed name (for doxygen documentation)"
-    )
-    prompt_param(_params, "cpu", "CPU name")
-    prompt_param(_params, "cpu_model", "CPU model name")
-    prompt_param_list(
-        _params, "features", "Features provided by this board (comma separated)"
-    )
+BOARD_PARAMS = {
+    "name": {"args": ["Board name"], "kwargs": {}},
+    "displayed_name": {
+        "args": ["Board displayed name (for doxygen documentation)"],
+        "kwargs": {},
+    },
+    "cpu": {"args": ["CPU name"], "kwargs": {}},
+    "cpu_model": {"args": ["CPU model name"], "kwargs": {}},
+}
 
-
-def check_board_params(params):
-    _params = params["board"]
-    for param in ["name", "cpu", "cpu_model", "displayed_name"]:
-        check_param(_params, param)
-    _params["name"] = _params["name"].replace(" ", "_")
+BOARD_PARAMS_LIST = ["features"]
 
 
 def generate_board(interactive, config, riotbase):
@@ -42,24 +34,21 @@ def generate_board(interactive, config, riotbase):
         params = read_config_file(config, "board")
 
     if interactive:
-        prompt_board_params(params)
+        prompt_params(params, BOARD_PARAMS, "board")
+        prompt_params_list(params, "board", *BOARD_PARAMS_LIST)
         prompt_common_params(params)
 
-    check_board_params(params)
+    check_params(params, BOARD_PARAMS.keys() ,"board")
     check_common_params(params)
 
-    _params = params["board"]
+    board_params = params["board"]
     riotbase = os.path.abspath(os.path.expanduser(riotbase))
     boards_dir = os.path.join(riotbase, "boards")
-    board_dir = os.path.join(boards_dir, _params["name"])
-    board_include_dir = os.path.join(board_dir, "include")
+    board_dir = os.path.join(boards_dir, board_params["name"])
 
-    if not os.path.exists(board_dir):
-        os.makedirs(board_dir)
-        os.makedirs(board_include_dir)
-    elif not click.prompt(
+    if os.path.exists(board_dir) and not click.prompt(
         "'{name}' board directory already exists, "
-        "overwrite (y/N)?".format(_params["name"]),
+        "overwrite (y/N)?".format(board_params["name"]),
         default=False,
         show_default=False,
     ):
@@ -91,7 +80,7 @@ def generate_board(interactive, config, riotbase):
     click.echo(
         click.style(
             "Support for board '{board}' generated!".format(
-                board=_params["displayed_name"]
+                board=board_params["displayed_name"]
             ),
             bold=True,
         )

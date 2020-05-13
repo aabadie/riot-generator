@@ -5,31 +5,23 @@ import os
 import click
 
 from .common import render_source, render_file, read_config_file
-from .common import check_param, prompt_param, prompt_param_list
+from .common import check_params, prompt_params, prompt_params_list
 from .common import check_riotbase
 
 
-def prompt_pkg_params(params):
-    """Request pkg specific variables."""
-    _params = params["pkg"]
-    prompt_param(_params, "name", "Package name")
-    prompt_param(
-        _params, "displayed_name", "Package displayed name (for doxygen documentation)"
-    )
-    prompt_param(_params, "url", "Package source url")
-    prompt_param(_params, "hash", "Package version hash")
-    prompt_param(_params, "license", "Package license")
-    prompt_param(_params, "description", "Package short description")
-    prompt_param_list(_params, "modules", "Required modules (comma separated)")
-    prompt_param_list(_params, "packages", "Required packages (comma separated)")
-    prompt_param_list(_params, "features", "Required features (comma separated)")
+PKG_PARAMS = {
+    "name": {"args": ["Package name"], "kwargs": {}},
+    "displayed_name": {
+        "args": ["Package displayed name (for doxygen documentation)"],
+        "kwargs": {}
+    },
+    "url": {"args": ["Package source url"], "kwargs": {}},
+    "hash": {"args": ["Package version hash"], "kwargs": {}},
+    "license": {"args": ["Package license"], "kwargs": {}},
+    "description": {"args": ["Package short description"], "kwargs": {}},
+}
 
-
-def check_pkg_params(params):
-    _params = params["pkg"]
-    for param in ["name", "displayed_name", "url", "hash", "license"]:
-        check_param(_params, param)
-    _params["name"] = _params["name"].replace(" ", "_")
+PKG_PARAMS_LIST = ["modules", "packages", "features"]
 
 
 def generate_pkg(interactive, config, riotbase):
@@ -44,26 +36,25 @@ def generate_pkg(interactive, config, riotbase):
         params = read_config_file(config, "board")
 
     if interactive:
-        prompt_pkg_params(params)
+        prompt_params(params, PKG_PARAMS, "pkg")
+        prompt_params_list(params, "pkg", *PKG_PARAMS_LIST)
 
-    check_pkg_params(params)
+    check_params(params, PKG_PARAMS.keys() ,"pkg")
 
-    _params = params["pkg"]
+    pkg_name = params["pkg"]["name"]
 
     riotbase = os.path.abspath(os.path.expanduser(riotbase))
     pkgs_dir = os.path.join(riotbase, "pkg")
-    pkg_dir = os.path.join(pkgs_dir, _params["name"])
+    pkg_dir = os.path.join(pkgs_dir, pkg_name)
 
     if os.path.abspath(os.path.curdir) == riotbase:
-        output_dir = os.path.join("pkg", _params["name"])
+        output_dir = os.path.join("pkg", pkg_name)
     else:
         output_dir = os.path.expanduser(pkg_dir)
 
-    if not os.path.exists(pkg_dir):
-        os.makedirs(pkg_dir)
-    elif not click.prompt(
+    if os.path.exists(pkg_dir) and not click.prompt(
         "'{name}' pkg directory already exists, "
-        "overwrite (y/N)?".format(_params["name"]),
+        "overwrite (y/N)?".format(pkg_name),
         default=False,
         show_default=False,
     ):
@@ -80,13 +71,13 @@ def generate_pkg(interactive, config, riotbase):
     template_dir = os.path.join(
         os.path.dirname(os.path.abspath(__file__)), "templates", "pkg"
     )
-    makefile_pkg_out = os.path.join(output_dir, "{}.mk".format(_params["name"]))
+    makefile_pkg_out = os.path.join(output_dir, "{}.mk".format(pkg_name))
     render_file(params, template_dir, "pkg.mk.j2", makefile_pkg_out)
 
     click.echo(
         click.style(
             "Package '{name}' generated in {output_dir} with success!".format(
-                name=_params["name"], output_dir=output_dir
+                name=pkg_name, output_dir=output_dir
             ),
             bold=True,
         )

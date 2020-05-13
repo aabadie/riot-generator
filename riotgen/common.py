@@ -6,7 +6,7 @@ import datetime
 from configparser import ConfigParser
 
 from jinja2 import Environment, FileSystemLoader
-from click import prompt, MissingParameter
+from click import prompt, MissingParameter, BadParameter
 
 from .utils import get_usermail, get_username, parse_list_option
 
@@ -34,6 +34,11 @@ def check_riotbase(riotbase):
         raise MissingParameter(param_type="riotbase directory")
 
 
+def _check_param(params, param):
+    if param not in params or params[param] == "":
+        raise MissingParameter(param_type=param.replace("_", " "))
+
+
 def check_common_params(params):
     _params = params["common"]
     if "year" not in _params or not _params["year"]:
@@ -44,33 +49,46 @@ def check_common_params(params):
         _params["author_email"] = get_usermail()
     if "organization" not in _params or not _params["organization"]:
         _params["organization"] = get_username()
-    check_param(_params, "author_name")
-    check_param(_params, "author_email")
-    check_param(_params, "organization")
+    for param_name in ("author_name", "author_email", "organization"):
+        _check_param(_params, param_name)
 
 
-def check_param(params, param):
-    if param not in params or params[param] == "":
-        raise MissingParameter(param_type=param.replace("_", " "))
+def check_params(params, param_names, group):
+    if group not in params:
+        raise BadParameter("'{}' group not in parameters.".format(group))
+    for param_name in param_names:
+        if param_name not in params[group] or params[group][param_name] == "":
+            raise MissingParameter(param_type=param_name.replace("_", " "))
+        if param_name == "name":
+            param = params[group][param_name]
+            params[group][param_name] = param.replace(" ", "_")
 
 
-def prompt_param(params, param, text, default=None, show_default=True):
+def _prompt_param(params, param, text, default=None, show_default=True):
     if param not in params or not params[param]:
         params[param] = prompt(text=text, default=default, show_default=show_default)
 
 
-def prompt_param_list(params, param, text):
-    if param not in params or not params[param]:
-        params[param] = prompt(text=text, default="", value_proc=parse_list_option)
+def prompt_params(params, params_dict, group):
+    for param, values in params_dict.items():
+        _prompt_param(params[group], param, *values['args'], **values['kwargs'])
+
+
+def prompt_params_list(params, group, *param_list):
+    for param in param_list:
+        if param not in params[group] or not params[group][param]:
+            params[group][param] = prompt(
+                text="Required {} (comma separated)".format(param),
+                default="", value_proc=parse_list_option)
 
 
 def prompt_common_params(params):
     _params = params["common"]
     if "year" not in params or not _params["year"]:
         _params["year"] = datetime.datetime.now().year
-    prompt_param(_params, "author_name", "Author name", default=get_username())
-    prompt_param(_params, "author_email", "Author email", default=get_usermail())
-    prompt_param(_params, "organization", "Organization", default=get_username())
+    _prompt_param(_params, "author_name", "Author name", default=get_username())
+    _prompt_param(_params, "author_email", "Author email", default=get_usermail())
+    _prompt_param(_params, "organization", "Organization", default=get_username())
 
 
 def render_file(context, template_dir, source, dest):
