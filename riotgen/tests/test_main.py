@@ -50,6 +50,7 @@ def test_version():
     assert result.exit_code == 0
     assert result.output == f"riotgen, version {__version__}\n"
 
+
 @pytest.mark.parametrize("command", COMMANDS)
 def test_missing_param(command):
     runner = CliRunner()

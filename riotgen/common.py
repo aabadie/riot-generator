@@ -1,13 +1,12 @@
 """Common generator module."""
 
 import os
-import sys
 import datetime
 
 from configparser import ConfigParser
 
 from jinja2 import Environment, FileSystemLoader
-from click import prompt, echo, MissingParameter, BadParameter, Abort
+from click import prompt, MissingParameter, BadParameter, Abort
 
 from .utils import get_usermail, get_username, parse_list_option
 
@@ -173,7 +172,8 @@ def generate(
                 "'{name}' {group} directory already exists, "
                 "overwrite (y/N)?".format(name=name, group=group),
                 default=False,
-                show_default=False)
+                show_default=False,
+            )
             if not reply or reply == "N":
                 raise Abort()
 
