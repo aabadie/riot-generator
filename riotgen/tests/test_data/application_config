@@ -1,0 +1,11 @@
+[common]
+author_name=test_name
+author_email=test_email
+organization=tes_orga
+[application]
+name=test
+brief=Test application
+board=board_test
+modules=xtimer,fmt
+packages=
+features=periph_gpio

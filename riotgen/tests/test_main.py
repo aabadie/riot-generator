@@ -8,6 +8,8 @@ from mock import patch
 from click.testing import CliRunner
 
 from riotgen import riotgen, __version__
+from riotgen.board import BOARD_INCLUDE_FILES
+from riotgen.common import TEMPLATE_BASE_DIR
 
 
 HELP_OUTPUT = """Usage: riotgen [OPTIONS] COMMAND [ARGS]...
@@ -105,5 +107,91 @@ def test_command_application_output_dir(tmpdir):
     runner = CliRunner()
     with patch("riotgen.main.generate_application") as m_command:
         runner.invoke(riotgen, ["application", "-d", tmpdir.strpath])
-        m_command.assert_called_once()
-        assert m_command.call_args.args[0] == tmpdir.strpath
+        m_command.assert_called_with(tmpdir.strpath, False, None, None)
+
+
+@patch("riotgen.application.generate")
+def test_command_generate_application(m_generate, tmpdir):
+    runner = CliRunner()
+    name = "test"
+    output_dir = tmpdir.strpath
+    m_generate.return_value = ({"application": {"name": name}}, None)
+    result = runner.invoke(riotgen, ["application", "-d", output_dir])
+
+    msg = f"Application '{name}' generated in {output_dir} with success!"
+    assert msg in result.output
+
+
+@patch("riotgen.board.render_source")
+@patch("riotgen.board.generate")
+def test_command_generate_board(m_generate, m_render, tmpdir):
+    runner = CliRunner()
+    name = "test"
+    riotbase = tmpdir.strpath
+    m_generate.return_value = ({"board": {"name": name}}, riotbase)
+    result = runner.invoke(riotgen, ["board"])
+    m_render.assert_called_with(
+        {"board": {"name": name}},
+        "board",
+        BOARD_INCLUDE_FILES,
+        riotbase,
+        output_subdir="include",
+    )
+
+    msg = f"Support for board '{name}' generated in {riotbase} with success!"
+    assert msg in result.output
+
+
+@patch("riotgen.example.generate")
+def test_command_generate_example(m_generate, tmpdir):
+    runner = CliRunner()
+    name = "test"
+    riotbase = tmpdir.strpath
+    m_generate.return_value = ({"example": {"name": name}}, riotbase)
+    result = runner.invoke(riotgen, ["example"])
+
+    msg = f"Example '{name}' generated in {riotbase} with success!"
+    assert msg in result.output
+
+
+@patch("riotgen.test.render_source")
+@patch("riotgen.test.generate")
+def test_command_generate_test(m_generate, m_render, tmpdir):
+    runner = CliRunner()
+    name = "test"
+    riotbase = tmpdir.strpath
+    m_generate.return_value = ({"test": {"name": name}}, riotbase)
+    result = runner.invoke(riotgen, ["test"])
+
+    msg = f"Test application '{name}' generated in {riotbase} with success!"
+    assert msg in result.output
+    assert m_render.call_count == 0
+
+    params = {"test": {"name": name, "use_testrunner": "True"}}
+    m_generate.return_value = (params, riotbase)
+    with patch("os.chmod"):
+        result = runner.invoke(riotgen, ["test"])
+        testrunner_dir = os.path.join(riotbase, "test")
+        m_render.assert_called_with(params, "test", ["01-run.py"], testrunner_dir)
+
+    msg = f"Test application '{name}' generated in {riotbase} with success!"
+    assert msg in result.output
+
+
+@patch("riotgen.pkg.render_file")
+@patch("riotgen.pkg.generate")
+def test_command_generate_pkg(m_generate, m_render, tmpdir):
+    runner = CliRunner()
+    name = "test"
+    riotbase = tmpdir.strpath
+    m_generate.return_value = ({"pkg": {"name": name}}, riotbase)
+    result = runner.invoke(riotgen, ["pkg"])
+
+    template_dir = os.path.join(TEMPLATE_BASE_DIR, "pkg")
+    file_out = os.path.join(riotbase, "{}.mk".format(name))
+    m_render.assert_called_with(
+        {"pkg": {"name": name}}, template_dir, "pkg.mk.j2", file_out
+    )
+
+    msg = f"Package '{name}' generated in {riotbase} with success!"
+    assert msg in result.output

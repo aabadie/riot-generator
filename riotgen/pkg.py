@@ -4,7 +4,7 @@ import os
 
 import click
 
-from .common import render_file, generate
+from .common import render_file, generate, TEMPLATE_BASE_DIR
 
 
 PKG_PARAMS = {
@@ -39,11 +39,9 @@ def generate_pkg(interactive, config, riotbase):
 
     name = params[group]["name"]
 
-    template_dir = os.path.join(
-        os.path.dirname(os.path.abspath(__file__)), "templates", group
-    )
+    template_dir = os.path.join(TEMPLATE_BASE_DIR, group)
     makefile_pkg_out = os.path.join(output_dir, "{}.mk".format(name))
-    render_file(params, template_dir, "pkg.mk.j2", makefile_pkg_out)
+    render_file(params, template_dir, f"{group}.mk.j2", makefile_pkg_out)
 
     click.echo(
         click.style(

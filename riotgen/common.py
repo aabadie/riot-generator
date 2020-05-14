@@ -11,6 +11,11 @@ from click import prompt, MissingParameter, BadParameter, Abort
 from .utils import get_usermail, get_username, parse_list_option
 
 
+TEMPLATE_BASE_DIR = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "templates"
+)
+
+
 def read_config_file(config_file, *command_args):
     """Read a configuration file and return the content as a dict."""
     parser = ConfigParser()
@@ -104,11 +109,6 @@ def render_file(context, template_dir, source, dest):
     render = template.render(**context)
     with open(dest, "w") as f_dest:
         f_dest.write(render)
-
-
-TEMPLATE_BASE_DIR = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), "templates"
-)
 
 
 def render_source(context, template_dir, input_files, output_dir, output_subdir=""):
