@@ -1,0 +1,5 @@
+CPU = cpu_test
+CPU_MODEL = cpu_model_test
+
+# Put defined MCU peripherals here (in alphabetical order)
+FEATURES_PROVIDED += periph_gpio

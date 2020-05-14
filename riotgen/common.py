@@ -150,11 +150,11 @@ def generate(
         group: {},
     }
 
-    if in_riot_dir is None:
-        params.update({group: {"riotbase": riotbase}})
-
     if config is not None:
         params = read_config_file(config, group)
+
+    if in_riot_dir is None:
+        params[group]["riotbase"] = riotbase
 
     if interactive:
         prompt_params(params, params_descriptor, group)

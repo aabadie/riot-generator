@@ -8,7 +8,8 @@ from mock import patch
 from click.testing import CliRunner
 
 from riotgen import riotgen, __version__
-from riotgen.board import BOARD_INCLUDE_FILES
+from riotgen.application import APPLICATION_FILES
+from riotgen.board import BOARD_INCLUDE_FILES, BOARD_FILES
 from riotgen.common import TEMPLATE_BASE_DIR
 
 
@@ -122,6 +123,81 @@ def test_command_generate_application(m_generate, tmpdir):
     assert msg in result.output
 
 
+def test_command_generate_application_from_config(tmpdir):
+    runner = CliRunner()
+    test_data_dir = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "test_data"
+    )
+    riotbase = os.path.join(test_data_dir, "riotbase")
+    os.removedirs(riotbase)
+    os.makedirs(riotbase)
+    expected_data_dir = os.path.join(test_data_dir, "application")
+    config_file = os.path.join(test_data_dir, "application.cfg")
+
+    tmpdir.mkdir("application")
+    tmpdir.mkdir("riotbase")
+    output_dir = tmpdir.join("application")
+    result = runner.invoke(
+        riotgen,
+        ["application", "-c", config_file, "-d", output_dir.strpath, "-r", riotbase],
+    )
+
+    for filename in APPLICATION_FILES:
+        assert os.path.exists(output_dir.join(filename))
+        with open(os.path.join(expected_data_dir, filename)) as f_expected:
+            expected_content = f_expected.readlines()
+        with open(output_dir.join(filename)) as f_result:
+            result_content = f_result.readlines()
+        for idx, line in enumerate(expected_content):
+            if line.startswith("RIOTBASE"):
+                # riotbase line depends on the local computer so needs a
+                # special handling
+                assert result_content[idx] == f"RIOTBASE ?= {riotbase}\n"
+            else:
+                assert result_content[idx] == line
+
+    msg = f"Application 'test' generated in {output_dir.strpath} with success!"
+    assert msg in result.output
+
+
+def test_command_generate_application_from_prompt(tmpdir):
+    runner = CliRunner()
+    test_data_dir = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "test_data"
+    )
+    expected_data_dir = os.path.join(test_data_dir, "application")
+
+    tmpdir.mkdir("application")
+    tmpdir.mkdir("riotbase")
+    riotbase = tmpdir.join("riotbase").strpath
+    output_dir = tmpdir.join("application")
+    result = runner.invoke(
+        riotgen,
+        ["application", "-i", "-d", output_dir.strpath, "-r", riotbase],
+        input=(
+            "test\nTest application\nboard_test\nxtimer,fmt\n\n"
+            "periph_gpio\ntest_name\ntest_email\ntest_orga\n"
+        ),
+    )
+
+    for filename in APPLICATION_FILES:
+        assert os.path.exists(output_dir.join(filename))
+        with open(os.path.join(expected_data_dir, filename)) as f_expected:
+            expected_content = f_expected.readlines()
+        with open(output_dir.join(filename)) as f_result:
+            result_content = f_result.readlines()
+        for idx, line in enumerate(expected_content):
+            if line.startswith("RIOTBASE"):
+                # riotbase line depends on the local computer so needs a
+                # special handling
+                assert result_content[idx] == f"RIOTBASE ?= {riotbase}\n"
+            else:
+                assert result_content[idx] == line
+
+    msg = f"Application 'test' generated in {output_dir.strpath} with success!"
+    assert msg in result.output
+
+
 @patch("riotgen.board.render_source")
 @patch("riotgen.board.generate")
 def test_command_generate_board(m_generate, m_render, tmpdir):
@@ -140,6 +216,50 @@ def test_command_generate_board(m_generate, m_render, tmpdir):
 
     msg = f"Support for board '{name}' generated in {riotbase} with success!"
     assert msg in result.output
+
+
+def test_command_generate_board_from_config(tmpdir):
+    name = "test"
+    runner = CliRunner()
+    test_data_dir = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "test_data"
+    )
+    expected_data_dir = os.path.join(test_data_dir, "board")
+    config_file = os.path.join(test_data_dir, "board.cfg")
+
+    tmpdir.mkdir("riotbase")
+    riotbase = tmpdir.join("riotbase")
+    board_dir = riotbase.join("boards", "test")
+    result = runner.invoke(riotgen, ["board", "-c", config_file, "-r", riotbase],)
+
+    for filename in BOARD_FILES:
+        assert os.path.exists(board_dir.join(filename))
+        with open(os.path.join(expected_data_dir, filename)) as f_expected:
+            expected_content = f_expected.read()
+        with open(board_dir.join(filename)) as f_result:
+            result_content = f_result.read()
+        assert result_content == expected_content
+
+    assert os.path.isdir(board_dir.join("include"))
+
+    msg = f"Support for board '{name}' generated in {board_dir.strpath} with success!"
+    assert msg in result.output
+
+    # Call the runner a second time to trigger overwrite prompt
+    result = runner.invoke(
+        riotgen, ["board", "-c", config_file, "-r", riotbase], input="y\n"
+    )
+
+    msg = f"Support for board '{name}' generated in {board_dir.strpath} with success!"
+    assert msg in result.output
+
+    # Verify Abort is correctly triggered
+    result = runner.invoke(
+        riotgen, ["board", "-c", config_file, "-r", riotbase], input="\n"
+    )
+
+    assert result.exit_code > 0
+    assert "Aborted!" in result.output
 
 
 @patch("riotgen.example.generate")
