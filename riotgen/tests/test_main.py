@@ -128,14 +128,12 @@ def test_command_generate_application_from_config(tmpdir):
     test_data_dir = os.path.join(
         os.path.dirname(os.path.abspath(__file__)), "test_data"
     )
-    riotbase = os.path.join(test_data_dir, "riotbase")
-    os.removedirs(riotbase)
-    os.makedirs(riotbase)
     expected_data_dir = os.path.join(test_data_dir, "application")
     config_file = os.path.join(test_data_dir, "application.cfg")
 
     tmpdir.mkdir("application")
     tmpdir.mkdir("riotbase")
+    riotbase = tmpdir.join("riotbase").strpath
     output_dir = tmpdir.join("application")
     result = runner.invoke(
         riotgen,
