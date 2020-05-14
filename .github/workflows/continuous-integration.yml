@@ -31,18 +31,12 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        python -m pip install tox
+        python -m pip install tox tox-gh-actions
     - name: Test with tox
-      env:
-        TOXENV: py$(echo ${{ matrix.python-version }} | tr -d .)-tests
       run: tox
     - name: Test cli
-      env:
-        TOXENV: py$(echo ${{ matrix.python-version }} | tr -d .)-cli
       run: tox
     - name: Check style
-      env:
-        TOXENV: py$(echo ${{ matrix.python-version }} | tr -d .)-check
       run: tox
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
