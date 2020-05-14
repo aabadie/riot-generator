@@ -33,11 +33,17 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install tox
     - name: Test with tox
-      run: |
-        tox -e py$(echo ${{ matrix.python-version }} | tr '\.' '')-tests
+      env:
+        TOXENV: py$(echo ${{ matrix.python-version }} | tr -d .)-tests
+      run: tox
+    - name: Test cli
+      env:
+        TOXENV: py$(echo ${{ matrix.python-version }} | tr -d .)-cli
+      run: tox
     - name: Check style
-      run: |
-        tox -e py$(echo ${{ matrix.python-version }} | tr '\.' '')-check
+      env:
+        TOXENV: py$(echo ${{ matrix.python-version }} | tr -d .)-check
+      run: tox
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
       with:
