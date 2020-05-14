@@ -3,9 +3,9 @@ RIOT code generator
 
 |CI| |PyPi|
 
-.. |CI| image:: https://github.com/aabadie/riot-generator/workflows/test/badge.svg
-    :target: https://github.com/aabadie/riot-generator/actions?query=workflow%3Atest+branch%3Amaster
-    :alt: test status
+.. |CI| image:: https://github.com/aabadie/riot-generator/workflows/CI/badge.svg
+    :target: https://github.com/aabadie/riot-generator/actions?query=workflow%3ACI+branch%3Amaster
+    :alt: CI status
 
 .. |PyPi| image:: https://badge.fury.io/py/riotgen.svg
     :target: https://badge.fury.io/py/riotgen
