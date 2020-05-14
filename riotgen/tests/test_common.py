@@ -11,13 +11,13 @@ from mock import patch
 from riotgen import common
 from riotgen.common import read_config_file, check_riotbase
 from riotgen.common import _check_param, check_params
-from riotgen.common import check_common_params, _prompt_param, prompt_params
-from riotgen.common import prompt_common_params, prompt_params_list
+from riotgen.common import check_global_params, _prompt_param, prompt_params
+from riotgen.common import prompt_global_params, prompt_params_list
 from riotgen.common import render_file, render_source
 from riotgen.utils import parse_list_option
 
 
-TEST_CONFIG = """[common]
+TEST_CONFIG = """[global]
 name=test
 [board]
 name=test_board
@@ -44,10 +44,10 @@ def test_read_config_file(config_file):
     """Test the read_config function."""
     with open(config_file.strpath) as f_config:
         config = read_config_file(f_config, "application", "board")
-    assert "common" in config
+    assert "global" in config
     assert "application" not in config
-    assert "name" in config["common"]
-    assert config["common"]["name"] == "test"
+    assert "name" in config["global"]
+    assert config["global"]["name"] == "test"
     assert "board" in config
     assert "name" in config["board"]
     assert config["board"]["name"] == "test_board"
@@ -150,17 +150,17 @@ def mock_utils(monkeypatch):
 
 
 @patch("riotgen.common._check_param", lambda x, y: None)
-def test_check_common_params(mock_utils):
-    """Test the check_common_params function."""
-    test_params = {"common": {}}
-    check_common_params(test_params)
-    assert test_params["common"]["year"] == datetime.datetime.now().year
-    assert test_params["common"]["author_name"] == "test_user"
-    assert test_params["common"]["author_email"] == "test_mail"
-    assert test_params["common"]["organization"] == "test_user"
+def test_check_global_params(mock_utils):
+    """Test the check_global_params function."""
+    test_params = {"global": {}}
+    check_global_params(test_params)
+    assert test_params["global"]["year"] == datetime.datetime.now().year
+    assert test_params["global"]["author_name"] == "test_user"
+    assert test_params["global"]["author_email"] == "test_mail"
+    assert test_params["global"]["organization"] == "test_user"
 
     test_params = {
-        "common": {
+        "global": {
             "year": "1970",
             "author_name": "user_test",
             "author_email": "mail_test",
@@ -168,28 +168,28 @@ def test_check_common_params(mock_utils):
         }
     }
 
-    check_common_params(test_params)
-    assert test_params["common"]["year"] == "1970"
-    assert test_params["common"]["author_name"] == "user_test"
-    assert test_params["common"]["author_email"] == "mail_test"
-    assert test_params["common"]["organization"] == "orga"
+    check_global_params(test_params)
+    assert test_params["global"]["year"] == "1970"
+    assert test_params["global"]["author_name"] == "user_test"
+    assert test_params["global"]["author_email"] == "mail_test"
+    assert test_params["global"]["organization"] == "orga"
 
 
-def test_prompt_params_common(mock_utils):
-    """Test the prompt_params_common function."""
-    test_params = {"common": {}}
+def test_prompt_global_params(mock_utils):
+    """Test the prompt_global_params function."""
+    test_params = {"global": {}}
     with patch("riotgen.common.prompt") as m_prompt:
         m_prompt.return_value = "test"
-        prompt_common_params(test_params)
+        prompt_global_params(test_params)
         assert m_prompt.call_count == 3
 
-    assert test_params["common"]["year"] == datetime.datetime.now().year
-    assert test_params["common"]["author_name"] == "test"
-    assert test_params["common"]["author_email"] == "test"
-    assert test_params["common"]["organization"] == "test"
+    assert test_params["global"]["year"] == datetime.datetime.now().year
+    assert test_params["global"]["author_name"] == "test"
+    assert test_params["global"]["author_email"] == "test"
+    assert test_params["global"]["organization"] == "test"
 
     test_params = {
-        "common": {
+        "global": {
             "year": "1970",
             "author_name": "user_test",
             "author_email": "mail_test",
@@ -198,13 +198,13 @@ def test_prompt_params_common(mock_utils):
     }
 
     with patch("riotgen.common.prompt") as m_prompt:
-        prompt_common_params(test_params)
+        prompt_global_params(test_params)
         assert m_prompt.call_count == 0
 
-    assert test_params["common"]["year"] == datetime.datetime.now().year
-    assert test_params["common"]["author_name"] == "user_test"
-    assert test_params["common"]["author_email"] == "mail_test"
-    assert test_params["common"]["organization"] == "orga"
+    assert test_params["global"]["year"] == datetime.datetime.now().year
+    assert test_params["global"]["author_name"] == "user_test"
+    assert test_params["global"]["author_email"] == "mail_test"
+    assert test_params["global"]["organization"] == "orga"
 
 
 def test_render_file(tmpdir):
@@ -212,7 +212,7 @@ def test_render_file(tmpdir):
     dest = tmpdir.join("template_dest").strpath
     template_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "test_data")
     context = {
-        "common": {"test": "test",},
+        "global": {"test": "test",},
         "test": {"tests": ["test1", "test2", "test3"]},
     }
 
@@ -229,7 +229,7 @@ def test_render_file(tmpdir):
 def test_render_source(tmpdir):
     template_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "test_data")
     context = {
-        "common": {"test": "test",},
+        "global": {"test": "test",},
         "test": {"tests": ["test1", "test2", "test3"]},
     }
     with patch("riotgen.common.TEMPLATE_BASE_DIR", template_dir):

@@ -44,8 +44,8 @@ def _check_param(params, param):
         raise MissingParameter(param_type=param.replace("_", " "))
 
 
-def check_common_params(params):
-    _params = params["common"]
+def check_global_params(params):
+    _params = params["global"]
     if "year" not in _params or not _params["year"]:
         _params["year"] = datetime.datetime.now().year
     if "author_name" not in _params or not _params["author_name"]:
@@ -89,8 +89,8 @@ def prompt_params_list(params, group, *param_list):
             )
 
 
-def prompt_common_params(params):
-    _params = params["common"]
+def prompt_global_params(params):
+    _params = params["global"]
     if "year" not in params or not _params["year"]:
         _params["year"] = datetime.datetime.now().year
     _prompt_param(_params, "author_name", "Author name", default=get_username())
@@ -146,7 +146,7 @@ def generate(
     riotbase = os.path.abspath(os.path.expanduser(riotbase))
 
     params = {
-        "common": {},
+        "global": {},
         group: {},
     }
 
@@ -159,10 +159,10 @@ def generate(
     if interactive:
         prompt_params(params, params_descriptor, group)
         prompt_params_list(params, group, *params_as_list)
-        prompt_common_params(params)
+        prompt_global_params(params)
 
     check_params(params, params_descriptor.keys(), group)
-    check_common_params(params)
+    check_global_params(params)
 
     name = params[group]["name"]
     if in_riot_dir is not None:
