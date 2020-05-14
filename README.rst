@@ -1,7 +1,7 @@
 RIOT code generator
 -------------------
 
-|PyPi| |CI|
+|CI| |PyPi|
 
 .. |CI| image:: https://github.com/aabadie/riot-generator/workflows/test/badge.svg
     :target: https://github.com/aabadie/riot-generator/actions?query=workflow%3Atest+branch%3Amaster
