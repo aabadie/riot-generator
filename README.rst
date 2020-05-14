@@ -1,11 +1,14 @@
 RIOT code generator
 -------------------
 
-|CI| |PyPi|
+|CI| |codecov| |PyPi|
 
 .. |CI| image:: https://github.com/aabadie/riot-generator/workflows/CI/badge.svg
     :target: https://github.com/aabadie/riot-generator/actions?query=workflow%3ACI+branch%3Amaster
     :alt: CI status
+
+.. |codecov| image:: https://codecov.io/gh/aabadie/riot-generator/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/aabadie/riot-generator
 
 .. |PyPi| image:: https://badge.fury.io/py/riotgen.svg
     :target: https://badge.fury.io/py/riotgen
