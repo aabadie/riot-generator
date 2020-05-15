@@ -39,6 +39,7 @@ jobs:
       run: |
           tox -e py$(echo ${{ matrix.python-version }} | tr -d .)-cli
     - name: Check style
+      if: ${{ matrix.os == 'ubuntu-latest' }}
       run: |
         tox -e py$(echo ${{ matrix.python-version }} | tr -d .)-check
     - name: Upload coverage to Codecov
