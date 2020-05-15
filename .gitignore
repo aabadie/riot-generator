@@ -5,3 +5,4 @@ dist/*
 .vscode/
 .tox/
 .coverage
+coverage.xml
