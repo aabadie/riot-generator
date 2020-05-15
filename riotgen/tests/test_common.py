@@ -25,6 +25,13 @@ features=feature1,feature2
 modules=
 """
 
+TEST_YAML = """global:
+  name: test
+board:
+  name: test_board
+  features: [feature1, feature2]
+"""
+
 TEST_PARAMS = {
     "name": {"args": ["name description"], "kwargs": {}},
     "board": {"args": ["board description"], "kwargs": {"default": "test"}},
@@ -41,7 +48,7 @@ def config_file(tmpdir_factory):
 
 
 def test_read_config_file(config_file):
-    """Test the read_config function."""
+    """Test the read_config_file function."""
     with open(config_file.strpath) as f_config:
         config = read_config_file(f_config, "application", "board")
     assert "global" in config
@@ -53,6 +60,41 @@ def test_read_config_file(config_file):
     assert config["board"]["name"] == "test_board"
     assert "features" in config["board"]
     assert config["board"]["features"] == ["feature1", "feature2"]
+
+
+@pytest.fixture()
+def yaml_file(tmpdir_factory):
+    """A fixture returning a temporary yaml filename."""
+    filename = tmpdir_factory.mktemp("config").join("test.yml")
+    with open(filename, "w") as yml_test:
+        yml_test.write(TEST_YAML)
+    return filename
+
+
+def test_read_yaml_file(yaml_file):
+    """Test the read_config_file function with a yaml input."""
+    with open(yaml_file.strpath) as f_config:
+        config = read_config_file(f_config, "application", "board")
+    assert "global" in config
+    assert "application" not in config
+    assert "name" in config["global"]
+    assert config["global"]["name"] == "test"
+    assert "board" in config
+    assert "name" in config["board"]
+    assert config["board"]["name"] == "test_board"
+    assert "features" in config["board"]
+    assert config["board"]["features"] == ["feature1", "feature2"]
+
+
+def test_invalid_config_file(tmpdir):
+    """Test the read_config_file function with an invalid input file."""
+    filename = tmpdir.join("config")
+    with open(filename, "w") as f_config:
+        f_config.write("[invalid_content]\n-")
+
+    with pytest.raises(BadParameter):
+        with open(filename) as f_config:
+            read_config_file(f_config)
 
 
 def test_check_riotbase():
@@ -152,7 +194,7 @@ def mock_utils(monkeypatch):
 @patch("riotgen.common._check_param", lambda x, y: None)
 def test_check_global_params(mock_utils):
     """Test the check_global_params function."""
-    test_params = {"global": {}}
+    test_params = {}
     check_global_params(test_params)
     assert test_params["global"]["year"] == datetime.datetime.now().year
     assert test_params["global"]["author_name"] == "test_user"

@@ -3,7 +3,9 @@
 import os
 import datetime
 
-from configparser import ConfigParser
+from configparser import ConfigParser, ParsingError
+
+import yaml
 
 from jinja2 import Environment, FileSystemLoader
 from click import prompt, MissingParameter, BadParameter, Abort
@@ -18,9 +20,17 @@ TEMPLATE_BASE_DIR = os.path.join(
 
 def read_config_file(config_file, *command_args):
     """Read a configuration file and return the content as a dict."""
-    parser = ConfigParser()
-    parser.read_file(config_file)
-    params = parser._sections
+    try:
+        params = yaml.load(config_file, Loader=yaml.FullLoader)
+    except yaml.parser.ParserError:
+        try:
+            config_file.seek(0)
+            parser = ConfigParser()
+            parser.read_file(config_file)
+            params = parser._sections
+        except ParsingError:
+            raise BadParameter("Cannot parse config file '{config_file.filename}'")
+
     for command in command_args:
         if command not in params:
             continue
@@ -45,6 +55,8 @@ def _check_param(params, param):
 
 
 def check_global_params(params):
+    if "global" not in params:
+        params.update({"global": {}})
     _params = params["global"]
     if "year" not in _params or not _params["year"]:
         _params["year"] = datetime.datetime.now().year

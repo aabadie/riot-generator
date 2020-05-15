@@ -5,15 +5,22 @@ import subprocess
 
 
 def parse_list_option(opt):
-    """Split list element separated by a comma.
+    """Parse options as list.
+
+    Strings are splitted based on comma separated elements.
+    Result is sorted.
 
     >>> parse_list_option('')
     []
     >>> parse_list_option('opt1,opt2,opt3')
     ['opt1', 'opt2', 'opt3']
+    >>> parse_list_option(['opt1','opt3','opt2'])
+    ['opt1', 'opt2', 'opt3']
     """
     if not opt:
         return []
+    if isinstance(opt, (list, tuple)):
+        return sorted(opt)
     return sorted(opt.split(","))
 
 
