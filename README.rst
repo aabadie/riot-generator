@@ -1,5 +1,5 @@
-RIOT code generator
--------------------
+riotgen, a RIOT source code generator
+-------------------------------------
 
 |CI| |codecov| |PyPi|
 
@@ -14,9 +14,11 @@ RIOT code generator
     :target: https://badge.fury.io/py/riotgen
     :alt: riotgen version
 
-RIOT generator is a command line interface helper that initiates `RIOT
-<http://github.com/RIOT-OS/RIOT>`_ source files for applications, boards
-support, packages and test applications.
+``riogen`` is a command line interface helper tool that is used to bootstrap
+`RIOT <http://github.com/RIOT-OS/RIOT>`_ source files for standalone applications,
+boards support, driver modules, packages and test applications.
+
+``riotgen`` is **Python 3.6+** compatible.
 
 Installation
 ............
@@ -40,7 +42,7 @@ Install using ``pip`` from the source directory::
 Usage
 .....
 
-RIOT code generator uses subcommands for generating the code for applications,
+``riotgen`` uses subcommands for generating the code for applications,
 tests, packages and board support::
 
     riotgen --help
@@ -92,3 +94,29 @@ directly in the RIOT base directory::
     riotgen pkg --riotbase /opt/RIOT -i
     riotgen board --riotbase /opt/RIOT -i
     riotgen test --riotbase /opt/RIOT -i
+
+
+Testing
+.......
+
+Testing is performed using the `Tox <http://github.com/tox-dev/tox>`_
+automation tool. You can install Tox using pip::
+
+    pip install tox
+
+To run the whole tests and checks, use::
+
+    tox
+
+To only run the tests, use::
+
+    tox -e tests
+
+To only run the static checks (``flake8``, ``black``, ``twine --check``), use::
+
+    tox -e check
+
+To reformat your code following the `black <https://black.readthedocs.io/en/stable>`_
+tool, use::
+
+    tox -e format
