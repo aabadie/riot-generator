@@ -10,6 +10,7 @@ from click.testing import CliRunner
 from riotgen import riotgen, __version__
 from riotgen.application import APPLICATION_FILES
 from riotgen.board import BOARD_INCLUDE_FILES, BOARD_FILES
+from riotgen.pkg import PKG_RENAMED_FILES
 from riotgen.common import TEMPLATE_BASE_DIR
 
 
@@ -208,8 +209,7 @@ def test_command_generate_board(m_generate, m_render, tmpdir):
         {"board": {"name": name}},
         "board",
         BOARD_INCLUDE_FILES,
-        riotbase,
-        output_subdir="include",
+        os.path.join(riotbase, "include"),
     )
 
     msg = f"Support for board '{name}' generated in {riotbase} with success!"
@@ -296,7 +296,7 @@ def test_command_generate_test(m_generate, m_render, tmpdir):
     assert msg in result.output
 
 
-@patch("riotgen.pkg.render_file")
+@patch("riotgen.pkg.render_source")
 @patch("riotgen.pkg.generate")
 def test_command_generate_pkg(m_generate, m_render, tmpdir):
     runner = CliRunner()
@@ -304,12 +304,11 @@ def test_command_generate_pkg(m_generate, m_render, tmpdir):
     riotbase = tmpdir.strpath
     m_generate.return_value = ({"pkg": {"name": name}}, riotbase)
     result = runner.invoke(riotgen, ["pkg"])
-
-    template_dir = os.path.join(TEMPLATE_BASE_DIR, "pkg")
-    file_out = os.path.join(riotbase, "{}.mk".format(name))
     m_render.assert_called_with(
-        {"pkg": {"name": name}}, template_dir, "pkg.mk.j2", file_out
+        {"pkg": {"name": name}},
+        "pkg",
+        PKG_RENAMED_FILES,
+        riotbase,
     )
-
     msg = f"Package '{name}' generated in {riotbase} with success!"
     assert msg in result.output

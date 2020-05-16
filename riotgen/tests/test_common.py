@@ -275,9 +275,7 @@ def test_render_source(tmpdir):
         "test": {"tests": ["test1", "test2", "test3"]},
     }
     with patch("riotgen.common.TEMPLATE_BASE_DIR", template_dir):
-        render_source(
-            context, template_dir, ["template"], tmpdir.strpath, output_subdir=""
-        )
+        render_source(context, template_dir, {"template": None}, tmpdir.strpath)
 
     dest_file = tmpdir.join("template").strpath
     assert os.path.exists(dest_file)
@@ -291,7 +289,7 @@ def test_render_source(tmpdir):
 
     with patch("riotgen.common.TEMPLATE_BASE_DIR", template_dir):
         render_source(
-            context, template_dir, ["template"], tmpdir.strpath, output_subdir="subdir"
+            context, template_dir, {"template": None}, tmpdir.join("subdir").strpath
         )
 
     dest_file = tmpdir.join("subdir", "template").strpath
