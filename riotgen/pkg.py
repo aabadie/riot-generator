@@ -1,10 +1,8 @@
 """RIOT pkg generator module."""
 
-import os
-
 import click
 
-from .common import render_source, generate, TEMPLATE_BASE_DIR
+from .common import render_source, generate
 
 
 PKG_PARAMS = {

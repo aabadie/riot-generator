@@ -13,10 +13,7 @@ APPLICATION_PARAMS = {
 
 APPLICATION_PARAMS_LIST = ["modules", "packages", "features"]
 
-APPLICATION_FILES = {
-    filename: None
-    for filename in ["main.c", "Makefile", "README.md"]
-}
+APPLICATION_FILES = {filename: None for filename in ["main.c", "Makefile", "README.md"]}
 
 
 def generate_application(output_dir, interactive, config, riotbase):

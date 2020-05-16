@@ -11,7 +11,6 @@ from riotgen import riotgen, __version__
 from riotgen.application import APPLICATION_FILES
 from riotgen.board import BOARD_INCLUDE_FILES, BOARD_FILES
 from riotgen.pkg import PKG_RENAMED_FILES
-from riotgen.common import TEMPLATE_BASE_DIR
 
 
 HELP_OUTPUT = """Usage: riotgen [OPTIONS] COMMAND [ARGS]...
@@ -305,10 +304,7 @@ def test_command_generate_pkg(m_generate, m_render, tmpdir):
     m_generate.return_value = ({"pkg": {"name": name}}, riotbase)
     result = runner.invoke(riotgen, ["pkg"])
     m_render.assert_called_with(
-        {"pkg": {"name": name}},
-        "pkg",
-        PKG_RENAMED_FILES,
-        riotbase,
+        {"pkg": {"name": name}}, "pkg", PKG_RENAMED_FILES, riotbase,
     )
     msg = f"Package '{name}' generated in {riotbase} with success!"
     assert msg in result.output

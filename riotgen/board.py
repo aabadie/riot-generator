@@ -30,9 +30,7 @@ BOARD_FILES = {
     ]
 }
 
-BOARD_INCLUDE_FILES = {
-    filename: None for filename in ["board.h", "periph_conf.h"]
-}
+BOARD_INCLUDE_FILES = {filename: None for filename in ["board.h", "periph_conf.h"]}
 
 
 def generate_board(interactive, config, riotbase):
