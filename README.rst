@@ -53,6 +53,7 @@ tests, packages and board support::
     Commands:
       application  Bootstrap a RIOT application
       board        Bootstrap a RIOT board support
+      driver       Bootstrap a RIOT driver module
       example      Bootstrap a RIOT example application
       pkg          Bootstrap a RIOT external package
       test         Bootstrap a RIOT test application

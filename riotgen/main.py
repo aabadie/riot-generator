@@ -4,6 +4,7 @@ import click
 from .application import generate_application
 from .example import generate_example
 from .board import generate_board
+from .driver import generate_driver
 from .pkg import generate_pkg
 from .test import generate_test
 from . import __version__
@@ -41,6 +42,21 @@ def application(output_dir, interactive, config, riotbase):
 )
 def board(interactive, config, riotbase):
     generate_board(interactive, config, riotbase)
+
+
+@riotgen.command(help="Bootstrap a RIOT driver module")
+@click.option("-i", "--interactive", is_flag=True, help="Use interactive mode")
+@click.option(
+    "-c",
+    "--config",
+    type=click.File(mode="r"),
+    help="Configuration file for the driver module",
+)
+@click.option(
+    "-r", "--riotbase", type=click.Path(exists=True), default=os.getenv("RIOTBASE")
+)
+def driver(interactive, config, riotbase):
+    generate_driver(interactive, config, riotbase)
 
 
 @riotgen.command(help="Bootstrap a RIOT example application")

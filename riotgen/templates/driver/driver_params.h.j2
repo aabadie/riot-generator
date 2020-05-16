@@ -1,0 +1,56 @@
+/*
+ * Copyright (C) {{ global.year }} {{ global.organization }}
+ *
+ * This file is subject to the terms and conditions of the GNU Lesser
+ * General Public License v2.1. See the file LICENSE in the top level
+ * directory for more details.
+ */
+
+/**
+ * @ingroup     drivers_{{ driver.name }}
+ *
+ * @{
+ * @file
+ * @brief       Default configuration
+ *
+ * @author      {{ global.author_name }} <{{ global.author_email }}>
+ */
+
+#ifndef {{ driver.name|upper }}_PARAMS_H
+#define {{ driver.name|upper }}_PARAMS_H
+
+#include "board.h"
+#include "{{ driver.name }}.h"
+#include "{{ driver.name }}_constants.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/**
+ * @name    Set default configuration parameters
+ * @{
+ */
+#ifndef {{ driver.name|upper }}_PARAM_PARAM1
+#define {{ driver.name|upper }}_PARAM_PARAM1
+#endif
+
+#ifndef {{ driver.name|upper }}_PARAMS
+#define {{ driver.name|upper }}_PARAMS
+#endif
+/**@}*/
+
+/**
+ * @brief   Configuration struct
+ */
+static const {{ driver.name }}_params_t {{ driver.name }}_params[] =
+{
+    {{ driver.name|upper }}_PARAMS
+};
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* {{ driver.name|upper }}_PARAMS_H */
+/** @} */

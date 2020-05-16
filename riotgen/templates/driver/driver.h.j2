@@ -1,0 +1,58 @@
+/*
+ * Copyright (C) {{ global.year }} {{ global.organization }}
+ *
+ * This file is subject to the terms and conditions of the GNU Lesser
+ * General Public License v2.1. See the file LICENSE in the top level
+ * directory for more details.
+ */
+
+/**
+ * @defgroup    drivers_{{ driver.name }} {{ driver.displayed_name }}
+ * @ingroup     drivers_{{ driver.ingroup }}
+ * @brief       {{ driver.brief }}
+ *
+ * @{
+ *
+ * @file
+ *
+ * @author      {{ global.author_name }} <{{ global.author_email }}>
+ */
+
+#ifndef {{ driver.name|upper }}_H
+#define {{ driver.name|upper }}_H
+
+/* Add header includes here */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/* Declare the API of the driver */
+
+/**
+ * @brief   Device initialization parameters
+ */
+typedef struct {
+    /* add initialization params here */
+} {{ driver.name }}_params_t;
+
+/**
+ * @brief   Device descriptor for the driver
+ */
+typedef struct {
+    /** Device initialization parameters */
+    {{ driver.name }}_params_t params;
+} {{ driver.name }}_t;
+
+/**
+ * @brief   Initialize the given device
+ *
+ * @param[inout] dev        Device descriptor of the driver
+ * @param[in]    params     Initialization parameters
+ *
+ * @return                  0 on success
+ */
+int {{ driver.name }}_init({{ driver.name }}_t *dev, const {{ driver.name }}_params_t *params);
+
+#endif /* {{ driver.name|upper }}_H */
+/** @} */
