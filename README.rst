@@ -14,7 +14,7 @@ riotgen, a RIOT source code generator
     :target: https://badge.fury.io/py/riotgen
     :alt: riotgen version
 
-``riogen`` is a command line interface helper tool that is used to bootstrap
+``riotgen`` is a command line interface helper tool that is used to bootstrap
 `RIOT <http://github.com/RIOT-OS/RIOT>`_ source files for standalone applications,
 boards support, driver modules, packages and test applications.
 
