@@ -1,4 +1,4 @@
-riotgen, a RIOT source code generator
+riotgen: a RIOT source code generator
 -------------------------------------
 
 |CI| |codecov| |PyPi|
@@ -16,7 +16,7 @@ riotgen, a RIOT source code generator
 
 ``riotgen`` is a command line interface helper tool that is used to bootstrap
 `RIOT <http://github.com/RIOT-OS/RIOT>`_ source files for standalone applications,
-boards support, driver modules, packages and test applications.
+board supports, driver modules, packages and example/test applications.
 
 ``riotgen`` is **Python 3.6+** compatible.
 
@@ -87,10 +87,11 @@ In both cases, once complete, the new application can be built using::
 
     make
 
-``example``, ``pkg``, ``test`` and ``board`` will generated the skeleton code
-directly in the RIOT base directory::
+``example``, ``driver``, ``pkg``, ``test`` and ``board`` subcommands generate
+the skeleton code directly in the RIOT base directory::
 
     riotgen example --riotbase /opt/RIOT -i
+    riotgen driver --riotbase /opt/RIOT -i
     riotgen pkg --riotbase /opt/RIOT -i
     riotgen board --riotbase /opt/RIOT -i
     riotgen test --riotbase /opt/RIOT -i
