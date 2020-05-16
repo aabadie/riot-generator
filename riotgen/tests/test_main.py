@@ -9,7 +9,12 @@ from click.testing import CliRunner
 
 from riotgen import riotgen, __version__
 from riotgen.application import APPLICATION_FILES
-from riotgen.board import BOARD_INCLUDE_FILES, BOARD_FILES
+from riotgen.board import BOARD_FILES, BOARD_INCLUDE_FILES
+from riotgen.driver import (
+    DRIVER_FILES,
+    DRIVER_INCLUDE_FILES,
+    DRIVER_INTERNAL_INCLUDE_FILES,
+)
 from riotgen.pkg import PKG_RENAMED_FILES
 
 
@@ -22,6 +27,7 @@ Options:
 Commands:
   application  Bootstrap a RIOT application
   board        Bootstrap a RIOT board support
+  driver       Bootstrap a RIOT driver module
   example      Bootstrap a RIOT example application
   pkg          Bootstrap a RIOT external package
   test         Bootstrap a RIOT test application
@@ -30,14 +36,29 @@ Commands:
 
 MISSING_PARAMETER_MSG = "Missing --interactive and/or --config options."
 
-COMMANDS = ["application", "board", "example", "pkg", "test"]
+COMMANDS = ["application", "board", "driver", "example", "pkg", "test"]
 COMMAND_FUNCS = [
     "riotgen.main.generate_application",
     "riotgen.main.generate_board",
+    "riotgen.main.generate_driver",
     "riotgen.main.generate_example",
     "riotgen.main.generate_pkg",
     "riotgen.main.generate_test",
 ]
+
+
+def _check_generated_files(files, expected_dir, generated_dir, name=None):
+    for input_name, output_name in files.items():
+        if output_name is None:
+            output_name = input_name
+        else:
+            output_name = output_name.format(name=name)
+        assert os.path.exists(generated_dir.join(output_name))
+        with open(os.path.join(expected_dir, input_name)) as f_expected:
+            expected_content = f_expected.read()
+        with open(generated_dir.join(output_name.format(name=name))) as f_result:
+            result_content = f_result.read()
+        assert result_content == expected_content
 
 
 def test_help():
@@ -221,23 +242,19 @@ def test_command_generate_board_from_config(tmpdir):
     test_data_dir = os.path.join(
         os.path.dirname(os.path.abspath(__file__)), "test_data"
     )
-    expected_data_dir = os.path.join(test_data_dir, "board")
+    expected_dir = os.path.join(test_data_dir, "board")
     config_file = os.path.join(test_data_dir, "board.cfg")
 
     tmpdir.mkdir("riotbase")
     riotbase = tmpdir.join("riotbase")
     board_dir = riotbase.join("boards", "test")
+    board_include_dir = board_dir.join("include")
     result = runner.invoke(riotgen, ["board", "-c", config_file, "-r", riotbase],)
 
-    for filename in BOARD_FILES:
-        assert os.path.exists(board_dir.join(filename))
-        with open(os.path.join(expected_data_dir, filename)) as f_expected:
-            expected_content = f_expected.read()
-        with open(board_dir.join(filename)) as f_result:
-            result_content = f_result.read()
-        assert result_content == expected_content
-
-    assert os.path.isdir(board_dir.join("include"))
+    _check_generated_files(BOARD_FILES, expected_dir, board_dir, name=name)
+    _check_generated_files(
+        BOARD_INCLUDE_FILES, expected_dir, board_include_dir, name=name
+    )
 
     msg = f"Support for board '{name}' generated in {board_dir.strpath} with success!"
     assert msg in result.output
@@ -307,4 +324,35 @@ def test_command_generate_pkg(m_generate, m_render, tmpdir):
         {"pkg": {"name": name}}, "pkg", PKG_RENAMED_FILES, riotbase,
     )
     msg = f"Package '{name}' generated in {riotbase} with success!"
+    assert msg in result.output
+
+
+def test_command_generate_driver_from_config(tmpdir):
+    name = "test"
+    runner = CliRunner()
+    test_data_dir = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "test_data"
+    )
+    expected_dir = os.path.join(test_data_dir, "driver")
+    config_file = os.path.join(test_data_dir, "driver.yml")
+
+    tmpdir.mkdir("riotbase")
+    riotbase = tmpdir.join("riotbase")
+    driver_dir = riotbase.join("drivers", "test")
+    driver_include_dir = riotbase.join("drivers", "include")
+    driver_internal_include_dir = driver_dir.join("include")
+    result = runner.invoke(riotgen, ["driver", "-c", config_file, "-r", riotbase],)
+
+    _check_generated_files(DRIVER_FILES, expected_dir, driver_dir, name=name)
+    _check_generated_files(
+        DRIVER_INCLUDE_FILES, expected_dir, driver_include_dir, name=name
+    )
+    _check_generated_files(
+        DRIVER_INTERNAL_INCLUDE_FILES,
+        expected_dir,
+        driver_internal_include_dir,
+        name=name,
+    )
+
+    msg = f"Driver '{name}' generated in {driver_dir.strpath} with success!"
     assert msg in result.output
