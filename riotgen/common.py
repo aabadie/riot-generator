@@ -123,21 +123,19 @@ def render_file(context, template_dir, source, dest):
         f_dest.write(render)
 
 
-def render_source(context, template_dir, input_files, output_dir, output_subdir=""):
+def render_source(context, group, input_files, output_dir):
     """Generate a list of files given from an input template directory."""
-    template_dir = os.path.join(TEMPLATE_BASE_DIR, template_dir)
-    if output_subdir:
-        output_dir = os.path.join(output_dir, output_subdir)
-
+    template_dir = os.path.join(TEMPLATE_BASE_DIR, group)
     if not os.path.isdir(output_dir):
         os.makedirs(output_dir)
 
-    files = {
-        filename + ".j2": os.path.join(output_dir, filename) for filename in input_files
-    }
-
-    for source, dest in files.items():
-        render_file(context, template_dir, source, dest)
+    for source, dest in input_files.items():
+        if dest is None:
+            dest = source
+        else:
+            dest = dest.format(name=context[group]["name"])
+        dest = os.path.join(output_dir, dest)
+        render_file(context, template_dir, source + ".j2", dest)
 
 
 def generate(

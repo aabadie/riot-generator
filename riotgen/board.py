@@ -1,5 +1,6 @@
 """RIOT application generator module."""
 
+import os
 import click
 
 from .common import render_source, generate
@@ -17,16 +18,21 @@ BOARD_PARAMS = {
 
 BOARD_PARAMS_LIST = ["features"]
 
-BOARD_FILES = [
-    "board.c",
-    "doc.txt",
-    "Makefile",
-    "Makefile.dep",
-    "Makefile.features",
-    "Makefile.include",
-]
+BOARD_FILES = {
+    filename: None
+    for filename in [
+        "board.c",
+        "doc.txt",
+        "Makefile",
+        "Makefile.dep",
+        "Makefile.features",
+        "Makefile.include",
+    ]
+}
 
-BOARD_INCLUDE_FILES = ["board.h", "periph_conf.h"]
+BOARD_INCLUDE_FILES = {
+    filename: None for filename in ["board.h", "periph_conf.h"]
+}
 
 
 def generate_board(interactive, config, riotbase):
@@ -43,7 +49,7 @@ def generate_board(interactive, config, riotbase):
     )
 
     render_source(
-        params, group, BOARD_INCLUDE_FILES, output_dir, output_subdir="include",
+        params, group, BOARD_INCLUDE_FILES, os.path.join(output_dir, "include"),
     )
 
     click.echo(
