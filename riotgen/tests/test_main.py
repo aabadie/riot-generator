@@ -7,7 +7,8 @@ from mock import patch
 
 from click.testing import CliRunner
 
-from riotgen import riotgen, __version__
+from riotgen import __version__
+from riotgen.main import riotgen
 from riotgen.application import APPLICATION_FILES
 from riotgen.board import BOARD_FILES, BOARD_INCLUDE_FILES
 from riotgen.driver import (

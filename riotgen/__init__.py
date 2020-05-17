@@ -11,5 +11,3 @@ It can be used to bootstrap:
 """
 
 __version__ = "0.4.0"
-
-from .main import riotgen  # noqa
