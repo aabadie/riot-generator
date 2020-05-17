@@ -26,7 +26,7 @@ def get_version():
 setup(
     name=PACKAGE,
     version=get_version(),
-    description="riotgen: generator for RIOT application/driver/board code",
+    description="riotgen: generator for RIOT source code",
     long_description=get_long_description(),
     long_description_content_type="text/x-rst",
     url="https://github.com/aabadie/riot-generator",
@@ -35,11 +35,7 @@ setup(
     license="",
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
-        # How mature is this project? Common values are
-        #   3 - Alpha
-        #   4 - Beta
-        #   5 - Production/Stable
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 4 - Beta",
         "Environment :: Console",
         "Intended Audience :: Developers",
         "Intended Audience :: Science/Research",
