@@ -1,0 +1,1 @@
+recursive-include riotgen/templates *.j2
