@@ -16,7 +16,7 @@ riotgen: a RIOT source code generator
 
 ``riotgen`` is a command line interface helper tool that is used to bootstrap
 `RIOT <http://github.com/RIOT-OS/RIOT>`_ source files for standalone applications,
-board supports, driver modules, packages and example/test applications.
+board supports, driver modules, system module, packages and example/test applications.
 
 ``riotgen`` is **Python 3.6+** compatible.
 
@@ -57,6 +57,7 @@ tests, packages and board support::
       board        Bootstrap a RIOT board support
       driver       Bootstrap a RIOT driver module
       example      Bootstrap a RIOT example application
+      module       Bootstrap a RIOT system module
       pkg          Bootstrap a RIOT external package
       test         Bootstrap a RIOT test application
 
@@ -87,11 +88,12 @@ In both cases, once complete, the new application can be built using::
 
     make
 
-``example``, ``driver``, ``pkg``, ``test`` and ``board`` subcommands generate
+``example``, ``driver``, ``module``, ``pkg``, ``test`` and ``board`` subcommands generate
 the skeleton code directly in the RIOT base directory::
 
     riotgen example --riotbase /opt/RIOT -i
     riotgen driver --riotbase /opt/RIOT -i
+    riotgen module --riotbase /opt/RIOT -i
     riotgen pkg --riotbase /opt/RIOT -i
     riotgen board --riotbase /opt/RIOT -i
     riotgen test --riotbase /opt/RIOT -i
