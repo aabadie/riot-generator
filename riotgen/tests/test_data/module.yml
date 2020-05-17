@@ -1,0 +1,8 @@
+global:
+  author_name: test_name
+  author_email: test_email
+  organization: test_orga
+module:
+  name: test
+  displayed_name: Test
+  brief: test brief description

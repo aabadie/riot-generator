@@ -15,6 +15,7 @@ from riotgen.driver import (
     DRIVER_INCLUDE_FILES,
     DRIVER_INTERNAL_INCLUDE_FILES,
 )
+from riotgen.module import MODULE_FILES, MODULE_INCLUDE_FILES
 from riotgen.pkg import PKG_RENAMED_FILES
 
 
@@ -29,6 +30,7 @@ Commands:
   board        Bootstrap a RIOT board support
   driver       Bootstrap a RIOT driver module
   example      Bootstrap a RIOT example application
+  module       Bootstrap a RIOT system module
   pkg          Bootstrap a RIOT external package
   test         Bootstrap a RIOT test application
 """
@@ -36,12 +38,13 @@ Commands:
 
 MISSING_PARAMETER_MSG = "Missing --interactive and/or --config options."
 
-COMMANDS = ["application", "board", "driver", "example", "pkg", "test"]
+COMMANDS = ["application", "board", "driver", "example", "module", "pkg", "test"]
 COMMAND_FUNCS = [
     "riotgen.main.generate_application",
     "riotgen.main.generate_board",
     "riotgen.main.generate_driver",
     "riotgen.main.generate_example",
+    "riotgen.main.generate_module",
     "riotgen.main.generate_pkg",
     "riotgen.main.generate_test",
 ]
@@ -355,4 +358,28 @@ def test_command_generate_driver_from_config(tmpdir):
     )
 
     msg = f"Driver '{name}' generated in {driver_dir.strpath} with success!"
+    assert msg in result.output
+
+
+def test_command_generate_module_from_config(tmpdir):
+    name = "test"
+    runner = CliRunner()
+    test_data_dir = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "test_data"
+    )
+    expected_dir = os.path.join(test_data_dir, "module")
+    config_file = os.path.join(test_data_dir, "module.yml")
+
+    tmpdir.mkdir("riotbase")
+    riotbase = tmpdir.join("riotbase")
+    module_dir = riotbase.join("sys", "test")
+    module_include_dir = riotbase.join("sys", "include")
+    result = runner.invoke(riotgen, ["module", "-c", config_file, "-r", riotbase],)
+
+    _check_generated_files(MODULE_FILES, expected_dir, module_dir, name=name)
+    _check_generated_files(
+        MODULE_INCLUDE_FILES, expected_dir, module_include_dir, name=name
+    )
+
+    msg = f"Module '{name}' generated in {module_dir.strpath} with success!"
     assert msg in result.output
