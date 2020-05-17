@@ -43,7 +43,13 @@ def riotgen():  # pylint:disable=missing-function-docstring
 
 
 @riotgen.command(cls=SharedCommand, help="Bootstrap a RIOT application")
-@click.option("-d", "--output-dir", type=click.Path(exists=True), default=os.getcwd())
+@click.option(
+    "-d",
+    "--output-dir",
+    type=click.Path(exists=True),
+    default=os.getcwd(),
+    show_default="current directory",
+)
 def application(output_dir, interactive, config, riotbase):
     """Entry point for application subcommand."""
     generate_application(output_dir, interactive, config, riotbase)
