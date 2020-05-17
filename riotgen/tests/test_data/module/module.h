@@ -29,5 +29,9 @@ extern "C" {
 
 /* Declare the API of the module */
 
+#ifdef __cplusplus
+}
+#endif
+
 #endif /* TEST_H */
 /** @} */

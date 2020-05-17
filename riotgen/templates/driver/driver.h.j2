@@ -54,5 +54,9 @@ typedef struct {
  */
 int {{ driver.name }}_init({{ driver.name }}_t *dev, const {{ driver.name }}_params_t *params);
 
+#ifdef __cplusplus
+}
+#endif
+
 #endif /* {{ driver.name|upper }}_H */
 /** @} */

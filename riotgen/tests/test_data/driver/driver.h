@@ -54,5 +54,9 @@ typedef struct {
  */
 int test_init(test_t *dev, const test_params_t *params);
 
+#ifdef __cplusplus
+}
+#endif
+
 #endif /* TEST_H */
 /** @} */
