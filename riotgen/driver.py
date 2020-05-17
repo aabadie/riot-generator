@@ -27,6 +27,7 @@ DRIVER_INTERNAL_INCLUDE_FILES = {
 
 
 def generate_driver(interactive, config, riotbase):
+    """Generate the code for a driver module."""
     group = "driver"
     params, output_dir = generate(
         group,

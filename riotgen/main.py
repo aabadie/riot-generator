@@ -1,3 +1,5 @@
+"""riotgen main module."""
+
 import os
 import click
 
@@ -13,7 +15,7 @@ from . import __version__
 
 @click.group()
 @click.version_option(version=__version__)
-def riotgen():
+def riotgen():  # pylint:disable=missing-function-docstring
     pass
 
 
@@ -30,6 +32,7 @@ def riotgen():
     "-r", "--riotbase", type=click.Path(exists=True), default=os.getenv("RIOTBASE")
 )
 def application(output_dir, interactive, config, riotbase):
+    """Entry point for application subcommand."""
     generate_application(output_dir, interactive, config, riotbase)
 
 
@@ -42,6 +45,7 @@ def application(output_dir, interactive, config, riotbase):
     "-r", "--riotbase", type=click.Path(exists=True), default=os.getenv("RIOTBASE")
 )
 def board(interactive, config, riotbase):
+    """Entry point for board subcommand."""
     generate_board(interactive, config, riotbase)
 
 
@@ -57,6 +61,7 @@ def board(interactive, config, riotbase):
     "-r", "--riotbase", type=click.Path(exists=True), default=os.getenv("RIOTBASE")
 )
 def driver(interactive, config, riotbase):
+    """Entry point for driver subcommand."""
     generate_driver(interactive, config, riotbase)
 
 
@@ -72,6 +77,7 @@ def driver(interactive, config, riotbase):
     "-r", "--riotbase", type=click.Path(exists=True), default=os.getenv("RIOTBASE")
 )
 def example(interactive, config, riotbase):
+    """Entry point for example application subcommand."""
     generate_example(interactive, config, riotbase)
 
 
@@ -87,6 +93,7 @@ def example(interactive, config, riotbase):
     "-r", "--riotbase", type=click.Path(exists=True), default=os.getenv("RIOTBASE")
 )
 def module(interactive, config, riotbase):
+    """Entry point for module subcommand."""
     generate_module(interactive, config, riotbase)
 
 
@@ -99,6 +106,7 @@ def module(interactive, config, riotbase):
     "-r", "--riotbase", type=click.Path(exists=True), default=os.getenv("RIOTBASE")
 )
 def pkg(interactive, config, riotbase):
+    """Entry point for pkg subcommand."""
     generate_pkg(interactive, config, riotbase)
 
 
@@ -114,4 +122,5 @@ def pkg(interactive, config, riotbase):
     "-r", "--riotbase", type=click.Path(exists=True), default=os.getenv("RIOTBASE")
 )
 def test(interactive, config, riotbase):
+    """Entry point for test subcommand."""
     generate_test(interactive, config, riotbase)

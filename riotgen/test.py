@@ -19,6 +19,7 @@ APPLICATION_PARAMS = {
 
 
 def generate_test(interactive, config, riotbase):
+    """Generate the code of a test application."""
     group = "test"
     params, output_dir = generate(
         group,

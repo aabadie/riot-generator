@@ -14,6 +14,7 @@ APPLICATION_PARAMS = {
 
 
 def generate_example(interactive, config, riotbase):
+    """Generate the code of an example application."""
     group = "example"
     params, output_dir = generate(
         group,

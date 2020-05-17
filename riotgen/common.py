@@ -27,7 +27,7 @@ def read_config_file(config_file, *command_args):
             config_file.seek(0)
             parser = ConfigParser()
             parser.read_file(config_file)
-            params = parser._sections
+            params = parser._sections  # pylint:disable=protected-access
         except ParsingError:
             raise BadParameter("Cannot parse config file '{config_file.filename}'")
 
@@ -55,6 +55,7 @@ def _check_param(params, param):
 
 
 def check_global_params(params):
+    """Check global parameters."""
     if "global" not in params:
         params.update({"global": {}})
     _params = params["global"]
@@ -71,6 +72,7 @@ def check_global_params(params):
 
 
 def check_params(params, param_names, group):
+    """Check a list of parameters."""
     if group not in params:
         raise BadParameter("'{}' group not in parameters.".format(group))
     for param_name in param_names:
@@ -87,11 +89,13 @@ def _prompt_param(params, param, text, default=None, show_default=True):
 
 
 def prompt_params(params, params_dict, group):
+    """Prompt a list of parameters."""
     for param, values in params_dict.items():
         _prompt_param(params[group], param, *values["args"], **values["kwargs"])
 
 
 def prompt_params_list(params, group, *param_list):
+    """Prompt a list of list parameters."""
     for param in param_list:
         if param not in params[group] or not params[group][param]:
             params[group][param] = prompt(
@@ -102,6 +106,7 @@ def prompt_params_list(params, group, *param_list):
 
 
 def prompt_global_params(params):
+    """Prompt global parameters."""
     _params = params["global"]
     if "year" not in params or not _params["year"]:
         _params["year"] = datetime.datetime.now().year
@@ -149,6 +154,7 @@ def generate(
     output_dir=None,
     in_riot_dir=None,
 ):
+    """Generic code generator function."""
     if not interactive and config is None:
         raise MissingParameter(param_type="--interactive and/or --config options")
 

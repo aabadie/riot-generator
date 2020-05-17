@@ -21,6 +21,7 @@ MODULE_INCLUDE_FILES = {"module.h": "{name}.h"}
 
 
 def generate_module(interactive, config, riotbase):
+    """Generate the code of a module."""
     group = "module"
     params, output_dir = generate(
         group,

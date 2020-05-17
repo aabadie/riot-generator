@@ -28,6 +28,7 @@ PKG_RENAMED_FILES = {"pkg.mk": "{name}.mk"}
 
 
 def generate_pkg(interactive, config, riotbase):
+    """Generate the code of a package."""
     group = "pkg"
     params, output_dir = generate(
         group,

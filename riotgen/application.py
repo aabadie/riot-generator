@@ -17,6 +17,7 @@ APPLICATION_FILES = {filename: None for filename in ["main.c", "Makefile", "READ
 
 
 def generate_application(output_dir, interactive, config, riotbase):
+    """Generate the code of an application."""
     params, _ = generate(
         "application",
         APPLICATION_PARAMS,

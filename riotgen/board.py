@@ -34,6 +34,7 @@ BOARD_INCLUDE_FILES = {filename: None for filename in ["board.h", "periph_conf.h
 
 
 def generate_board(interactive, config, riotbase):
+    """Generate the code for a board support."""
     group = "board"
     params, output_dir = generate(
         group,
