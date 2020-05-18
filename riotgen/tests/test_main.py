@@ -165,6 +165,8 @@ def test_command_generate_application_from_config(tmpdir):
         ["application", "-c", config_file, "-d", output_dir.strpath, "-r", riotbase],
     )
 
+    assert result.exit_code == 0
+
     for filename in APPLICATION_FILES:
         assert os.path.exists(output_dir.join(filename))
         with open(os.path.join(expected_data_dir, filename)) as f_expected:
@@ -202,6 +204,8 @@ def test_command_generate_application_from_prompt(tmpdir):
             "periph_gpio\nLGPL21\ntest_name\ntest_email\ntest_orga\n"
         ),
     )
+
+    assert result.exit_code == 0
 
     for filename in APPLICATION_FILES:
         assert os.path.exists(output_dir.join(filename))
@@ -255,6 +259,8 @@ def test_command_generate_board_from_config(tmpdir):
     board_include_dir = board_dir.join("include")
     result = runner.invoke(riotgen, ["board", "-c", config_file, "-r", riotbase],)
 
+    assert result.exit_code == 0
+
     _check_generated_files(BOARD_FILES, expected_dir, board_dir, name=name)
     _check_generated_files(
         BOARD_INCLUDE_FILES, expected_dir, board_include_dir, name=name
@@ -267,6 +273,8 @@ def test_command_generate_board_from_config(tmpdir):
     result = runner.invoke(
         riotgen, ["board", "-c", config_file, "-r", riotbase], input="y\n"
     )
+
+    assert result.exit_code == 0
 
     msg = f"Support for board '{name}' generated in {board_dir.strpath} with success!"
     assert msg in result.output
@@ -347,6 +355,8 @@ def test_command_generate_driver_from_config(tmpdir):
     driver_internal_include_dir = driver_dir.join("include")
     result = runner.invoke(riotgen, ["driver", "-c", config_file, "-r", riotbase],)
 
+    assert result.exit_code == 0
+
     _check_generated_files(DRIVER_FILES, expected_dir, driver_dir, name=name)
     _check_generated_files(
         DRIVER_INCLUDE_FILES, expected_dir, driver_include_dir, name=name
@@ -376,6 +386,8 @@ def test_command_generate_module_from_config(tmpdir):
     module_dir = riotbase.join("sys", "test")
     module_include_dir = riotbase.join("sys", "include")
     result = runner.invoke(riotgen, ["module", "-c", config_file, "-r", riotbase],)
+
+    assert result.exit_code == 0
 
     _check_generated_files(MODULE_FILES, expected_dir, module_dir, name=name)
     _check_generated_files(
