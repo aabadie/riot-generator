@@ -1,0 +1,5 @@
+# Put the package dependencies here
+
+# required modules
+USEMODULE += fmt
+USEMODULE += xtimer
