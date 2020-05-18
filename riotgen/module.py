@@ -40,9 +40,7 @@ def generate_module(interactive, config, riotbase):
 
     click.echo(
         click.style(
-            "Module '{board}' generated in {output_dir} with success!".format(
-                board=params[group]["name"], output_dir=output_dir
-            ),
+            f"Module '{params[group]['name']}' generated in {output_dir} with success!",
             bold=True,
         )
     )

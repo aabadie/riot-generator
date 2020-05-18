@@ -56,9 +56,7 @@ def generate_driver(interactive, config, riotbase):
 
     click.echo(
         click.style(
-            "Driver '{board}' generated in {output_dir} with success!".format(
-                board=params[group]["name"], output_dir=output_dir
-            ),
+            f"Driver '{params[group]['name']}' generated in {output_dir} with success!",
             bold=True,
         )
     )

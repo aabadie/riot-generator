@@ -53,9 +53,7 @@ def generate_board(interactive, config, riotbase):
 
     click.echo(
         click.style(
-            "Support for {group} '{board}' generated in {output_dir} with success!".format(
-                group=group, board=params[group]["name"], output_dir=output_dir
-            ),
+            f"Support for {group} '{params[group]['name']}' generated in {output_dir} with success!",
             bold=True,
         )
     )

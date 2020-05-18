@@ -45,9 +45,7 @@ def generate_pkg(interactive, config, riotbase):
 
     click.echo(
         click.style(
-            "Package '{name}' generated in {output_dir} with success!".format(
-                name=params[group]["name"], output_dir=output_dir
-            ),
+            f"Package '{params[group]['name']}' generated in {output_dir} with success!",
             bold=True,
         )
     )

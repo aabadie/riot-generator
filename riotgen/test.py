@@ -40,9 +40,8 @@ def generate_test(interactive, config, riotbase):
 
     click.echo(
         click.style(
-            "Test application '{name}' generated in {output_dir} with success!".format(
-                name=params[group]["name"], output_dir=output_dir
-            ),
+            f"Test '{params[group]['name']}' generated "
+            f"in {output_dir} with success!",
             bold=True,
         )
     )

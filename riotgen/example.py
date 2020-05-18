@@ -29,9 +29,8 @@ def generate_example(interactive, config, riotbase):
 
     click.echo(
         click.style(
-            "Example '{name}' generated in {output_dir} with success!".format(
-                name=params[group]["name"], output_dir=output_dir
-            ),
+            f"Example '{params[group]['name']}' generated "
+            f"in {output_dir} with success!",
             bold=True,
         )
     )

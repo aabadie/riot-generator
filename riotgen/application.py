@@ -33,11 +33,10 @@ def generate_application(output_dir, interactive, config, riotbase):
 
     click.echo(
         click.style(
-            "Application '{name}' generated in {output_dir} with success!".format(
-                name=name, output_dir=output_dir
-            ),
+            f"Application '{params['application']['name']}' generated "
+            f"in {output_dir} with success!",
             bold=True,
         )
     )
     click.echo("\nTo build the application, use")
-    click.echo("\n     make -C {output_dir}\n".format(output_dir=output_dir))
+    click.echo(f"\n     make -C {output_dir}\n")
