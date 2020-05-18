@@ -140,9 +140,13 @@ def test_prompt_param(m_prompt):
     _prompt_param({"test": "test"}, "test", "Test text")
     assert m_prompt.call_count == 0
     _prompt_param({"test": ""}, "test", "Test text")
-    m_prompt.assert_called_with(text="Test text", default=None, show_default=True)
+    m_prompt.assert_called_with(
+        text="Test text", default=None, show_default=True, type=None, show_choices=True
+    )
     _prompt_param({}, "test", "Test text")
-    m_prompt.assert_called_with(text="Test text", default=None, show_default=True)
+    m_prompt.assert_called_with(
+        text="Test text", default=None, show_default=True, type=None, show_choices=True
+    )
 
 
 @patch("riotgen.common.prompt")
@@ -155,7 +159,11 @@ def test_prompt_params(m_prompt):
     prompt_params(params, TEST_PARAMS, "test")
     assert m_prompt.call_count == 1
     m_prompt.assert_called_with(
-        text="board description", default="test", show_default=True
+        text="board description",
+        default="test",
+        show_default=True,
+        type=None,
+        show_choices=True,
     )
     m_prompt.call_count = 0
     params = {"test": {"name": "", "board": ""}}
@@ -223,16 +231,16 @@ def test_prompt_global_params(mock_utils):
     with patch("riotgen.common.prompt") as m_prompt:
         m_prompt.return_value = "test"
         prompt_global_params(test_params)
-        assert m_prompt.call_count == 3
+        assert m_prompt.call_count == 4
 
     assert test_params["global"]["year"] == datetime.datetime.now().year
-    assert test_params["global"]["author_name"] == "test"
-    assert test_params["global"]["author_email"] == "test"
-    assert test_params["global"]["organization"] == "test"
+    for param in ["license", "author_name", "author_name", "organization"]:
+        assert test_params["global"][param] == "test"
 
     test_params = {
         "global": {
             "year": "1970",
+            "license": "BSD",
             "author_name": "user_test",
             "author_email": "mail_test",
             "organization": "orga",
@@ -244,6 +252,7 @@ def test_prompt_global_params(mock_utils):
         assert m_prompt.call_count == 0
 
     assert test_params["global"]["year"] == datetime.datetime.now().year
+    assert test_params["global"]["license"] == "BSD"
     assert test_params["global"]["author_name"] == "user_test"
     assert test_params["global"]["author_email"] == "mail_test"
     assert test_params["global"]["organization"] == "orga"

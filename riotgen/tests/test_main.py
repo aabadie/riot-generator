@@ -199,7 +199,7 @@ def test_command_generate_application_from_prompt(tmpdir):
         ["application", "-i", "-d", output_dir.strpath, "-r", riotbase],
         input=(
             "test\nTest application\nboard_test\nxtimer,fmt\n\n"
-            "periph_gpio\ntest_name\ntest_email\ntest_orga\n"
+            "periph_gpio\nLGPL21\ntest_name\ntest_email\ntest_orga\n"
         ),
     )
 

@@ -8,7 +8,7 @@ from configparser import ConfigParser, ParsingError
 import yaml
 
 from jinja2 import Environment, FileSystemLoader
-from click import prompt, MissingParameter, BadParameter, Abort
+from click import prompt, Choice, MissingParameter, BadParameter, Abort
 
 from .utils import get_usermail, get_username, parse_list_option
 
@@ -16,6 +16,9 @@ from .utils import get_usermail, get_username, parse_list_option
 TEMPLATE_BASE_DIR = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), "templates"
 )
+
+
+LICENSES = ["LGPL21", "BSD", "MIT", "Apache2"]
 
 
 def read_config_file(config_file, *command_args):
@@ -83,9 +86,23 @@ def check_params(params, param_names, group):
             params[group][param_name] = param.replace(" ", "_")
 
 
-def _prompt_param(params, param, text, default=None, show_default=True):
+def _prompt_param(
+    params,
+    param,
+    text,
+    default=None,
+    show_default=True,
+    param_type=None,
+    show_choices=True,
+):
     if param not in params or not params[param]:
-        params[param] = prompt(text=text, default=default, show_default=show_default)
+        params[param] = prompt(
+            text=text,
+            default=default,
+            show_default=show_default,
+            type=param_type,
+            show_choices=show_choices,
+        )
 
 
 def prompt_params(params, params_dict, group):
@@ -110,6 +127,14 @@ def prompt_global_params(params):
     _params = params["global"]
     if "year" not in params or not _params["year"]:
         _params["year"] = datetime.datetime.now().year
+    if "license" not in params:
+        _prompt_param(
+            _params,
+            "license",
+            "License",
+            param_type=Choice(LICENSES),
+            show_choices=True,
+        )
     _prompt_param(_params, "author_name", "Author name", default=get_username())
     _prompt_param(_params, "author_email", "Author email", default=get_usermail())
     _prompt_param(_params, "organization", "Organization", default=get_username())
@@ -171,11 +196,22 @@ def generate(
 
     if in_riot_dir is None:
         params[group]["riotbase"] = riotbase
+    else:
+        params["global"]["license"] = "LGPL21"
 
     if interactive:
         prompt_params(params, params_descriptor, group)
         prompt_params_list(params, group, *params_as_list)
         prompt_global_params(params)
+
+    licences_dir = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "data", "licenses"
+    )
+
+    with open(
+        os.path.join(licences_dir, params["global"]["license"] + ".txt")
+    ) as f_license:
+        params["global"]["license_header"] = f_license.read()
 
     check_params(params, params_descriptor.keys(), group)
     check_global_params(params)

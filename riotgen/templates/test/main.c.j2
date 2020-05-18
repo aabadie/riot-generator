@@ -1,13 +1,17 @@
 /*
+{% if global.license == "MIT" %}
+ * MIT License
+ *
+{% endif %}
+{% if global.license != "Apache2" %}
  * Copyright (C) {{ global.year }} {{ global.organization }}
  *
- * This file is subject to the terms and conditions of the GNU Lesser
- * General Public License v2.1. See the file LICENSE in the top level
- * directory for more details.
+{% endif %}
+{{ global.license_header }}
  */
 
 /**
- * @ingroup tests
+ * @ingroup     tests
  * @{
  *
  * @file
