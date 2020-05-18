@@ -261,13 +261,14 @@ def test_prompt_global_params(mock_utils):
 def test_render_file(tmpdir):
     """Test the render_file function."""
     dest = tmpdir.join("template_dest").strpath
-    template_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "test_data")
     context = {
         "global": {"test": "test",},
         "test": {"tests": ["test1", "test2", "test3"]},
     }
 
-    render_file(context, template_dir, "template.j2", dest)
+    template_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "test_data")
+    with patch("riotgen.common.TEMPLATE_BASE_DIR", template_dir):
+        render_file(context, "test", "template.j2", dest)
     with open(dest, "r") as f_dest:
         dest_content = f_dest.read()
 
@@ -284,7 +285,7 @@ def test_render_source(tmpdir):
         "test": {"tests": ["test1", "test2", "test3"]},
     }
     with patch("riotgen.common.TEMPLATE_BASE_DIR", template_dir):
-        render_source(context, template_dir, {"template": None}, tmpdir.strpath)
+        render_source(context, "test", {"template": None}, tmpdir.strpath)
 
     dest_file = tmpdir.join("template").strpath
     assert os.path.exists(dest_file)
@@ -298,7 +299,7 @@ def test_render_source(tmpdir):
 
     with patch("riotgen.common.TEMPLATE_BASE_DIR", template_dir):
         render_source(
-            context, template_dir, {"template": None}, tmpdir.join("subdir").strpath
+            context, "test", {"template": None}, tmpdir.join("subdir").strpath
         )
 
     dest_file = tmpdir.join("subdir", "template").strpath

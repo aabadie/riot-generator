@@ -140,14 +140,15 @@ def prompt_global_params(params):
     _prompt_param(_params, "organization", "Organization", default=get_username())
 
 
-def render_file(context, template_dir, source, dest):
+def render_file(context, group, source, dest):
     """Generate a file from an input template and a dict of parameters."""
-    loader = FileSystemLoader(searchpath=template_dir)
+    loader = FileSystemLoader(searchpath=TEMPLATE_BASE_DIR)
     env = Environment(
         loader=loader, trim_blocks=True, lstrip_blocks=True, keep_trailing_newline=True
     )
+    source_file = os.path.join(group, source)
     env.globals.update(zip=zip)
-    template = env.get_template(source)
+    template = env.get_template(source_file)
     render = template.render(**context)
     with open(dest, "w") as f_dest:
         f_dest.write(render)
@@ -155,7 +156,6 @@ def render_file(context, template_dir, source, dest):
 
 def render_source(context, group, input_files, output_dir):
     """Generate a list of files given from an input template directory."""
-    template_dir = os.path.join(TEMPLATE_BASE_DIR, group)
     if not os.path.isdir(output_dir):
         os.makedirs(output_dir)
 
@@ -165,7 +165,7 @@ def render_source(context, group, input_files, output_dir):
         else:
             dest = dest.format(name=context[group]["name"])
         dest = os.path.join(output_dir, dest)
-        render_file(context, template_dir, source + ".j2", dest)
+        render_file(context, group, source + ".j2", dest)
 
 
 def generate(
