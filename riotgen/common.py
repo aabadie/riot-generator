@@ -146,7 +146,7 @@ def render_file(context, group, source, dest):
     env = Environment(
         loader=loader, trim_blocks=True, lstrip_blocks=True, keep_trailing_newline=True
     )
-    source_file = os.path.join(group, source)
+    source_file = group + "/" + source
     env.globals.update(zip=zip)
     template = env.get_template(source_file)
     render = template.render(**context)
