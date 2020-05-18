@@ -1,9 +1,10 @@
 """RIOT example application generator module."""
 
+import os
 import click
 
-from .common import generate
-from .application import APPLICATION_FILES, APPLICATION_PARAMS_LIST
+from .common import check_overwrite
+from .application import load_and_check_application_params, render_application_source
 
 
 APPLICATION_PARAMS = {
@@ -13,19 +14,25 @@ APPLICATION_PARAMS = {
 }
 
 
+def _get_output_dir(params, group, riotbase):
+    """Helper function for tests.
+
+    >>> params = {"test": {"name": "test"}}
+    >>> _get_output_dir(params, "test", "/tmp")
+    '/tmp/examples/test'
+    """
+    return os.path.join(riotbase, "examples", params[group]["name"])
+
+
 def generate_example(interactive, config, riotbase):
     """Generate the code of an example application."""
     group = "example"
-    params, output_dir = generate(
-        group,
-        APPLICATION_PARAMS,
-        APPLICATION_PARAMS_LIST,
-        APPLICATION_FILES,
-        interactive,
-        config,
-        riotbase,
-        in_riot_dir="examples",
-    )
+    params = load_and_check_application_params(group, interactive, config, riotbase,)
+
+    output_dir = _get_output_dir(params, group, riotbase)
+    check_overwrite(output_dir)
+
+    render_application_source(params, group, output_dir)
 
     click.echo(
         click.style(

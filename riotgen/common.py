@@ -162,6 +162,8 @@ def render_file(context, group, source, dest):
 
 def render_source(context, group, input_files, output_dir):
     """Generate a list of files given from an input template directory."""
+    output_dir = os.path.abspath(os.path.expanduser(output_dir))
+
     if not os.path.isdir(output_dir):
         os.makedirs(output_dir)
 
@@ -174,35 +176,29 @@ def render_source(context, group, input_files, output_dir):
         render_file(context, group, source + ".j2", dest)
 
 
-def generate(
+def load_and_check_params(
     group,
     params_descriptor,
     params_as_list,
-    files,
     interactive,
     config,
     riotbase,
-    output_dir=None,
     in_riot_dir=None,
 ):
-    """Generic code generator function."""
+    """Load, prompt and check configuration parameters."""
     if not interactive and config is None:
         raise MissingParameter(param_type="--interactive and/or --config options")
 
     check_riotbase(riotbase)
     riotbase = os.path.abspath(os.path.expanduser(riotbase))
 
-    params = {
-        "global": {},
-        group: {},
-    }
-
+    params = {group: {}, "global": {}}
     if config is not None:
         params = read_config_file(config, group)
 
     if in_riot_dir is None:
         params[group]["riotbase"] = riotbase
-    else:
+    elif "global" in params:
         params["global"]["license"] = "LGPL21"
 
     if interactive:
@@ -214,28 +210,26 @@ def generate(
         os.path.dirname(os.path.abspath(__file__)), "data", "licenses"
     )
 
-    with open(
-        os.path.join(licences_dir, params["global"]["license"] + ".txt")
-    ) as f_license:
-        params["global"]["license_header"] = f_license.read()
+    if "global" in params and "license" in params["global"]:
+        with open(
+            os.path.join(licences_dir, params["global"]["license"] + ".txt")
+        ) as f_license:
+            params["global"]["license_header"] = f_license.read()
 
     check_params(params, params_descriptor.keys(), group)
-    check_global_params(params)
+    if "global" in params:
+        check_global_params(params)
 
-    name = params[group]["name"]
-    if in_riot_dir is not None:
-        output_dir = os.path.join(riotbase, in_riot_dir, name)
-        if os.path.exists(output_dir):
-            reply = prompt(
-                "'{name}' {group} directory already exists, "
-                "overwrite (y/N)?".format(name=name, group=group),
-                default=False,
-                show_default=False,
-            )
-            if not reply or reply == "N":
-                raise Abort()
+    return params
 
-    output_dir = os.path.abspath(os.path.expanduser(output_dir))
-    render_source(params, group, files, output_dir)
 
-    return params, output_dir
+def check_overwrite(output_dir):
+    """Check if output directory exists and prompt for overwrite."""
+    if os.path.exists(output_dir):
+        reply = prompt(
+            f"{output_dir} directory already exists, overwrite (y/N)?",
+            default=False,
+            show_default=False,
+        )
+        if not reply or reply == "N":
+            raise Abort()

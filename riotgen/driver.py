@@ -3,7 +3,7 @@
 import os
 import click
 
-from .common import render_source, generate
+from .common import load_and_check_params, check_overwrite, render_source
 
 
 DRIVER_PARAMS = {
@@ -29,29 +29,19 @@ DRIVER_INTERNAL_INCLUDE_FILES = {
 def generate_driver(interactive, config, riotbase):
     """Generate the code for a driver module."""
     group = "driver"
-    params, output_dir = generate(
-        group,
-        DRIVER_PARAMS,
-        [],
-        DRIVER_FILES,
-        interactive,
-        config,
-        riotbase,
-        in_riot_dir="drivers",
+    params = load_and_check_params(
+        group, DRIVER_PARAMS, [], interactive, config, riotbase, "drivers",
     )
 
+    drivers_dir = os.path.join(riotbase, "drivers")
+    drivers_include_dir = os.path.join(drivers_dir, "include")
+    output_dir = os.path.join(drivers_dir, params[group]["name"])
+    drivers_internal_include_dir = os.path.join(output_dir, "include")
+    check_overwrite(output_dir)
+    render_source(params, group, DRIVER_FILES, output_dir)
+    render_source(params, group, DRIVER_INCLUDE_FILES, drivers_include_dir)
     render_source(
-        params,
-        group,
-        DRIVER_INCLUDE_FILES,
-        os.path.join(riotbase, "drivers", "include"),
-    )
-
-    render_source(
-        params,
-        group,
-        DRIVER_INTERNAL_INCLUDE_FILES,
-        os.path.join(output_dir, "include"),
+        params, group, DRIVER_INTERNAL_INCLUDE_FILES, drivers_internal_include_dir
     )
 
     click.echo(

@@ -4,8 +4,8 @@ import os
 
 import click
 
-from .common import render_source, generate
-from .application import APPLICATION_FILES, APPLICATION_PARAMS_LIST
+from .common import check_overwrite, render_source
+from .application import load_and_check_application_params, render_application_source
 
 
 APPLICATION_PARAMS = {
@@ -18,19 +18,25 @@ APPLICATION_PARAMS = {
 }
 
 
+def _get_output_dir(params, group, riotbase):
+    """Helper function for tests.
+
+    >>> params = {"test": {"name": "test"}}
+    >>> _get_output_dir(params, "test", "/tmp")
+    '/tmp/tests/test'
+    """
+    return os.path.join(riotbase, "tests", params[group]["name"])
+
+
 def generate_test(interactive, config, riotbase):
     """Generate the code of a test application."""
     group = "test"
-    params, output_dir = generate(
-        group,
-        APPLICATION_PARAMS,
-        APPLICATION_PARAMS_LIST,
-        APPLICATION_FILES,
-        interactive,
-        config,
-        riotbase,
-        in_riot_dir="tests",
-    )
+    params = load_and_check_application_params(group, interactive, config, riotbase,)
+
+    output_dir = _get_output_dir(params, group, riotbase)
+    check_overwrite(output_dir)
+
+    render_application_source(params, group, output_dir)
 
     test_params = params[group]
     if "use_testrunner" in test_params and test_params["use_testrunner"] == "True":

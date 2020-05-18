@@ -3,7 +3,7 @@
 import os
 import click
 
-from .common import render_source, generate
+from .common import load_and_check_params, check_overwrite, render_source
 
 
 BOARD_PARAMS = {
@@ -36,17 +36,14 @@ BOARD_INCLUDE_FILES = {filename: None for filename in ["board.h", "periph_conf.h
 def generate_board(interactive, config, riotbase):
     """Generate the code for a board support."""
     group = "board"
-    params, output_dir = generate(
-        group,
-        BOARD_PARAMS,
-        BOARD_PARAMS_LIST,
-        BOARD_FILES,
-        interactive,
-        config,
-        riotbase,
-        in_riot_dir="boards",
+    params = load_and_check_params(
+        group, BOARD_PARAMS, BOARD_PARAMS_LIST, interactive, config, riotbase, "boards",
     )
 
+    output_dir = os.path.join(riotbase, "boards", params[group]["name"])
+    check_overwrite(output_dir)
+
+    render_source(params, group, BOARD_FILES, output_dir)
     render_source(
         params, group, BOARD_INCLUDE_FILES, os.path.join(output_dir, "include"),
     )
