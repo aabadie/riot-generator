@@ -13,10 +13,10 @@ RIOTBASE ?= $(CURDIR)/../..
 USEMODULE += {{ module }}
 {% endfor %}
 {% endif %}
-{% if example.features|length > 0 %}
+{% if example.features_required|length > 0 %}
 
 # required features
-{% for feature in example.features %}
+{% for feature in example.features_required %}
 FEATURES_REQUIRED += {{ feature }}
 {% endfor %}
 {% endif %}

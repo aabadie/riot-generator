@@ -2,6 +2,6 @@ CPU = {{ board.cpu }}
 CPU_MODEL = {{ board.cpu_model }}
 
 # Put defined MCU peripherals here (in alphabetical order)
-{% for feature in board.features %}
+{% for feature in board.features_provided %}
 FEATURES_PROVIDED += {{ feature }}
 {% endfor %}

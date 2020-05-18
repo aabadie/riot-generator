@@ -8,10 +8,10 @@ include ../Makefile.tests_common
 USEMODULE += {{ module }}
 {% endfor %}
 {% endif %}
-{% if test.features|length > 0 %}
+{% if test.features_required|length > 0 %}
 
 # required features
-{% for feature in test.features %}
+{% for feature in test.features_required %}
 FEATURES_REQUIRED += {{ feature }}
 {% endfor %}
 {% endif %}

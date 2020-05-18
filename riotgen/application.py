@@ -11,7 +11,7 @@ APPLICATION_PARAMS = {
     "board": {"args": ["Target board"], "kwargs": {"default": "native"}},
 }
 
-APPLICATION_PARAMS_LIST = ["modules", "packages", "features"]
+APPLICATION_PARAMS_LIST = ["modules", "packages", "features_required"]
 
 APPLICATION_FILES = {filename: None for filename in ["main.c", "Makefile", "README.md"]}
 

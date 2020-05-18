@@ -6,10 +6,10 @@
 USEMODULE += {{ module }}
 {% endfor %}
 {% endif %}
-{% if pkg.features|length > 0 %}
+{% if pkg.features_required|length > 0 %}
 
 # required features
-{% for feature in pkg.features %}
+{% for feature in pkg.features_required %}
 FEATURES_REQUIRED += {{ feature }}
 {% endfor %}
 {% endif %}

@@ -13,10 +13,10 @@ RIOTBASE ?= {{ application.riotbase }}
 USEMODULE += {{ module }}
 {% endfor %}
 {% endif %}
-{% if application.features|length > 0 %}
+{% if application.features_required|length > 0 %}
 
 # required features
-{% for feature in application.features %}
+{% for feature in application.features_required %}
 FEATURES_REQUIRED += {{ feature }}
 {% endfor %}
 {% endif %}

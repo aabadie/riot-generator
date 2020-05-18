@@ -17,6 +17,12 @@ TEMPLATE_BASE_DIR = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), "templates"
 )
 
+PARAMS_LIST_AVAILABLE = [
+    "modules",
+    "packages",
+    "features_required",
+    "features_provided",
+]
 
 LICENSES = ["LGPL21", "BSD", "MIT", "Apache2"]
 
@@ -38,7 +44,7 @@ def read_config_file(config_file, *command_args):
         if command not in params:
             continue
         _params = params[command]
-        for param in ["modules", "packages", "features"]:
+        for param in PARAMS_LIST_AVAILABLE:
             if param not in _params:
                 _params[param] = []
             else:
@@ -116,7 +122,7 @@ def prompt_params_list(params, group, *param_list):
     for param in param_list:
         if param not in params[group] or not params[group][param]:
             params[group][param] = prompt(
-                text="Required {} (comma separated)".format(param),
+                text=f"{param.replace('_', ' ').capitalize()} (comma separated)",
                 default="",
                 value_proc=parse_list_option,
             )

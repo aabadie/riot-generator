@@ -21,7 +21,7 @@ TEST_CONFIG = """[global]
 name=test
 [board]
 name=test_board
-features=feature1,feature2
+features_provided=feature1,feature2
 modules=
 """
 
@@ -29,7 +29,7 @@ TEST_YAML = """global:
   name: test
 board:
   name: test_board
-  features: [feature1, feature2]
+  features_provided: [feature1, feature2]
 """
 
 TEST_PARAMS = {
@@ -58,8 +58,8 @@ def test_read_config_file(config_file):
     assert "board" in config
     assert "name" in config["board"]
     assert config["board"]["name"] == "test_board"
-    assert "features" in config["board"]
-    assert config["board"]["features"] == ["feature1", "feature2"]
+    assert "features_provided" in config["board"]
+    assert config["board"]["features_provided"] == ["feature1", "feature2"]
 
 
 @pytest.fixture()
@@ -82,8 +82,8 @@ def test_read_yaml_file(yaml_file):
     assert "board" in config
     assert "name" in config["board"]
     assert config["board"]["name"] == "test_board"
-    assert "features" in config["board"]
-    assert config["board"]["features"] == ["feature1", "feature2"]
+    assert "features_provided" in config["board"]
+    assert config["board"]["features_provided"] == ["feature1", "feature2"]
 
 
 def test_invalid_config_file(tmpdir):
@@ -181,9 +181,7 @@ def test_prompt_params_list(m_prompt):
     prompt_params_list(params, "test", "test1", "test2", "test3")
     assert m_prompt.call_count == 1  # for missing test3
     m_prompt.assert_called_with(
-        text="Required test3 (comma separated)",
-        default="",
-        value_proc=parse_list_option,
+        text="Test3 (comma separated)", default="", value_proc=parse_list_option,
     )
 
     m_prompt.call_count = 0

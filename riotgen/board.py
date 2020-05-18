@@ -16,7 +16,7 @@ BOARD_PARAMS = {
     "cpu_model": {"args": ["CPU model name"], "kwargs": {}},
 }
 
-BOARD_PARAMS_LIST = ["features"]
+BOARD_PARAMS_LIST = ["features_provided"]
 
 BOARD_FILES = {
     filename: None

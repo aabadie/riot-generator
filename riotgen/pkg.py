@@ -17,7 +17,7 @@ PKG_PARAMS = {
     "description": {"args": ["Package short description"], "kwargs": {}},
 }
 
-PKG_PARAMS_LIST = ["modules", "packages", "features"]
+PKG_PARAMS_LIST = ["modules", "packages", "features_required"]
 
 PKG_FILES = {
     filename: None
