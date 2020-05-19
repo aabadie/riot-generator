@@ -29,7 +29,7 @@ def generate_test(interactive, config, riotbase):
         "True",
         "y",
     ):
-        testrunner_dir = os.path.join(output_dir, "test")
+        testrunner_dir = os.path.join(output_dir, "tests")
         render_source(params, group, {"01-run.py": None}, testrunner_dir)
         os.chmod(os.path.join(testrunner_dir, "01-run.py"), 0o755)
 
