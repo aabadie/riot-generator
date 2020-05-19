@@ -15,12 +15,7 @@ APPLICATION_PARAMS = {
 
 
 def _get_output_dir(params, group, riotbase):
-    """Helper function for tests.
-
-    >>> params = {"test": {"name": "test"}}
-    >>> _get_output_dir(params, "test", "/tmp")
-    '/tmp/examples/test'
-    """
+    """Helper function for tests."""
     return os.path.join(riotbase, "examples", params[group]["name"])
 
 

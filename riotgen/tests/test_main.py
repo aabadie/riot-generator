@@ -1,6 +1,7 @@
 """Main generator tests."""
 
 import os
+import sys
 
 import pytest
 from mock import patch
@@ -18,6 +19,8 @@ from riotgen.driver import (
 )
 from riotgen.module import MODULE_FILES, MODULE_INCLUDE_FILES
 from riotgen.pkg import PKG_FILES
+from riotgen.example import _get_output_dir as _get_output_dir_example
+from riotgen.test import _get_output_dir as _get_output_dir_test
 
 
 HELP_OUTPUT = """Usage: riotgen [OPTIONS] COMMAND [ARGS]...
@@ -63,6 +66,18 @@ def _check_generated_files(files, expected_dir, generated_dir, name):
         with open(generated_dir.join(output_name.format(name=name))) as f_result:
             result_content = f_result.read()
         assert result_content == expected_content
+
+
+@pytest.mark.skipif(sys.platform.startswith("win"), reason="doesn't work on windows")
+def test_get_output_dir_test():
+    params = {"test": {"name": "test"}}
+    assert _get_output_dir_test(params, "test", "/tmp") == '/tmp/tests/test'
+
+
+@pytest.mark.skipif(sys.platform.startswith("win"), reason="doesn't work on windows")
+def test_get_output_dir_example():
+    params = {"test": {"name": "test"}}
+    assert _get_output_dir_example(params, "test", "/tmp") == '/tmp/examples/test'
 
 
 def test_help():
