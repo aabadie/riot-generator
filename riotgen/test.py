@@ -25,6 +25,7 @@ def generate_test(interactive, config, riotbase):
 
     test_params = params[group]
     if "use_testrunner" in test_params and test_params["use_testrunner"] in (
+        True,
         "True",
         "y",
     ):
