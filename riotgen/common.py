@@ -24,7 +24,7 @@ PARAMS_LIST_AVAILABLE = [
     "features_provided",
 ]
 
-LICENSES = ["LGPL21", "BSD", "MIT", "Apache2"]
+LICENSES = ["LGPL21", "BSD", "MIT", "MPL2", "Apache2", "AGPL3"]
 
 
 def read_config_file(config_file, *command_args):
