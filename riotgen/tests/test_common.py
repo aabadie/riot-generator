@@ -124,14 +124,31 @@ def test_check_params():
     with pytest.raises(BadParameter):
         check_params({}, ["test"], "test")
 
+    # Regular test: all params in descriptor are set in the params
+    params_descriptor = {
+        "name": {"args": ["test name"], "kwargs": {},},
+        "board": {"args": ["test board"], "kwargs": {"default": "native"},},
+    }
     params = {"test": {"name": "test name", "board": "test_board"}}
-    check_params(params, params["test"].keys(), "test")
+    check_params(params, params_descriptor, "test")
     assert params["test"]["name"] == "test_name"
     assert params["test"]["board"] == "test_board"
 
+    # Use default param: all but one are set, the remaining one has a default
+    # value set in the descriptor
+    params = {"test": {"name": "test name"}}
+    check_params(params, params_descriptor, "test")
+    assert params["test"]["name"] == "test_name"
+    assert params["test"]["board"] == "native"
+
+    # Missing default param
     params = {"test": {"name": "test name", "board": ""}}
+    params_descriptor = {
+        "name": {"args": ["test name"], "kwargs": {},},
+        "board": {"args": ["test board"], "kwargs": {},},
+    }
     with pytest.raises(MissingParameter):
-        check_params(params, params["test"].keys(), "test")
+        check_params(params, params_descriptor, "test")
 
 
 @patch("riotgen.common.prompt")

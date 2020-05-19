@@ -80,13 +80,16 @@ def check_global_params(params):
         _check_param(_params, param_name)
 
 
-def check_params(params, param_names, group):
+def check_params(params, params_descriptor, group):
     """Check a list of parameters."""
     if group not in params:
         raise BadParameter(f"'{group}' group not in parameters.")
-    for param_name in param_names:
+    for param_name, param_values in params_descriptor.items():
         if param_name not in params[group] or params[group][param_name] == "":
-            raise MissingParameter(param_type=param_name.replace("_", " "))
+            if "kwargs" in param_values and "default" in param_values["kwargs"]:
+                params[group][param_name] = param_values["kwargs"]["default"]
+            else:
+                raise MissingParameter(param_type=param_name.replace("_", " "))
         if param_name == "name":
             param = params[group][param_name]
             params[group][param_name] = param.replace(" ", "_")
@@ -111,9 +114,9 @@ def _prompt_param(
         )
 
 
-def prompt_params(params, params_dict, group):
+def prompt_params(params, params_descriptor, group):
     """Prompt a list of parameters."""
-    for param, values in params_dict.items():
+    for param, values in params_descriptor.items():
         _prompt_param(params[group], param, *values["args"], **values["kwargs"])
 
 
@@ -216,7 +219,7 @@ def load_and_check_params(
         ) as f_license:
             params["global"]["license_header"] = f_license.read()
 
-    check_params(params, params_descriptor.keys(), group)
+    check_params(params, params_descriptor, group)
     if "global" in params:
         check_global_params(params)
 
