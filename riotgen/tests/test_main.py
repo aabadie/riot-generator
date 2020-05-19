@@ -71,13 +71,13 @@ def _check_generated_files(files, expected_dir, generated_dir, name):
 @pytest.mark.skipif(sys.platform.startswith("win"), reason="doesn't work on windows")
 def test_get_output_dir_test():
     params = {"test": {"name": "test"}}
-    assert _get_output_dir_test(params, "test", "/tmp") == '/tmp/tests/test'
+    assert _get_output_dir_test(params, "test", "/tmp") == "/tmp/tests/test"
 
 
 @pytest.mark.skipif(sys.platform.startswith("win"), reason="doesn't work on windows")
 def test_get_output_dir_example():
     params = {"test": {"name": "test"}}
-    assert _get_output_dir_example(params, "test", "/tmp") == '/tmp/examples/test'
+    assert _get_output_dir_example(params, "test", "/tmp") == "/tmp/examples/test"
 
 
 def test_help():
