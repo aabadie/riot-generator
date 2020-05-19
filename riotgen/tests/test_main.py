@@ -10,7 +10,7 @@ from click.testing import CliRunner
 
 from riotgen import __version__
 from riotgen.main import riotgen
-from riotgen.application import APPLICATION_FILES
+from riotgen.application import APPLICATION_FILES, get_output_dir
 from riotgen.board import BOARD_FILES, BOARD_INCLUDE_FILES
 from riotgen.driver import (
     DRIVER_FILES,
@@ -19,8 +19,6 @@ from riotgen.driver import (
 )
 from riotgen.module import MODULE_FILES, MODULE_INCLUDE_FILES
 from riotgen.pkg import PKG_FILES
-from riotgen.example import _get_output_dir as _get_output_dir_example
-from riotgen.test import _get_output_dir as _get_output_dir_test
 
 
 HELP_OUTPUT = """Usage: riotgen [OPTIONS] COMMAND [ARGS]...
@@ -71,13 +69,8 @@ def _check_generated_files(files, expected_dir, generated_dir, name):
 @pytest.mark.skipif(sys.platform.startswith("win"), reason="doesn't work on windows")
 def test_get_output_dir_test():
     params = {"test": {"name": "test"}}
-    assert _get_output_dir_test(params, "test", "/tmp") == "/tmp/tests/test"
-
-
-@pytest.mark.skipif(sys.platform.startswith("win"), reason="doesn't work on windows")
-def test_get_output_dir_example():
-    params = {"test": {"name": "test"}}
-    assert _get_output_dir_example(params, "test", "/tmp") == "/tmp/examples/test"
+    output_dir = get_output_dir(params, "test", "/tmp", "test_dir")
+    assert output_dir == "/tmp/test_dir/test"
 
 
 def test_help():
@@ -301,13 +294,16 @@ def test_command_generate_driver_from_config(tmpdir):
     assert msg in result.output
 
 
-@patch("riotgen.example._get_output_dir")
+@patch("riotgen.example.get_output_dir")
 @patch("riotgen.application.render_source")
 @patch("riotgen.application.load_and_check_params")
 def test_command_generate_example(m_check, m_render, m_output_dir, tmpdir):
     runner = CliRunner()
     name = "test"
-    m_check.return_value = {"example": {"name": name}, "global": {"license": "test"}}
+    m_check.return_value = {
+        "application": {"name": name},
+        "global": {"license": "test"},
+    }
     output_dir = tmpdir.join("test").strpath
     m_output_dir.return_value = output_dir
     result = runner.invoke(riotgen, ["example", "-r", tmpdir.strpath])
@@ -362,14 +358,17 @@ def test_command_generate_pkg_from_config(tmpdir):
     assert msg in result.output
 
 
-@patch("riotgen.test._get_output_dir")
+@patch("riotgen.test.get_output_dir")
 @patch("riotgen.application.render_source")
 @patch("riotgen.application.load_and_check_params")
 @patch("riotgen.test.render_source")
 def test_command_generate_test(m_test_render, m_check, m_render, m_output_dir, tmpdir):
     runner = CliRunner()
     name = "test"
-    m_check.return_value = {"test": {"name": name}, "global": {"license": "test"}}
+    m_check.return_value = {
+        "application": {"name": name},
+        "global": {"license": "test"},
+    }
     output_dir = tmpdir.join("test").strpath
     m_output_dir.return_value = output_dir
     result = runner.invoke(riotgen, ["test", "-r", tmpdir.strpath])
@@ -379,14 +378,16 @@ def test_command_generate_test(m_test_render, m_check, m_render, m_output_dir, t
     assert m_render.call_count == 1
 
     params = {
-        "test": {"name": name, "use_testrunner": "True"},
+        "application": {"name": name, "use_testrunner": "True"},
         "global": {"license": "test"},
     }
     m_check.return_value = params
     with patch("os.chmod"):
         result = runner.invoke(riotgen, ["test"])
         testrunner_dir = os.path.join(output_dir, "test")
-        m_test_render.assert_called_with(params, "test", ["01-run.py"], testrunner_dir)
+        m_test_render.assert_called_with(
+            params, "application", {"01-run.py": None}, testrunner_dir
+        )
 
     msg = f"Test '{name}' generated in {output_dir} with success!"
     assert msg in result.output

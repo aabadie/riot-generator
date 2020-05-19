@@ -1,5 +1,6 @@
 """RIOT application generator module."""
 
+import os
 import click
 
 from .common import load_and_check_params, render_source
@@ -11,20 +12,39 @@ APPLICATION_PARAMS = {
     "board": {"args": ["Target board"], "kwargs": {"default": "native"}},
 }
 
+TESTRUNNER_PARAMS = {
+    "use_testrunner": {
+        "args": ["Add testrunner script (y/N)"],
+        "kwargs": {"default": False, "show_default": False},
+    },
+}
+
 APPLICATION_PARAMS_LIST = ["modules", "packages", "features_required"]
 
 APPLICATION_FILES = {filename: None for filename in ["main.c", "Makefile", "README.md"]}
 
 
-def load_and_check_application_params(group, interactive, config, riotbase):
+def get_output_dir(params, group, riotbase, in_riot_dir):
+    """Helper function for tests."""
+    return os.path.join(riotbase, in_riot_dir, params[group]["name"])
+
+
+def load_and_check_application_params(
+    group, interactive, config, riotbase, in_riot_dir=None, testrunner=False
+):
     """Load, prompt and check application configuration parameters."""
+    params = APPLICATION_PARAMS.copy()
+    if testrunner is True:
+        params.update(TESTRUNNER_PARAMS)
+
     return load_and_check_params(
         group,
-        APPLICATION_PARAMS,
+        params,
         APPLICATION_PARAMS_LIST,
         interactive,
         config,
         riotbase,
+        in_riot_dir,
     )
 
 

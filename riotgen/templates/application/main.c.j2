@@ -1,6 +1,14 @@
 {% include "common/header.j2" %}
 
 /**
+{% if application.type is defined %}
+{% if application.type == "example" %}
+ * @ingroup     examples
+{% endif %}
+{% if application.type == "test" %}
+ * @ingroup     tests
+{% endif %}
+{% endif %}
  * @{
  *
  * @file

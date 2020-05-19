@@ -5,7 +5,11 @@ APPLICATION = {{ application.name }}
 BOARD ?= {{ application.board }}
 
 # This has to be the absolute path to the RIOT base directory:
+{% if application.type is defined %}
+RIOTBASE ?= $(CURDIR)/../..
+{% else %}
 RIOTBASE ?= {{ application.riotbase }}
+{% endif %}
 {% if application.modules|length > 0 %}
 
 # required modules
