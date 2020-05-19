@@ -294,21 +294,25 @@ def test_command_generate_driver_from_config(tmpdir):
     assert msg in result.output
 
 
-@patch("riotgen.example.get_output_dir")
-@patch("riotgen.application.render_source")
-@patch("riotgen.application.load_and_check_params")
-def test_command_generate_example(m_check, m_render, m_output_dir, tmpdir):
-    runner = CliRunner()
+def test_command_generate_example(tmpdir):
     name = "test"
-    m_check.return_value = {
-        "application": {"name": name},
-        "global": {"license": "test"},
-    }
-    output_dir = tmpdir.join("test").strpath
-    m_output_dir.return_value = output_dir
-    result = runner.invoke(riotgen, ["example", "-r", tmpdir.strpath])
+    runner = CliRunner()
+    test_data_dir = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "test_data"
+    )
+    expected_data_dir = os.path.join(test_data_dir, "example")
+    config_file = os.path.join(test_data_dir, "example.yml")
+    output_dir = tmpdir.join("examples", name)
 
-    msg = f"Example '{name}' generated in {output_dir} with success!"
+    result = runner.invoke(
+        riotgen, ["example", "-c", config_file, "-r", tmpdir.strpath],
+    )
+
+    assert result.exit_code == 0
+
+    _check_generated_files(APPLICATION_FILES, expected_data_dir, output_dir, name)
+
+    msg = f"Example '{name}' generated in {output_dir.strpath} with success!"
     assert msg in result.output
 
 
@@ -358,36 +362,24 @@ def test_command_generate_pkg_from_config(tmpdir):
     assert msg in result.output
 
 
-@patch("riotgen.test.get_output_dir")
-@patch("riotgen.application.render_source")
-@patch("riotgen.application.load_and_check_params")
-@patch("riotgen.test.render_source")
-def test_command_generate_test(m_test_render, m_check, m_render, m_output_dir, tmpdir):
-    runner = CliRunner()
+def test_command_generate_test_from_config(tmpdir):
     name = "test"
-    m_check.return_value = {
-        "application": {"name": name},
-        "global": {"license": "test"},
-    }
-    output_dir = tmpdir.join("test").strpath
-    m_output_dir.return_value = output_dir
-    result = runner.invoke(riotgen, ["test", "-r", tmpdir.strpath])
+    runner = CliRunner()
+    test_data_dir = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "test_data"
+    )
+    expected_data_dir = os.path.join(test_data_dir, "test")
+    config_file = os.path.join(test_data_dir, "test.yml")
+    output_dir = tmpdir.join("tests", name)
 
-    msg = f"Test '{name}' generated in {output_dir} with success!"
-    assert msg in result.output
-    assert m_render.call_count == 1
+    result = runner.invoke(riotgen, ["test", "-c", config_file, "-r", tmpdir.strpath],)
 
-    params = {
-        "application": {"name": name, "use_testrunner": "True"},
-        "global": {"license": "test"},
-    }
-    m_check.return_value = params
-    with patch("os.chmod"):
-        result = runner.invoke(riotgen, ["test"])
-        testrunner_dir = os.path.join(output_dir, "test")
-        m_test_render.assert_called_with(
-            params, "application", {"01-run.py": None}, testrunner_dir
-        )
+    assert result.exit_code == 0
 
-    msg = f"Test '{name}' generated in {output_dir} with success!"
+    _check_generated_files(APPLICATION_FILES, expected_data_dir, output_dir, name)
+    _check_generated_files(
+        {"01-run.py": None}, expected_data_dir, output_dir.join("tests"), name
+    )
+
+    msg = f"Test '{name}' generated in {output_dir.strpath} with success!"
     assert msg in result.output

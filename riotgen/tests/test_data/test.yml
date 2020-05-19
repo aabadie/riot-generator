@@ -1,0 +1,8 @@
+global:
+  author_name: test_name
+  author_email: test_email
+  organization: test_orga
+application:
+  name: test
+  brief: test brief description
+  use_testrunner: True
