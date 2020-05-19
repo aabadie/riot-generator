@@ -83,7 +83,7 @@ def check_global_params(params):
 def check_params(params, param_names, group):
     """Check a list of parameters."""
     if group not in params:
-        raise BadParameter("'{}' group not in parameters.".format(group))
+        raise BadParameter(f"'{group}' group not in parameters.")
     for param_name in param_names:
         if param_name not in params[group] or params[group][param_name] == "":
             raise MissingParameter(param_type=param_name.replace("_", " "))

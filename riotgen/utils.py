@@ -25,7 +25,7 @@ def parse_list_option(opt):
 
 
 def _get_git_config(config):
-    cmd = "git config --get {config}".format(config=config)
+    cmd = f"git config --get {config}"
     try:
         config = subprocess.check_output(shlex.split(cmd)).decode()[:-1]
     except subprocess.CalledProcessError:
@@ -46,7 +46,5 @@ def get_usermail():
 
 def clone_repository(url, version, dest):
     """Clone a git repository."""
-    cmd = "git clone --depth=1 -b {version} {url} {dest}".format(
-        dest=dest, url=url, version=version
-    )
+    cmd = f"git clone --depth=1 -b {version} {url} {dest}"
     return subprocess.check_call(shlex.split(cmd))

@@ -52,5 +52,5 @@ setup(
     package_dir={"riotgen": "riotgen"},
     package_data={"riotgen": ["templates/*/*", "data/*/*"]},
     install_requires=["click", "Jinja2", "PyYaml"],
-    entry_points={"console_scripts": ["{}=riotgen:main.riotgen".format(PACKAGE),],},
+    entry_points={"console_scripts": [f"{PACKAGE}=riotgen:main.riotgen",],},
 )
