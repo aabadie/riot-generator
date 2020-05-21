@@ -2,6 +2,7 @@
 
 import os
 import datetime
+import textwrap
 
 from configparser import ConfigParser, ParsingError
 
@@ -179,6 +180,20 @@ def render_source(context, group, input_files, output_dir):
         render_file(context, group, source + ".j2", dest)
 
 
+def load_license(params, prefix):
+    """Load the license_header in params from the data."""
+    licences_dir = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "data", "licenses"
+    )
+
+    if "global" in params and "license" in params["global"]:
+        with open(
+            os.path.join(licences_dir, params["global"]["license"] + ".txt")
+        ) as f_license:
+            license_header = textwrap.indent(f_license.read(), prefix)
+            params["global"]["license_header"] = license_header
+
+
 def load_and_check_params(
     group,
     params_descriptor,
@@ -209,15 +224,7 @@ def load_and_check_params(
         prompt_params_list(params, group, *params_as_list)
         prompt_global_params(params)
 
-    licences_dir = os.path.join(
-        os.path.dirname(os.path.abspath(__file__)), "data", "licenses"
-    )
-
-    if "global" in params and "license" in params["global"]:
-        with open(
-            os.path.join(licences_dir, params["global"]["license"] + ".txt")
-        ) as f_license:
-            params["global"]["license_header"] = f_license.read()
+    load_license(params, " * ")
 
     check_params(params, params_descriptor, group)
     if "global" in params:

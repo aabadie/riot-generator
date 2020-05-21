@@ -4,7 +4,7 @@ import os
 
 import click
 
-from .common import check_overwrite, render_source
+from .common import check_overwrite, render_source, load_license
 from .application import load_and_check_application_params, render_application_source
 from .application import get_output_dir
 
@@ -29,6 +29,7 @@ def generate_test(interactive, config, riotbase):
         "True",
         "y",
     ):
+        load_license(params, "# ")
         testrunner_dir = os.path.join(output_dir, "tests")
         render_source(params, group, {"01-run.py": None}, testrunner_dir)
         os.chmod(os.path.join(testrunner_dir, "01-run.py"), 0o755)
