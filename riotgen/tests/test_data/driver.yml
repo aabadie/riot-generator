@@ -6,4 +6,4 @@ driver:
   name: test
   displayed_name: Test
   brief: test brief description
-  ingroup: test
+  ingroup: misc

@@ -8,7 +8,7 @@
 
 /**
  * @defgroup    drivers_test Test
- * @ingroup     drivers_test
+ * @ingroup     drivers_misc
  * @brief       test brief description
  *
  * @{

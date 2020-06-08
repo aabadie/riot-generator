@@ -6,11 +6,26 @@ import click
 from .common import load_and_check_params, check_overwrite, render_source
 
 
+DRIVER_PARENTS = [
+    "actuators",
+    "display",
+    "can",
+    "misc",
+    "mtd",
+    "netdev",
+    "power",
+    "sensors",
+    "storage",
+]
+
 DRIVER_PARAMS = {
     "name": {"args": ["Driver name"], "kwargs": {}},
     "displayed_name": {"args": ["Driver Doxygen group name"], "kwargs": {},},
     "brief": {"args": ["Brief doxygen description"], "kwargs": {}},
-    "ingroup": {"args": ["Parent driver Doxygen group"], "kwargs": {}},
+    "ingroup": {
+        "args": ["Parent driver Doxygen group"],
+        "kwargs": {"param_type": click.Choice(DRIVER_PARENTS), "show_choices": True,},
+    },
 }
 
 DRIVER_FILES = {
