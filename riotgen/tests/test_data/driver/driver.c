@@ -19,8 +19,8 @@
  */
 
 #include "test.h"
-#include "test_constants.h"
-#include "test_params.h"
+#include "include/test_constants.h"
+#include "include/test_params.h"
 
 int test_init(test_t *dev, const test_params_t *params)
 {
