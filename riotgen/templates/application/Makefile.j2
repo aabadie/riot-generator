@@ -1,3 +1,6 @@
+{% if application.type == "test" %}
+include ../Makefile.tests_common
+{% else %}
 # name of the application
 APPLICATION = {{ application.name }}
 
@@ -9,6 +12,7 @@ BOARD ?= {{ application.board }}
 RIOTBASE ?= $(CURDIR)/../..
 {% else %}
 RIOTBASE ?= {{ application.riotbase }}
+{% endif %}
 {% endif %}
 {% if application.modules|length > 0 %}
 
@@ -32,6 +36,7 @@ USE_PKG += {{ package }}
 {% endfor %}
 {% endif %}
 
+{% if application.type != "test" %}
 # Comment this out to disable code in RIOT that does safety checking
 # which is not needed in a production environment but helps in the
 # development process:
@@ -40,4 +45,5 @@ DEVELHELP ?= 1
 # Change this to 0 show compiler invocation lines by default:
 QUIET ?= 1
 
+{% endif %}
 include $(RIOTBASE)/Makefile.include
