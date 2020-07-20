@@ -7,3 +7,5 @@ driver:
   displayed_name: Test
   brief: test brief description
   ingroup: misc
+  modules: xtimer
+  features_required: periph_i2c
