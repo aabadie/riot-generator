@@ -49,7 +49,13 @@ def generate_driver(interactive, config, riotbase):
     """Generate the code for a driver module."""
     group = "driver"
     params = load_and_check_params(
-        group, DRIVER_PARAMS, DRIVER_PARAMS_LIST, interactive, config, riotbase, "drivers",
+        group,
+        DRIVER_PARAMS,
+        DRIVER_PARAMS_LIST,
+        interactive,
+        config,
+        riotbase,
+        "drivers",
     )
 
     drivers_dir = os.path.join(riotbase, "drivers")
