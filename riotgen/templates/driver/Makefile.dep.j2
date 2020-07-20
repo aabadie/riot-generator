@@ -1,0 +1,15 @@
+{% if driver.modules|length > 0 %}
+{% for module in driver.modules %}
+USEMODULE += {{ module }}
+{% endfor %}
+{% endif %}
+{% if driver.features_required|length > 0 %}
+{% for feature in driver.features_required %}
+FEATURES_REQUIRED += {{ feature }}
+{% endfor %}
+{% endif %}
+{% if driver.packages|length > 0 %}
+{% for package in driver.packages %}
+USE_PKG += {{ package }}
+{% endfor %}
+{% endif %}

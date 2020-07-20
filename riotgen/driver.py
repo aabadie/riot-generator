@@ -31,7 +31,11 @@ DRIVER_PARAMS = {
 DRIVER_FILES = {
     "driver.c": "{name}.c",
     "Makefile": None,
+    "Makefile.include": None,
+    "Makefile.dep": None,
 }
+
+DRIVER_PARAMS_LIST = ["modules", "packages", "features_required"]
 
 DRIVER_INCLUDE_FILES = {"driver.h": "{name}.h"}
 
@@ -45,7 +49,7 @@ def generate_driver(interactive, config, riotbase):
     """Generate the code for a driver module."""
     group = "driver"
     params = load_and_check_params(
-        group, DRIVER_PARAMS, [], interactive, config, riotbase, "drivers",
+        group, DRIVER_PARAMS, DRIVER_PARAMS_LIST, interactive, config, riotbase, "drivers",
     )
 
     drivers_dir = os.path.join(riotbase, "drivers")
