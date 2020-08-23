@@ -39,6 +39,7 @@ def read_config_file(config_file, *command_args):
             parser.read_file(config_file)
             params = parser._sections  # pylint:disable=protected-access
         except ParsingError:
+            # pylint: disable=raise-missing-from
             raise BadParameter("Cannot parse config file '{config_file.filename}'")
 
     for command in command_args:
