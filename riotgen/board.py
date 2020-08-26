@@ -37,7 +37,13 @@ def generate_board(interactive, config, riotbase):
     """Generate the code for a board support."""
     group = "board"
     params = load_and_check_params(
-        group, BOARD_PARAMS, BOARD_PARAMS_LIST, interactive, config, riotbase, "boards",
+        group,
+        BOARD_PARAMS,
+        BOARD_PARAMS_LIST,
+        interactive,
+        config,
+        riotbase,
+        "boards",
     )
 
     output_dir = os.path.join(riotbase, "boards", params[group]["name"])
@@ -45,7 +51,10 @@ def generate_board(interactive, config, riotbase):
 
     render_source(params, group, BOARD_FILES, output_dir)
     render_source(
-        params, group, BOARD_INCLUDE_FILES, os.path.join(output_dir, "include"),
+        params,
+        group,
+        BOARD_INCLUDE_FILES,
+        os.path.join(output_dir, "include"),
     )
 
     click.echo(

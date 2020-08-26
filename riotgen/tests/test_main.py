@@ -97,7 +97,11 @@ def test_missing_param(command):
 
 @pytest.mark.parametrize("command,func", list(zip(COMMANDS, COMMAND_FUNCS)))
 @pytest.mark.parametrize(
-    "options,expected_args", [([], [False, None, None]), (["-i"], [True, None, None]),]
+    "options,expected_args",
+    [
+        ([], [False, None, None]),
+        (["-i"], [True, None, None]),
+    ],
 )
 def test_command_interactive(command, func, options, expected_args):
     runner = CliRunner()
@@ -234,7 +238,10 @@ def test_command_generate_board_from_config(tmpdir):
     riotbase = tmpdir.join("riotbase")
     board_dir = riotbase.join("boards", "test")
     board_include_dir = board_dir.join("include")
-    result = runner.invoke(riotgen, ["board", "-c", config_file, "-r", riotbase],)
+    result = runner.invoke(
+        riotgen,
+        ["board", "-c", config_file, "-r", riotbase],
+    )
 
     assert result.exit_code == 0
 
@@ -277,7 +284,10 @@ def test_command_generate_driver_from_config(tmpdir):
     driver_dir = riotbase.join("drivers", "test")
     driver_include_dir = riotbase.join("drivers", "include")
     driver_internal_include_dir = driver_dir.join("include")
-    result = runner.invoke(riotgen, ["driver", "-c", config_file, "-r", riotbase],)
+    result = runner.invoke(
+        riotgen,
+        ["driver", "-c", config_file, "-r", riotbase],
+    )
 
     assert result.exit_code == 0
 
@@ -305,7 +315,8 @@ def test_command_generate_example(tmpdir):
     output_dir = tmpdir.join("examples", name)
 
     result = runner.invoke(
-        riotgen, ["example", "-c", config_file, "-r", tmpdir.strpath],
+        riotgen,
+        ["example", "-c", config_file, "-r", tmpdir.strpath],
     )
 
     assert result.exit_code == 0
@@ -329,7 +340,10 @@ def test_command_generate_module_from_config(tmpdir):
     riotbase = tmpdir.join("riotbase")
     module_dir = riotbase.join("sys", "test")
     module_include_dir = riotbase.join("sys", "include")
-    result = runner.invoke(riotgen, ["module", "-c", config_file, "-r", riotbase],)
+    result = runner.invoke(
+        riotgen,
+        ["module", "-c", config_file, "-r", riotbase],
+    )
 
     assert result.exit_code == 0
 
@@ -352,7 +366,10 @@ def test_command_generate_pkg_from_config(tmpdir):
     tmpdir.mkdir("riotbase")
     riotbase = tmpdir.join("riotbase")
     pkg_dir = riotbase.join("pkg", "test")
-    result = runner.invoke(riotgen, ["pkg", "-c", config_file, "-r", riotbase],)
+    result = runner.invoke(
+        riotgen,
+        ["pkg", "-c", config_file, "-r", riotbase],
+    )
 
     assert result.exit_code == 0
 
@@ -372,7 +389,10 @@ def test_command_generate_test_from_config(tmpdir):
     config_file = os.path.join(test_data_dir, "test.yml")
     output_dir = tmpdir.join("tests", name)
 
-    result = runner.invoke(riotgen, ["test", "-c", config_file, "-r", tmpdir.strpath],)
+    result = runner.invoke(
+        riotgen,
+        ["test", "-c", config_file, "-r", tmpdir.strpath],
+    )
 
     assert result.exit_code == 0
 

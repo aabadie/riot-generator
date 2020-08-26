@@ -8,7 +8,10 @@ from .common import load_and_check_params, check_overwrite, render_source
 
 MODULE_PARAMS = {
     "name": {"args": ["Module name"], "kwargs": {}},
-    "displayed_name": {"args": ["Module Doxygen name"], "kwargs": {},},
+    "displayed_name": {
+        "args": ["Module Doxygen name"],
+        "kwargs": {},
+    },
     "brief": {"args": ["Brief doxygen description"], "kwargs": {}},
 }
 

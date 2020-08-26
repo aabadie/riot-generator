@@ -20,11 +20,17 @@ DRIVER_PARENTS = [
 
 DRIVER_PARAMS = {
     "name": {"args": ["Driver name"], "kwargs": {}},
-    "displayed_name": {"args": ["Driver Doxygen group name"], "kwargs": {},},
+    "displayed_name": {
+        "args": ["Driver Doxygen group name"],
+        "kwargs": {},
+    },
     "brief": {"args": ["Brief doxygen description"], "kwargs": {}},
     "ingroup": {
         "args": ["Parent driver Doxygen group"],
-        "kwargs": {"param_type": click.Choice(DRIVER_PARENTS), "show_choices": True,},
+        "kwargs": {
+            "param_type": click.Choice(DRIVER_PARENTS),
+            "show_choices": True,
+        },
     },
 }
 

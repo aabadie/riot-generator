@@ -126,8 +126,14 @@ def test_check_params():
 
     # Regular test: all params in descriptor are set in the params
     params_descriptor = {
-        "name": {"args": ["test name"], "kwargs": {},},
-        "board": {"args": ["test board"], "kwargs": {"default": "native"},},
+        "name": {
+            "args": ["test name"],
+            "kwargs": {},
+        },
+        "board": {
+            "args": ["test board"],
+            "kwargs": {"default": "native"},
+        },
     }
     params = {"test": {"name": "test name", "board": "test_board"}}
     check_params(params, params_descriptor, "test")
@@ -144,8 +150,14 @@ def test_check_params():
     # Missing default param
     params = {"test": {"name": "test name", "board": ""}}
     params_descriptor = {
-        "name": {"args": ["test name"], "kwargs": {},},
-        "board": {"args": ["test board"], "kwargs": {},},
+        "name": {
+            "args": ["test name"],
+            "kwargs": {},
+        },
+        "board": {
+            "args": ["test board"],
+            "kwargs": {},
+        },
     }
     with pytest.raises(MissingParameter):
         check_params(params, params_descriptor, "test")
@@ -198,7 +210,9 @@ def test_prompt_params_list(m_prompt):
     prompt_params_list(params, "test", "test1", "test2", "test3")
     assert m_prompt.call_count == 1  # for missing test3
     m_prompt.assert_called_with(
-        text="Test3 (comma separated)", default="", value_proc=parse_list_option,
+        text="Test3 (comma separated)",
+        default="",
+        value_proc=parse_list_option,
     )
 
     m_prompt.call_count = 0
@@ -277,7 +291,9 @@ def test_render_file(tmpdir):
     """Test the render_file function."""
     dest = tmpdir.join("template_dest").strpath
     context = {
-        "global": {"test": "test",},
+        "global": {
+            "test": "test",
+        },
         "test_template": {"tests": ["test1", "test2", "test3"]},
     }
 
@@ -296,7 +312,9 @@ def test_render_file(tmpdir):
 def test_render_source(tmpdir):
     template_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "test_data")
     context = {
-        "global": {"test": "test",},
+        "global": {
+            "test": "test",
+        },
         "test_template": {"tests": ["test1", "test2", "test3"]},
     }
     with patch("riotgen.common.TEMPLATE_BASE_DIR", template_dir):

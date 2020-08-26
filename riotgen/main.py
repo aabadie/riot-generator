@@ -20,10 +20,18 @@ class SharedCommand(click.core.Command):
         super().__init__(*args, **kwargs)
         options = [
             click.core.Option(
-                ("-i", "--interactive",), is_flag=True, help="Use interactive mode"
+                (
+                    "-i",
+                    "--interactive",
+                ),
+                is_flag=True,
+                help="Use interactive mode",
             ),
             click.core.Option(
-                ("-c", "--config",),
+                (
+                    "-c",
+                    "--config",
+                ),
                 type=click.File(mode="r"),
                 help="Use a configuration file",
             ),

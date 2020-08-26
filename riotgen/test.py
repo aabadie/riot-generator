@@ -13,7 +13,12 @@ def generate_test(interactive, config, riotbase):
     """Generate the code of a test application."""
     group = "application"
     params = load_and_check_application_params(
-        group, interactive, config, riotbase, in_riot_dir="tests", testrunner=True,
+        group,
+        interactive,
+        config,
+        riotbase,
+        in_riot_dir="tests",
+        testrunner=True,
     )
 
     params["application"]["type"] = "test"

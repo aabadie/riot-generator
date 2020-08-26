@@ -32,7 +32,13 @@ def generate_pkg(interactive, config, riotbase):
     """Generate the code of a package."""
     group = "pkg"
     params = load_and_check_params(
-        group, PKG_PARAMS, PKG_PARAMS_LIST, interactive, config, riotbase, "pkg",
+        group,
+        PKG_PARAMS,
+        PKG_PARAMS_LIST,
+        interactive,
+        config,
+        riotbase,
+        "pkg",
     )
 
     output_dir = os.path.join(riotbase, "pkg", params[group]["name"])
