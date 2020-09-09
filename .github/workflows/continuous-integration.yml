@@ -46,11 +46,8 @@ jobs:
       run: |
         tox -e py$(echo ${{ matrix.python-version }} | tr -d .)-check
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v1.0.7
       if: ${{ (matrix.python-version == 3.8) && (matrix.os == 'ubuntu-latest') }}
-      with:
-        name: ${{ matrix.os }} Python ${{ matrix.python-version }}
-        fail_ci_if_error: true
+      run: bash <(curl -s https://codecov.io/bash)
     - name: Build a source tarball
       if: matrix.python-version == 3.8 && matrix.os == 'ubuntu-latest'
       run: python setup.py sdist
