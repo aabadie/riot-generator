@@ -1,0 +1,11 @@
+global:
+  author_name: test_name
+  author_email: test_email
+  organization: test_orga
+driver:
+  name: test
+  displayed_name: Test
+  brief: test brief description
+  ingroup: netdev
+  modules: xtimer
+  features_required: periph_spi

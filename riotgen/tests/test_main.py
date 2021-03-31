@@ -16,6 +16,8 @@ from riotgen.driver import (
     DRIVER_FILES,
     DRIVER_INCLUDE_FILES,
     DRIVER_INTERNAL_INCLUDE_FILES,
+    DRIVER_NETDEV_FILES,
+    DRIVER_NETDEV_INCLUDE_FILES,
 )
 from riotgen.module import MODULE_FILES, MODULE_INCLUDE_FILES
 from riotgen.pkg import PKG_FILES
@@ -298,6 +300,44 @@ def test_command_generate_driver_from_config(tmpdir):
         expected_dir,
         driver_internal_include_dir,
         name=name,
+    )
+
+    msg = f"Driver '{name}' generated in {driver_dir.strpath} with success!"
+    assert msg in result.output
+
+
+def test_command_generate_driver_netdev_from_config(tmpdir):
+    name = "test"
+    runner = CliRunner()
+    test_data_dir = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "test_data"
+    )
+    expected_dir = os.path.join(test_data_dir, "driver_netdev")
+    config_file = os.path.join(test_data_dir, "driver_netdev.yml")
+
+    tmpdir.mkdir("riotbase")
+    riotbase = tmpdir.join("riotbase")
+    driver_dir = riotbase.join("drivers", "test")
+    driver_include_dir = riotbase.join("drivers", "include")
+    driver_internal_include_dir = driver_dir.join("include")
+    result = runner.invoke(
+        riotgen,
+        ["driver", "-c", config_file, "-r", riotbase],
+    )
+
+    assert result.exit_code == 0
+
+    _check_generated_files(DRIVER_FILES, expected_dir, driver_dir, name)
+    _check_generated_files(DRIVER_INCLUDE_FILES, expected_dir, driver_include_dir, name)
+    _check_generated_files(
+        DRIVER_INTERNAL_INCLUDE_FILES,
+        expected_dir,
+        driver_internal_include_dir,
+        name=name,
+    )
+    _check_generated_files(DRIVER_NETDEV_FILES, expected_dir, driver_dir, name)
+    _check_generated_files(
+        DRIVER_NETDEV_INCLUDE_FILES, expected_dir, driver_internal_include_dir, name
     )
 
     msg = f"Driver '{name}' generated in {driver_dir.strpath} with success!"
