@@ -1,0 +1,31 @@
+{% include "common/header.j2" %}
+
+/**
+ * @ingroup     drivers_{{ driver.name }}
+ * @{
+ * @file
+ * @brief       Netdev driver definitions for {{ driver.displayed_name }} driver
+ *
+ * @author      {{ global.author_name }} <{{ global.author_email }}>
+ */
+
+#ifndef {{ driver.name|upper }}_H
+#define {{ driver.name|upper }}_H
+
+#include "net/netdev.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/**
+ * @brief   Reference to the netdev device driver struct
+ */
+extern const netdev_driver_t {{ driver.name }}_driver;
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* {{ driver.name|upper }}_H */
+/** @} */

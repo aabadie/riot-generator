@@ -15,8 +15,28 @@
 #include "{{ driver.name }}.h"
 #include "{{ driver.name }}_constants.h"
 #include "{{ driver.name }}_params.h"
+{% if driver.ingroup == "netdev" %}
+#include "{{ driver.name }}_netdev.h"
+
+void {{ driver.name }}_setup({{ driver.name }}_t *dev, const {{ driver.name }}_params_t *params, uint8_t index)
+{
+    netdev_t *netdev = (netdev_t *)dev;
+
+    netdev->driver = &{{ driver.name }}_driver;
+    dev->params = ({{ driver.name }}_params_t *)params;
+    netdev_register(&dev->netdev, NETDEV_{{ driver.name | upper }}, index);
+}
+
+int {{ driver.name }}_init({{ driver.name }}_t *dev)
+{
+    /* Initialize peripherals, gpios, setup registers, etc */
+
+    return 0;
+}
+{% else %}
 
 int {{ driver.name }}_init({{ driver.name }}_t *dev, const {{ driver.name }}_params_t *params)
 {
 
 }
+{% endif %}

@@ -50,6 +50,14 @@ DRIVER_INTERNAL_INCLUDE_FILES = {
     "driver_params.h": "{name}_params.h",
 }
 
+DRIVER_NETDEV_FILES = {
+    "driver_netdev.c": "{name}_netdev.c",
+}
+
+DRIVER_NETDEV_INCLUDE_FILES = {
+    "driver_netdev.h": "{name}_netdev.h",
+}
+
 
 def generate_driver(interactive, config, riotbase):
     """Generate the code for a driver module."""
@@ -74,6 +82,12 @@ def generate_driver(interactive, config, riotbase):
     render_source(
         params, group, DRIVER_INTERNAL_INCLUDE_FILES, drivers_internal_include_dir
     )
+
+    if params[group]["ingroup"] == "netdev":
+        render_source(params, group, DRIVER_NETDEV_FILES, output_dir)
+        render_source(
+            params, group, DRIVER_NETDEV_INCLUDE_FILES, drivers_internal_include_dir
+        )
 
     click.echo(
         click.style(

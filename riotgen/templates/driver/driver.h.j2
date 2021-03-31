@@ -15,6 +15,9 @@
 #ifndef {{ driver.name|upper }}_H
 #define {{ driver.name|upper }}_H
 
+{% if driver.ingroup == "netdev" %}
+#include "net/netdev.h"
+{% endif %}
 /* Add header includes here */
 
 #ifdef __cplusplus
@@ -34,10 +37,36 @@ typedef struct {
  * @brief   Device descriptor for the driver
  */
 typedef struct {
+{% if driver.ingroup == "netdev" %}
+    netdev_t netdev;                        /**< Netdev parent struct */
+    /** Device initialization parameters */
+    {{ driver.name }}_params_t *params;
+{% else %}
     /** Device initialization parameters */
     {{ driver.name }}_params_t params;
+{% endif %}
 } {{ driver.name }}_t;
 
+{% if driver.ingroup == "netdev" %}
+/**
+ * @brief   Setup the radio device
+ *
+ * @param[in] dev                       Device descriptor
+ * @param[in] params                    Parameters for device initialization
+ * @param[in] index                     Index of @p params in a global parameter struct array.
+ *                                      If initialized manually, pass a unique identifier instead.
+ */
+void {{ driver.name }}_setup({{ driver.name }}_t *dev, const {{ driver.name }}_params_t *params, uint8_t index);
+
+/**
+ * @brief   Initialize the given device
+ *
+ * @param[inout] dev                    Device descriptor of the driver
+ *
+ * @return                  0 on success
+ */
+int {{ driver.name }}_init({{ driver.name }}_t *dev);
+{% else %}
 /**
  * @brief   Initialize the given device
  *
@@ -47,6 +76,7 @@ typedef struct {
  * @return                  0 on success
  */
 int {{ driver.name }}_init({{ driver.name }}_t *dev, const {{ driver.name }}_params_t *params);
+{% endif %}
 
 #ifdef __cplusplus
 }
