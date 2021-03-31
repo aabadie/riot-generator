@@ -249,6 +249,7 @@ def test_command_generate_board_from_config(tmpdir):
 
     _check_generated_files(BOARD_FILES, expected_dir, board_dir, name)
     _check_generated_files(BOARD_INCLUDE_FILES, expected_dir, board_include_dir, name)
+    _check_generated_files({"Kconfig": None}, expected_dir, board_dir, name)
 
     msg = f"Support for board '{name}' generated in {board_dir.strpath} with success!"
     assert msg in result.output
