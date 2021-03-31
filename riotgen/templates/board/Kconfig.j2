@@ -1,0 +1,24 @@
+{% if global.license == "MIT" %}
+# MIT License
+#
+{% endif %}
+{% if global.license != "Apache2" %}
+# Copyright (c) {{ global.year }} {{ global.organization }}
+#
+{% endif %}
+{{ global.license_header }}
+
+config BOARD
+    default "{{ board.name }}" if BOARD_{{ board.name | upper | replace("-", "_") }}
+
+config BOARD_{{ board.name | upper | replace("-", "_") }}
+    bool
+    default y
+    select {{ board.cpu_model | upper }}
+
+    # Put defined MCU peripherals here (in alphabetical order)
+{% for feature in board.features_provided %}
+    select HAS_{{ feature | upper }}
+{% endfor %}
+
+    # Put other features for this board (in alphabetical order)

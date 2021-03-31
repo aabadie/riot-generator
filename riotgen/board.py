@@ -3,7 +3,7 @@
 import os
 import click
 
-from .common import load_and_check_params, check_overwrite, render_source
+from .common import load_and_check_params, check_overwrite, render_source, load_license
 
 
 BOARD_PARAMS = {
@@ -56,6 +56,11 @@ def generate_board(interactive, config, riotbase):
         BOARD_INCLUDE_FILES,
         os.path.join(output_dir, "include"),
     )
+
+    # Generate the Kconfig file separately because of the different license
+    # format
+    load_license(params, "# ")
+    render_source(params, group, {"Kconfig": None}, output_dir)
 
     click.echo(
         click.style(
