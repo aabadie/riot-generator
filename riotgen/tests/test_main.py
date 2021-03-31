@@ -302,6 +302,7 @@ def test_command_generate_driver_from_config(tmpdir):
         driver_internal_include_dir,
         name=name,
     )
+    _check_generated_files({"Kconfig": None}, expected_dir, driver_dir, name)
 
     msg = f"Driver '{name}' generated in {driver_dir.strpath} with success!"
     assert msg in result.output
