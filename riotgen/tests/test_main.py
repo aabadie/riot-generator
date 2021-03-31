@@ -416,6 +416,7 @@ def test_command_generate_pkg_from_config(tmpdir):
     assert result.exit_code == 0
 
     _check_generated_files(PKG_FILES, expected_dir, pkg_dir, name)
+    _check_generated_files({"Kconfig": None}, expected_dir, pkg_dir, name)
 
     msg = f"Package '{name}' generated in {pkg_dir.strpath} with success!"
     assert msg in result.output
