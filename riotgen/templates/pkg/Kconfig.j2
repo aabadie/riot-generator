@@ -1,0 +1,25 @@
+{% if global.license == "MIT" %}
+# MIT License
+#
+{% endif %}
+{% if global.license != "Apache2" %}
+# Copyright (c) {{ global.year }} {{ global.organization }}
+#
+{% endif %}
+{{ global.license_header }}
+
+config PACKAGE_{{ pkg.name | upper | replace("-", "_") }}
+    bool "{{ pkg.displayed_name }}"
+    depends on TEST_KCONFIG
+{% for feature in pkg.features_required %}
+    depends on HAS_{{ feature | upper }}
+{% endfor %}
+{% for package in pkg.packages %}
+    select PACKAGE_{{ package | upper }}
+{% endfor %}
+{% for feature in pkg.features_required %}
+    select MODULE_{{ feature | upper }}
+{% endfor %}
+{% for module in pkg.modules %}
+    select MODULE_{{ module | upper }}
+{% endfor %}

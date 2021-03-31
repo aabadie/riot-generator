@@ -3,7 +3,7 @@
 import os
 import click
 
-from .common import load_and_check_params, check_overwrite, render_source
+from .common import load_and_check_params, check_overwrite, render_source, load_license
 
 
 PKG_PARAMS = {
@@ -14,7 +14,7 @@ PKG_PARAMS = {
     },
     "url": {"args": ["Package source url"], "kwargs": {}},
     "hash": {"args": ["Package version hash"], "kwargs": {}},
-    "license": {"args": ["Package license"], "kwargs": {}},
+    "pkg_license": {"args": ["Package license"], "kwargs": {}},
     "description": {"args": ["Package short description"], "kwargs": {}},
 }
 
@@ -45,6 +45,11 @@ def generate_pkg(interactive, config, riotbase):
     check_overwrite(output_dir)
     render_source(params, group, PKG_FILES, output_dir)
     render_source(params, group, PKG_RENAMED_FILES, output_dir)
+
+    # Generate the Kconfig file separately because of the different license
+    # format
+    load_license(params, "# ")
+    render_source(params, group, {"Kconfig": None}, output_dir)
 
     click.echo(
         click.style(
