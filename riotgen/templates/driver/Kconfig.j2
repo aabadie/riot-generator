@@ -1,0 +1,25 @@
+{% if global.license == "MIT" %}
+# MIT License
+#
+{% endif %}
+{% if global.license != "Apache2" %}
+# Copyright (c) {{ global.year }} {{ global.organization }}
+#
+{% endif %}
+{{ global.license_header }}
+
+config MODULE_{{ driver.name | upper | replace("-", "_") }}
+    bool "{{ driver.displayed_name }}"
+    depends on TEST_KCONFIG
+{% for feature in driver.features_required %}
+    depends on HAS_{{ feature | upper }}
+{% endfor %}
+{% for package in driver.packages %}
+    select PACKAGE_{{ package | upper }}
+{% endfor %}
+{% for feature in driver.features_required %}
+    select MODULE_{{ feature | upper }}
+{% endfor %}
+{% for module in driver.modules %}
+    select MODULE_{{ module | upper }}
+{% endfor %}

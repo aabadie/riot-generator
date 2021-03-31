@@ -3,7 +3,7 @@
 import os
 import click
 
-from .common import load_and_check_params, check_overwrite, render_source
+from .common import load_and_check_params, check_overwrite, render_source, load_license
 
 
 DRIVER_PARENTS = [
@@ -88,6 +88,11 @@ def generate_driver(interactive, config, riotbase):
         render_source(
             params, group, DRIVER_NETDEV_INCLUDE_FILES, drivers_internal_include_dir
         )
+
+    # Generate the Kconfig file separately because of the different license
+    # format
+    load_license(params, "# ")
+    render_source(params, group, {"Kconfig": None}, output_dir)
 
     click.echo(
         click.style(
