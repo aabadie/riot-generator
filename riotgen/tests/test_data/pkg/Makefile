@@ -6,4 +6,4 @@ PKG_LICENSE=BSD
 include $(RIOTBASE)/pkg/pkg.mk
 
 all:
-	"$(MAKE)" -f $(PKG_BUILDDIR)/$(PKG_NAME).mk -C $(PKG_BUILDDIR)
+	$(QQ)"$(MAKE)" -C $(PKG_SOURCE_DIR) -f $(CURDIR)/$(PKG_NAME).mk
