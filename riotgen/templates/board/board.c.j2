@@ -18,6 +18,8 @@
 
 void board_init(void)
 {
+#if RIOT_VERSION_CODE < RIOT_VERSION_NUM(2022, 1, 0, 0)
     /* initialize the CPU */
     cpu_init();
+#endif
 }
