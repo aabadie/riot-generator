@@ -18,7 +18,7 @@ riotgen: a RIOT source code generator
 `RIOT <http://github.com/RIOT-OS/RIOT>`_ source files for standalone applications,
 board supports, driver modules, system modules, packages and example/test applications.
 
-``riotgen`` is **Python 3.6+** compatible.
+``riotgen`` is **Python 3.7+** compatible.
 
 Installation
 ............
