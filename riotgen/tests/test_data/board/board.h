@@ -33,11 +33,6 @@ extern "C" {
  - xtimer configuration
  */
 
-/**
- * @brief   Initialize board specific hardware
- */
-void board_init(void);
-
 #ifdef __cplusplus
 }
 #endif
