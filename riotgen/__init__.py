@@ -10,4 +10,4 @@ It can be used to bootstrap:
 - a new package for RIOT
 """
 
-__version__ = "0.9.0"
+/bin/bash: line 1: q: command not found
