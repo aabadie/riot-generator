@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches:
-      - master
+      - ["master", "test"]
     tags:
       - '*'
   pull_request:
@@ -23,7 +23,7 @@ jobs:
           - ubuntu-latest
           - macos-latest
           - windows-latest
-        python-version: [3.7, 3.8, 3.9]
+        python-version: ['3.7', '3.8', '3.9', '3.10']
 
     steps:
     - uses: actions/checkout@master
@@ -45,15 +45,15 @@ jobs:
       run: |
         tox -e py$(echo ${{ matrix.python-version }} | tr -d .)-check
     - name: Upload coverage to Codecov
-      if: ${{ (matrix.python-version == 3.8) && (matrix.os == 'ubuntu-latest') }}
+      if: ${{ (matrix.python-version == '3.8') && (matrix.os == 'ubuntu-latest') }}
       run: bash <(curl -s https://codecov.io/bash)
     - name: Build a package tarball
-      if: matrix.python-version == 3.8 && matrix.os == 'ubuntu-latest'
+      if: matrix.python-version == '3.8' && matrix.os == 'ubuntu-latest'
       run: python setup.py sdist bdist_wheel
     - name: Publish package to TestPyPI
       uses: pypa/gh-action-pypi-publish@master
       if: >-
-        matrix.python-version == 3.8 &&
+        matrix.python-version == '3.8' &&
         matrix.os == 'ubuntu-latest' &&
         github.event_name == 'push' &&
         startsWith(github.event.ref, 'refs/tags')
@@ -64,7 +64,7 @@ jobs:
     - name: Publish package to PyPI
       uses: pypa/gh-action-pypi-publish@master
       if: >-
-        matrix.python-version == 3.8 &&
+        matrix.python-version == '3.8' &&
         matrix.os == 'ubuntu-latest' &&
         github.event_name == 'push' &&
         startsWith(github.event.ref, 'refs/tags')
