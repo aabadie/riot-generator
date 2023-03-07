@@ -14,7 +14,7 @@ config BOARD
 config BOARD_{{ board.name | upper | replace("-", "_") }}
     bool
     default y
-    select {{ board.cpu_model | upper }}
+    select CPU_MODEL_{{ board.cpu_model | upper }}
 
     # Put defined MCU peripherals here (in alphabetical order)
 {% for feature in board.features_provided %}
