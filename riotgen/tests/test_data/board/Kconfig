@@ -1,4 +1,4 @@
-# Copyright (c) 2022 test_orga
+# Copyright (c) 2023 test_orga
 #
 # This file is subject to the terms and conditions of the GNU Lesser
 # General Public License v2.1. See the file LICENSE in the top level
@@ -10,7 +10,7 @@ config BOARD
 config BOARD_TEST
     bool
     default y
-    select CPU_MODEL_TEST
+    select CPU_MODEL_CPU_MODEL_TEST
 
     # Put defined MCU peripherals here (in alphabetical order)
     select HAS_PERIPH_GPIO
