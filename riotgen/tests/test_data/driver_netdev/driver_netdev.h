@@ -15,8 +15,8 @@
  * @author      test_name <test_email>
  */
 
-#ifndef TEST_H
-#define TEST_H
+#ifndef TEST_NETDEV_H
+#define TEST_NETDEV_H
 
 #include "net/netdev.h"
 
@@ -33,5 +33,5 @@ extern const netdev_driver_t test_driver;
 }
 #endif
 
-#endif /* TEST_H */
+#endif /* TEST_NETDEV_H */
 /** @} */

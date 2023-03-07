@@ -9,8 +9,8 @@
  * @author      {{ global.author_name }} <{{ global.author_email }}>
  */
 
-#ifndef {{ driver.name|upper }}_H
-#define {{ driver.name|upper }}_H
+#ifndef {{ driver.name|upper }}_NETDEV_H
+#define {{ driver.name|upper }}_NETDEV_H
 
 #include "net/netdev.h"
 
@@ -27,5 +27,5 @@ extern const netdev_driver_t {{ driver.name }}_driver;
 }
 #endif
 
-#endif /* {{ driver.name|upper }}_H */
+#endif /* {{ driver.name|upper }}_NETDEV_H */
 /** @} */
