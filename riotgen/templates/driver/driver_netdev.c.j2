@@ -44,7 +44,7 @@ static int _send(netdev_t *netdev, const iolist_t *iolist)
         }
     }
 
-    state = NETOPT_STATE_TX;
+    netopt_state_t state = NETOPT_STATE_TX;
     netdev->driver->set(netdev, NETOPT_STATE, &state, sizeof(uint8_t));
     DEBUG("[{{ driver.name }}] netdev: send: transmission in progress.\n");
 
