@@ -4,10 +4,10 @@ riotgen: a RIOT source code generator
 |CI| |codecov| |PyPi|
 
 .. |CI| image:: https://github.com/aabadie/riot-generator/workflows/CI/badge.svg
-    :target: https://github.com/aabadie/riot-generator/actions?query=workflow%3ACI+branch%3Amaster
+    :target: https://github.com/aabadie/riot-generator/actions?query=workflow%3ACI+branch%3Amain
     :alt: CI status
 
-.. |codecov| image:: https://codecov.io/gh/aabadie/riot-generator/branch/master/graph/badge.svg
+.. |codecov| image:: https://codecov.io/gh/aabadie/riot-generator/branch/main/graph/badge.svg
   :target: https://codecov.io/gh/aabadie/riot-generator
 
 .. |PyPi| image:: https://badge.fury.io/py/riotgen.svg
@@ -78,7 +78,7 @@ The command line wizard will ask for questions about the new
 application: target board, RIOT base directory, author name, etc.
 
 Generate an application using a configuration file (see the
-`samples <https://github.com/aabadie/riot-generator/tree/master/riotgen/samples>`_
+`samples <https://github.com/aabadie/riot-generator/tree/main/riotgen/samples>`_
 provided in the source code)::
 
     riotgen application --riotbase /opt/RIOT --config path/to/config/file.cfg
