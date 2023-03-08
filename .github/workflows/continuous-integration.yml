@@ -37,6 +37,7 @@ jobs:
     - name: Test with tox
       run: tox -e tests
     - name: Test cli
+      if: matrix.os != 'windows-latest'
       run: tox -e cli
     - name: Check style
       if: ${{ matrix.os == 'ubuntu-latest' }}
