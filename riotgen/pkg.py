@@ -22,7 +22,7 @@ PKG_PARAMS_LIST = ["modules", "packages", "features_required"]
 
 PKG_FILES = {
     filename: None
-    for filename in ["doc.txt", "Makefile", "Makefile.dep", "Makefile.include"]
+    for filename in ["doc.md", "Makefile", "Makefile.dep", "Makefile.include"]
 }
 
 PKG_RENAMED_FILES = {"pkg.mk": "{name}.mk"}

@@ -21,7 +21,7 @@ BOARD_PARAMS_LIST = ["features_provided"]
 BOARD_FILES = {
     filename: None
     for filename in [
-        "doc.txt",
+        "doc.md",
         "Makefile",
         "Makefile.dep",
         "Makefile.features",
