@@ -1,9 +1,10 @@
 """Utils tests."""
 
 import subprocess
+
 from mock import patch
 
-from riotgen.utils import get_usermail, get_username, clone_repository
+from riotgen.utils import clone_repository, get_usermail, get_username
 
 
 @patch("subprocess.check_output")

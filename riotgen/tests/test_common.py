@@ -1,21 +1,27 @@
 """Common tests."""
 
-import os
 import datetime
+import os
+
 import pytest
-
-from click import MissingParameter, BadParameter
-
+from click import BadParameter, MissingParameter
 from mock import patch
 
-from riotgen import common
-from riotgen.common import read_config_file, check_riotbase
-from riotgen.common import _check_param, check_params
-from riotgen.common import check_global_params, _prompt_param, prompt_params
-from riotgen.common import prompt_global_params, prompt_params_list
-from riotgen.common import render_file, render_source
+import riotgen.common as common
+from riotgen.common import (
+    _check_param,
+    _prompt_param,
+    check_global_params,
+    check_params,
+    check_riotbase,
+    prompt_global_params,
+    prompt_params,
+    prompt_params_list,
+    read_config_file,
+    render_file,
+    render_source,
+)
 from riotgen.utils import parse_list_option
-
 
 TEST_CONFIG = """[global]
 name=test
@@ -170,11 +176,19 @@ def test_prompt_param(m_prompt):
     assert m_prompt.call_count == 0
     _prompt_param({"test": ""}, "test", "Test text")
     m_prompt.assert_called_with(
-        text="Test text", default=None, show_default=True, type=None, show_choices=True
+        text="Test text",
+        default=None,
+        show_default=True,
+        type=None,
+        show_choices=True,
     )
     _prompt_param({}, "test", "Test text")
     m_prompt.assert_called_with(
-        text="Test text", default=None, show_default=True, type=None, show_choices=True
+        text="Test text",
+        default=None,
+        show_default=True,
+        type=None,
+        show_choices=True,
     )
 
 
@@ -297,7 +311,9 @@ def test_render_file(tmpdir):
         "test_template": {"tests": ["test1", "test2", "test3"]},
     }
 
-    template_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "test_data")
+    template_dir = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "test_data"
+    )
     with patch("riotgen.common.TEMPLATE_BASE_DIR", template_dir):
         render_file(context, "test_template", "template.j2", dest)
     with open(dest, "r") as f_dest:
@@ -310,7 +326,9 @@ def test_render_file(tmpdir):
 
 
 def test_render_source(tmpdir):
-    template_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "test_data")
+    template_dir = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "test_data"
+    )
     context = {
         "global": {
             "test": "test",
@@ -318,7 +336,9 @@ def test_render_source(tmpdir):
         "test_template": {"tests": ["test1", "test2", "test3"]},
     }
     with patch("riotgen.common.TEMPLATE_BASE_DIR", template_dir):
-        render_source(context, "test_template", {"template": None}, tmpdir.strpath)
+        render_source(
+            context, "test_template", {"template": None}, tmpdir.strpath
+        )
 
     dest_file = tmpdir.join("template").strpath
     assert os.path.exists(dest_file)
@@ -332,7 +352,10 @@ def test_render_source(tmpdir):
 
     with patch("riotgen.common.TEMPLATE_BASE_DIR", template_dir):
         render_source(
-            context, "test_template", {"template": None}, tmpdir.join("subdir").strpath
+            context,
+            "test_template",
+            {"template": None},
+            tmpdir.join("subdir").strpath,
         )
 
     dest_file = tmpdir.join("subdir", "template").strpath

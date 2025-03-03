@@ -2,15 +2,6 @@
 
 import shlex
 import subprocess
-from importlib.metadata import PackageNotFoundError, version
-
-
-def riotgen_version() -> str:
-    """Returns the version of the riotgen package."""
-    try:
-        return version("riotgen")
-    except PackageNotFoundError:
-        return "unknown"
 
 
 def parse_list_option(opt: list | str) -> list[str]:

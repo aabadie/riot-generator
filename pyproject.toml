@@ -1,18 +1,13 @@
 [build-system]
-requires = [
-    "hatchling>=1.4.1",
-]
-build-backend = "hatchling.build"
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
 
-[tool.hatch.build]
-include = [
-    "riotgen/templates/*/*",
-    "riotgen/data/*/*",
-]
+[tool.setuptools.dynamic]
+version = {attr = "riotgen.__version__"}
 
 [project]
 name = "riotgen"
-version = "0.10.1"
+dynamic = ["version"]
 authors = [
     { name="Alexandre Abadie", email="alexandre.abadie@inria.fr" },
 ]
@@ -54,7 +49,6 @@ line-length = 79
 skip-string-normalization = true
 
 [tool.pytest]
-minversion = "6.0"
 addopts = """
     -vv -s \
     --doctest-modules \
@@ -62,7 +56,7 @@ addopts = """
     --cov-report=term \
     --cov-report=term-missing \
     --cov-report=xml \
-    --ignore-glob="*test_data \
+    --ignore-glob="*test_data" \
 """
 testpaths = [
     "riotgen",

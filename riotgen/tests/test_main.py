@@ -4,12 +4,10 @@ import os
 import sys
 
 import pytest
+from click.testing import CliRunner
 from mock import patch
 
-from click.testing import CliRunner
-
-from riotgen.utils import riotgen_version
-from riotgen.main import riotgen
+from riotgen import __version__
 from riotgen.application import APPLICATION_FILES, get_output_dir
 from riotgen.board import BOARD_FILES, BOARD_INCLUDE_FILES
 from riotgen.driver import (
@@ -19,9 +17,9 @@ from riotgen.driver import (
     DRIVER_NETDEV_FILES,
     DRIVER_NETDEV_INCLUDE_FILES,
 )
+from riotgen.main import riotgen
 from riotgen.module import MODULE_FILES, MODULE_INCLUDE_FILES
 from riotgen.pkg import PKG_FILES
-
 
 HELP_OUTPUT = """Usage: riotgen [OPTIONS] COMMAND [ARGS]...
 
@@ -42,7 +40,15 @@ Commands:
 
 MISSING_PARAMETER_MSG = "Missing --interactive and/or --config options."
 
-COMMANDS = ["application", "board", "driver", "example", "module", "pkg", "test"]
+COMMANDS = [
+    "application",
+    "board",
+    "driver",
+    "example",
+    "module",
+    "pkg",
+    "test",
+]
 COMMAND_FUNCS = [
     "riotgen.main.generate_application",
     "riotgen.main.generate_board",
@@ -63,12 +69,16 @@ def _check_generated_files(files, expected_dir, generated_dir, name):
         assert os.path.exists(generated_dir.join(output_name))
         with open(os.path.join(expected_dir, input_name)) as f_expected:
             expected_content = f_expected.read()
-        with open(generated_dir.join(output_name.format(name=name))) as f_result:
+        with open(
+            generated_dir.join(output_name.format(name=name))
+        ) as f_result:
             result_content = f_result.read()
         assert result_content == expected_content
 
 
-@pytest.mark.skipif(sys.platform.startswith("win"), reason="doesn't work on windows")
+@pytest.mark.skipif(
+    sys.platform.startswith("win"), reason="doesn't work on windows"
+)
 def test_get_output_dir_test():
     params = {"test": {"name": "test"}}
     output_dir = get_output_dir(params, "test", "/tmp", "test_dir")
@@ -86,7 +96,7 @@ def test_version():
     runner = CliRunner()
     result = runner.invoke(riotgen, ["--version"])
     assert result.exit_code == 0
-    assert result.output == f"riotgen, version {riotgen_version()}\n"
+    assert result.output == f"riotgen, version {__version__}\n"
 
 
 @pytest.mark.parametrize("command", COMMANDS)
@@ -164,7 +174,15 @@ def test_command_generate_application_from_config(tmpdir):
     output_dir = tmpdir.join("application")
     result = runner.invoke(
         riotgen,
-        ["application", "-c", config_file, "-d", output_dir.strpath, "-r", riotbase],
+        [
+            "application",
+            "-c",
+            config_file,
+            "-d",
+            output_dir.strpath,
+            "-r",
+            riotbase,
+        ],
     )
 
     assert result.exit_code == 0
@@ -248,7 +266,9 @@ def test_command_generate_board_from_config(tmpdir):
     assert result.exit_code == 0
 
     _check_generated_files(BOARD_FILES, expected_dir, board_dir, name)
-    _check_generated_files(BOARD_INCLUDE_FILES, expected_dir, board_include_dir, name)
+    _check_generated_files(
+        BOARD_INCLUDE_FILES, expected_dir, board_include_dir, name
+    )
     _check_generated_files({"Kconfig": None}, expected_dir, board_dir, name)
 
     msg = f"Support for board '{name}' generated in {board_dir.strpath} with success!"
@@ -295,7 +315,9 @@ def test_command_generate_driver_from_config(tmpdir):
     assert result.exit_code == 0
 
     _check_generated_files(DRIVER_FILES, expected_dir, driver_dir, name)
-    _check_generated_files(DRIVER_INCLUDE_FILES, expected_dir, driver_include_dir, name)
+    _check_generated_files(
+        DRIVER_INCLUDE_FILES, expected_dir, driver_include_dir, name
+    )
     _check_generated_files(
         DRIVER_INTERNAL_INCLUDE_FILES,
         expected_dir,
@@ -330,7 +352,9 @@ def test_command_generate_driver_netdev_from_config(tmpdir):
     assert result.exit_code == 0
 
     _check_generated_files(DRIVER_FILES, expected_dir, driver_dir, name)
-    _check_generated_files(DRIVER_INCLUDE_FILES, expected_dir, driver_include_dir, name)
+    _check_generated_files(
+        DRIVER_INCLUDE_FILES, expected_dir, driver_include_dir, name
+    )
     _check_generated_files(
         DRIVER_INTERNAL_INCLUDE_FILES,
         expected_dir,
@@ -339,7 +363,10 @@ def test_command_generate_driver_netdev_from_config(tmpdir):
     )
     _check_generated_files(DRIVER_NETDEV_FILES, expected_dir, driver_dir, name)
     _check_generated_files(
-        DRIVER_NETDEV_INCLUDE_FILES, expected_dir, driver_internal_include_dir, name
+        DRIVER_NETDEV_INCLUDE_FILES,
+        expected_dir,
+        driver_internal_include_dir,
+        name,
     )
 
     msg = f"Driver '{name}' generated in {driver_dir.strpath} with success!"
@@ -363,7 +390,9 @@ def test_command_generate_example(tmpdir):
 
     assert result.exit_code == 0
 
-    _check_generated_files(APPLICATION_FILES, expected_data_dir, output_dir, name)
+    _check_generated_files(
+        APPLICATION_FILES, expected_data_dir, output_dir, name
+    )
 
     msg = f"Example '{name}' generated in {output_dir.strpath} with success!"
     assert msg in result.output
@@ -390,7 +419,9 @@ def test_command_generate_module_from_config(tmpdir):
     assert result.exit_code == 0
 
     _check_generated_files(MODULE_FILES, expected_dir, module_dir, name)
-    _check_generated_files(MODULE_INCLUDE_FILES, expected_dir, module_include_dir, name)
+    _check_generated_files(
+        MODULE_INCLUDE_FILES, expected_dir, module_include_dir, name
+    )
 
     msg = f"Module '{name}' generated in {module_dir.strpath} with success!"
     assert msg in result.output
@@ -439,7 +470,9 @@ def test_command_generate_test_from_config(tmpdir):
 
     assert result.exit_code == 0
 
-    _check_generated_files(APPLICATION_FILES, expected_data_dir, output_dir, name)
+    _check_generated_files(
+        APPLICATION_FILES, expected_data_dir, output_dir, name
+    )
     _check_generated_files(
         {"01-run.py": None}, expected_data_dir, output_dir.join("tests"), name
     )

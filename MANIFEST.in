@@ -1,0 +1,2 @@
+include riotgen/templates/*/*.j2
+include riotgen/data/*/*.txt

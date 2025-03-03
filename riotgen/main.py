@@ -4,7 +4,7 @@ import os
 
 import click
 
-from riotgen.utils import riotgen_version
+from riotgen import __version__
 from riotgen.application import generate_application
 from riotgen.board import generate_board
 from riotgen.driver import generate_driver
@@ -46,7 +46,7 @@ class SharedCommand(click.core.Command):
 
 
 @click.group()
-@click.version_option(version=riotgen_version())
+@click.version_option(version=__version__)
 def riotgen():  # pylint:disable=missing-function-docstring
     pass
 
