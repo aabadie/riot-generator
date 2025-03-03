@@ -8,7 +8,7 @@ from mock import patch
 
 from click.testing import CliRunner
 
-from riotgen import __version__
+from riotgen.utils import riotgen_version
 from riotgen.main import riotgen
 from riotgen.application import APPLICATION_FILES, get_output_dir
 from riotgen.board import BOARD_FILES, BOARD_INCLUDE_FILES
@@ -86,7 +86,7 @@ def test_version():
     runner = CliRunner()
     result = runner.invoke(riotgen, ["--version"])
     assert result.exit_code == 0
-    assert result.output == f"riotgen, version {__version__}\n"
+    assert result.output == f"riotgen, version {riotgen_version()}\n"
 
 
 @pytest.mark.parametrize("command", COMMANDS)
