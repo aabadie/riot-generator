@@ -10,4 +10,4 @@ It can be used to bootstrap:
 - a new package for RIOT
 """
 
-__version__ = "0.10.0"
+__version__ = "0.10.0.dev0"
