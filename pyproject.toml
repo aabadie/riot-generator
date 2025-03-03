@@ -48,7 +48,7 @@ profile = "black"
 line-length = 79
 skip-string-normalization = true
 
-[tool.pytest]
+[tool.pytest.ini_options]
 addopts = """
     -vv -s \
     --doctest-modules \
