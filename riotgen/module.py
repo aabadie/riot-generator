@@ -1,10 +1,10 @@
 """RIOT application generator module."""
 
 import os
+
 import click
 
-from .common import load_and_check_params, check_overwrite, render_source
-
+from riotgen.common import check_overwrite, load_and_check_params, render_source
 
 MODULE_PARAMS = {
     "name": {"args": ["Module name"], "kwargs": {}},

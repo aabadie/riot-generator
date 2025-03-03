@@ -1,2 +1,0 @@
-recursive-include riotgen/templates *.j2
-recursive-include riotgen/data/licenses *.txt

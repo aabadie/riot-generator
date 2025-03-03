@@ -1,10 +1,15 @@
 """RIOT application generator module."""
 
 import os
+
 import click
 
-from .common import load_and_check_params, check_overwrite, render_source, load_license
-
+from riotgen.common import (
+    check_overwrite,
+    load_and_check_params,
+    load_license,
+    render_source,
+)
 
 DRIVER_PARENTS = [
     "actuators",
@@ -80,13 +85,19 @@ def generate_driver(interactive, config, riotbase):
     render_source(params, group, DRIVER_FILES, output_dir)
     render_source(params, group, DRIVER_INCLUDE_FILES, drivers_include_dir)
     render_source(
-        params, group, DRIVER_INTERNAL_INCLUDE_FILES, drivers_internal_include_dir
+        params,
+        group,
+        DRIVER_INTERNAL_INCLUDE_FILES,
+        drivers_internal_include_dir,
     )
 
     if params[group]["ingroup"] == "netdev":
         render_source(params, group, DRIVER_NETDEV_FILES, output_dir)
         render_source(
-            params, group, DRIVER_NETDEV_INCLUDE_FILES, drivers_internal_include_dir
+            params,
+            group,
+            DRIVER_NETDEV_INCLUDE_FILES,
+            drivers_internal_include_dir,
         )
 
     # Generate the Kconfig file separately because of the different license

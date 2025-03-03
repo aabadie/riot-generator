@@ -1,16 +1,17 @@
 """riotgen main module."""
 
 import os
+
 import click
 
-from .application import generate_application
-from .example import generate_example
-from .board import generate_board
-from .driver import generate_driver
-from .module import generate_module
-from .pkg import generate_pkg
-from .test import generate_test
-from . import __version__
+from riotgen.utils import riotgen_version
+from riotgen.application import generate_application
+from riotgen.board import generate_board
+from riotgen.driver import generate_driver
+from riotgen.example import generate_example
+from riotgen.module import generate_module
+from riotgen.pkg import generate_pkg
+from riotgen.test import generate_test
 
 
 class SharedCommand(click.core.Command):
@@ -45,7 +46,7 @@ class SharedCommand(click.core.Command):
 
 
 @click.group()
-@click.version_option(version=__version__)
+@click.version_option(version=riotgen_version())
 def riotgen():  # pylint:disable=missing-function-docstring
     pass
 
@@ -75,7 +76,9 @@ def driver(interactive, config, riotbase):
     generate_driver(interactive, config, riotbase)
 
 
-@riotgen.command(cls=SharedCommand, help="Bootstrap a RIOT example application")
+@riotgen.command(
+    cls=SharedCommand, help="Bootstrap a RIOT example application"
+)
 def example(interactive, config, riotbase):
     """Entry point for example application subcommand."""
     generate_example(interactive, config, riotbase)

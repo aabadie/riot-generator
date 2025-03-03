@@ -2,9 +2,18 @@
 
 import shlex
 import subprocess
+from importlib.metadata import PackageNotFoundError, version
 
 
-def parse_list_option(opt):
+def riotgen_version() -> str:
+    """Returns the version of the riotgen package."""
+    try:
+        return version("riotgen")
+    except PackageNotFoundError:
+        return "unknown"
+
+
+def parse_list_option(opt: list | str) -> list[str]:
     """Parse options as list.
 
     Strings are splitted based on comma separated elements.
@@ -24,7 +33,7 @@ def parse_list_option(opt):
     return sorted(opt.split(","))
 
 
-def _get_git_config(config):
+def _get_git_config(config: str) -> str:
     cmd = f"git config --get {config}"
     try:
         config = subprocess.check_output(shlex.split(cmd)).decode()[:-1]
@@ -34,17 +43,17 @@ def _get_git_config(config):
     return config
 
 
-def get_username():
+def get_username() -> str:
     """Get the user name from git config."""
     return _get_git_config("user.name")
 
 
-def get_usermail():
+def get_usermail() -> str:
     """Get the user email from git config."""
     return _get_git_config("user.email")
 
 
-def clone_repository(url, version, dest):
+def clone_repository(url: str, version: str, dest: str) -> int:
     """Clone a git repository."""
     cmd = f"git clone --depth=1 -b {version} {url} {dest}"
     return subprocess.check_call(shlex.split(cmd))

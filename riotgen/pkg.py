@@ -1,10 +1,15 @@
 """RIOT pkg generator module."""
 
 import os
+
 import click
 
-from .common import load_and_check_params, check_overwrite, render_source, load_license
-
+from riotgen.common import (
+    check_overwrite,
+    load_and_check_params,
+    load_license,
+    render_source,
+)
 
 PKG_PARAMS = {
     "name": {"args": ["Package name"], "kwargs": {}},

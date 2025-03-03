@@ -1,0 +1,69 @@
+[build-system]
+requires = [
+    "hatchling>=1.4.1",
+]
+build-backend = "hatchling.build"
+
+[tool.hatch.build]
+include = [
+    "riotgen/templates/*/*",
+    "riotgen/data/*/*",
+]
+
+[project]
+name = "riotgen"
+version = "0.10.1"
+authors = [
+    { name="Alexandre Abadie", email="alexandre.abadie@inria.fr" },
+]
+dependencies = [
+    "rich-click  >= 1.8.6",
+    "jinja2 >= 3.0.2",
+    "pyyaml >= 6.0",
+]
+description = "riotgen: generator for RIOT source code."
+readme = "README.rst"
+license = { text="BSD" }
+requires-python = ">=3.9"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: MacOS",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: Microsoft :: Windows",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/aabadie/riot-generator"
+"Bug Tracker" = "https://github.com/aaabadie/riot-generator/issues"
+
+[project.scripts]
+riotgen = "riotgen.main:riotgen"
+
+[tool.ruff]
+lint.select = ["E", "F"]
+line-length = 88
+lint.ignore = ["E501"]
+
+[tool.isort]
+multi_line_output = 3  # Use Vertical Hanging Indent
+profile = "black"
+
+[tool.black]
+line-length = 79
+skip-string-normalization = true
+
+[tool.pytest]
+minversion = "6.0"
+addopts = """
+    -vv -s \
+    --doctest-modules \
+    --cov=riotgen \
+    --cov-report=term \
+    --cov-report=term-missing \
+    --cov-report=xml \
+    --ignore-glob="*test_data \
+"""
+testpaths = [
+    "riotgen",
+]

@@ -2,9 +2,12 @@
 
 import click
 
-from .common import check_overwrite
-from .application import load_and_check_application_params, render_application_source
-from .application import get_output_dir
+from riotgen.application import (
+    get_output_dir,
+    load_and_check_application_params,
+    render_application_source,
+)
+from riotgen.common import check_overwrite
 
 
 def generate_example(interactive, config, riotbase):

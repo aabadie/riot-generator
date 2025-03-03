@@ -1,10 +1,15 @@
 """RIOT application generator module."""
 
 import os
+
 import click
 
-from .common import load_and_check_params, check_overwrite, render_source, load_license
-
+from riotgen.common import (
+    check_overwrite,
+    load_and_check_params,
+    load_license,
+    render_source,
+)
 
 BOARD_PARAMS = {
     "name": {"args": ["Board name"], "kwargs": {}},
@@ -29,7 +34,9 @@ BOARD_FILES = {
     ]
 }
 
-BOARD_INCLUDE_FILES = {filename: None for filename in ["board.h", "periph_conf.h"]}
+BOARD_INCLUDE_FILES = {
+    filename: None for filename in ["board.h", "periph_conf.h"]
+}
 
 
 def generate_board(interactive, config, riotbase):

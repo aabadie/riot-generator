@@ -4,9 +4,12 @@ import os
 
 import click
 
-from .common import check_overwrite, render_source, load_license
-from .application import load_and_check_application_params, render_application_source
-from .application import get_output_dir
+from riotgen.application import (
+    get_output_dir,
+    load_and_check_application_params,
+    render_application_source,
+)
+from riotgen.common import check_overwrite, load_license, render_source
 
 
 def generate_test(interactive, config, riotbase):

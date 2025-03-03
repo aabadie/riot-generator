@@ -1,18 +1,15 @@
 """Common generator module."""
 
-import os
 import datetime
+import os
 import textwrap
-
 from configparser import ConfigParser, ParsingError
 
 import yaml
-
+from click import Abort, BadParameter, Choice, MissingParameter, prompt
 from jinja2 import Environment, FileSystemLoader
-from click import prompt, Choice, MissingParameter, BadParameter, Abort
 
-from .utils import get_usermail, get_username, parse_list_option
-
+from riotgen.utils import get_usermail, get_username, parse_list_option
 
 TEMPLATE_BASE_DIR = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), "templates"
@@ -40,7 +37,9 @@ def read_config_file(config_file, *command_args):
             params = parser._sections  # pylint:disable=protected-access
         except ParsingError:
             # pylint: disable=raise-missing-from
-            raise BadParameter("Cannot parse config file '{config_file.filename}'")
+            raise BadParameter(
+                "Cannot parse config file '{config_file.filename}'"
+            )
 
     for command in command_args:
         if command not in params:
@@ -88,7 +87,10 @@ def check_params(params, params_descriptor, group):
         raise BadParameter(f"'{group}' group not in parameters.")
     for param_name, param_values in params_descriptor.items():
         if param_name not in params[group] or params[group][param_name] == "":
-            if "kwargs" in param_values and "default" in param_values["kwargs"]:
+            if (
+                "kwargs" in param_values
+                and "default" in param_values["kwargs"]
+            ):
                 params[group][param_name] = param_values["kwargs"]["default"]
             else:
                 raise MissingParameter(param_type=param_name.replace("_", " "))
@@ -119,7 +121,9 @@ def _prompt_param(
 def prompt_params(params, params_descriptor, group):
     """Prompt a list of parameters."""
     for param, values in params_descriptor.items():
-        _prompt_param(params[group], param, *values["args"], **values["kwargs"])
+        _prompt_param(
+            params[group], param, *values["args"], **values["kwargs"]
+        )
 
 
 def prompt_params_list(params, group, *param_list):
@@ -146,16 +150,25 @@ def prompt_global_params(params):
             param_type=Choice(LICENSES),
             show_choices=True,
         )
-    _prompt_param(_params, "author_name", "Author name", default=get_username())
-    _prompt_param(_params, "author_email", "Author email", default=get_usermail())
-    _prompt_param(_params, "organization", "Organization", default=get_username())
+    _prompt_param(
+        _params, "author_name", "Author name", default=get_username()
+    )
+    _prompt_param(
+        _params, "author_email", "Author email", default=get_usermail()
+    )
+    _prompt_param(
+        _params, "organization", "Organization", default=get_username()
+    )
 
 
 def render_file(context, group, source, dest):
     """Generate a file from an input template and a dict of parameters."""
     loader = FileSystemLoader(searchpath=TEMPLATE_BASE_DIR)
     env = Environment(
-        loader=loader, trim_blocks=True, lstrip_blocks=True, keep_trailing_newline=True
+        loader=loader,
+        trim_blocks=True,
+        lstrip_blocks=True,
+        keep_trailing_newline=True,
     )
     source_file = group + "/" + source
     env.globals.update(zip=zip)
@@ -206,7 +219,9 @@ def load_and_check_params(
 ):
     """Load, prompt and check configuration parameters."""
     if not interactive and config is None:
-        raise MissingParameter(param_type="--interactive and/or --config options")
+        raise MissingParameter(
+            param_type="--interactive and/or --config options"
+        )
 
     check_riotbase(riotbase)
     riotbase = os.path.abspath(os.path.expanduser(riotbase))
