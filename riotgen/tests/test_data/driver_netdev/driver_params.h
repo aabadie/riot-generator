@@ -6,6 +6,8 @@
  * directory for more details.
  */
 
+#pragma once
+
 /**
  * @ingroup     drivers_test
  *
@@ -15,9 +17,6 @@
  *
  * @author      test_name <test_email>
  */
-
-#ifndef TEST_PARAMS_H
-#define TEST_PARAMS_H
 
 #include "board.h"
 #include "test.h"
@@ -52,5 +51,4 @@ static const test_params_t test_params[] =
 }
 #endif
 
-#endif /* TEST_PARAMS_H */
 /** @} */

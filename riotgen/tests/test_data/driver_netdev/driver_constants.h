@@ -6,6 +6,8 @@
  * directory for more details.
  */
 
+#pragma once
+
 /**
  * @ingroup     drivers_test
  * @{
@@ -15,9 +17,6 @@
  *
  * @author      test_name <test_email>
  */
-
-#ifndef TEST_CONSTANTS_H
-#define TEST_CONSTANTS_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -29,5 +28,4 @@ extern "C" {
 }
 #endif
 
-#endif /* TEST_CONSTANTS_H */
 /** @} */

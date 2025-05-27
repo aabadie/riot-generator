@@ -1,4 +1,4 @@
-{% include "common/header.j2" %}
+{% include "common/header-headerfile.j2" %}
 
 /**
  * @ingroup     boards_{{ board.name }}
@@ -9,9 +9,6 @@
  *
  * @author      {{ global.author_name }} <{{ global.author_email }}>
  */
-
-#ifndef PERIPH_CONF_H
-#define PERIPH_CONF_H
 
 #include <stdint.h>
 
@@ -39,5 +36,4 @@ etc
 }
 #endif
 
-#endif /* PERIPH_CONF_H */
 /** @} */

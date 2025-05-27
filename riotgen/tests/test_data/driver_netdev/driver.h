@@ -6,6 +6,8 @@
  * directory for more details.
  */
 
+#pragma once
+
 /**
  * @defgroup    drivers_test Test
  * @ingroup     drivers_netdev
@@ -17,9 +19,6 @@
  *
  * @author      test_name <test_email>
  */
-
-#ifndef TEST_H
-#define TEST_H
 
 #include "net/netdev.h"
 /* Add header includes here */
@@ -69,5 +68,4 @@ int test_init(test_t *dev);
 }
 #endif
 
-#endif /* TEST_H */
 /** @} */

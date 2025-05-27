@@ -6,6 +6,8 @@
  * directory for more details.
  */
 
+#pragma once
+
 /**
  * @defgroup    sys_test Test
  * @ingroup     sys
@@ -17,9 +19,6 @@
  *
  * @author      test_name <test_email>
  */
-
-#ifndef TEST_H
-#define TEST_H
 
 /* Add header includes here */
 
@@ -33,5 +32,4 @@ extern "C" {
 }
 #endif
 
-#endif /* TEST_H */
 /** @} */
