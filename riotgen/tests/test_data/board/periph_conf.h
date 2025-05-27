@@ -6,6 +6,8 @@
  * directory for more details.
  */
 
+#pragma once
+
 /**
  * @ingroup     boards_test
  * @{
@@ -15,9 +17,6 @@
  *
  * @author      test_name <test_email>
  */
-
-#ifndef PERIPH_CONF_H
-#define PERIPH_CONF_H
 
 #include <stdint.h>
 
@@ -45,5 +44,4 @@ etc
 }
 #endif
 
-#endif /* PERIPH_CONF_H */
 /** @} */

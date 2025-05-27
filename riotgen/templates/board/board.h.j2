@@ -1,4 +1,4 @@
-{% include "common/header.j2" %}
+{% include "common/header-headerfile.j2" %}
 
 /**
  * @ingroup     boards_{{ board.name }}
@@ -9,9 +9,6 @@
  *
  * @author      {{ global.author_name }} <{{ global.author_email }}>
  */
-
-#ifndef BOARD_H
-#define BOARD_H
 
 #include "cpu.h"
 #include "periph_conf.h"
@@ -31,5 +28,4 @@ extern "C" {
 }
 #endif
 
-#endif /* BOARD_H */
 /** @} */

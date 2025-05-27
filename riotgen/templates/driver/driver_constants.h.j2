@@ -1,4 +1,4 @@
-{% include "common/header.j2" %}
+{% include "common/header-headerfile.j2" %}
 
 /**
  * @ingroup     drivers_{{ driver.name }}
@@ -10,9 +10,6 @@
  * @author      {{ global.author_name }} <{{ global.author_email }}>
  */
 
-#ifndef {{ driver.name|upper }}_CONSTANTS_H
-#define {{ driver.name|upper }}_CONSTANTS_H
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -23,5 +20,4 @@ extern "C" {
 }
 #endif
 
-#endif /* {{ driver.name|upper }}_CONSTANTS_H */
 /** @} */

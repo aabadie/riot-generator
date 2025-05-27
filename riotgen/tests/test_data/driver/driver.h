@@ -6,6 +6,8 @@
  * directory for more details.
  */
 
+#pragma once
+
 /**
  * @defgroup    drivers_test Test
  * @ingroup     drivers_misc
@@ -17,9 +19,6 @@
  *
  * @author      test_name <test_email>
  */
-
-#ifndef TEST_H
-#define TEST_H
 
 /* Add header includes here */
 
@@ -58,5 +57,4 @@ int test_init(test_t *dev, const test_params_t *params);
 }
 #endif
 
-#endif /* TEST_H */
 /** @} */

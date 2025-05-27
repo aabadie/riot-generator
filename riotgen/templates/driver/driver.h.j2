@@ -1,4 +1,4 @@
-{% include "common/header.j2" %}
+{% include "common/header-headerfile.j2" %}
 
 /**
  * @defgroup    drivers_{{ driver.name }} {{ driver.displayed_name }}
@@ -11,9 +11,6 @@
  *
  * @author      {{ global.author_name }} <{{ global.author_email }}>
  */
-
-#ifndef {{ driver.name|upper }}_H
-#define {{ driver.name|upper }}_H
 
 {% if driver.ingroup == "netdev" %}
 #include "net/netdev.h"
@@ -82,5 +79,4 @@ int {{ driver.name }}_init({{ driver.name }}_t *dev, const {{ driver.name }}_par
 }
 #endif
 
-#endif /* {{ driver.name|upper }}_H */
 /** @} */

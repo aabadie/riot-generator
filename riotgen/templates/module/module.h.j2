@@ -1,4 +1,4 @@
-{% include "common/header.j2" %}
+{% include "common/header-headerfile.j2" %}
 
 /**
  * @defgroup    sys_{{ module.name }} {{ module.displayed_name }}
@@ -12,9 +12,6 @@
  * @author      {{ global.author_name }} <{{ global.author_email }}>
  */
 
-#ifndef {{ module.name|upper }}_H
-#define {{ module.name|upper }}_H
-
 /* Add header includes here */
 
 #ifdef __cplusplus
@@ -27,5 +24,4 @@ extern "C" {
 }
 #endif
 
-#endif /* {{ module.name|upper }}_H */
 /** @} */

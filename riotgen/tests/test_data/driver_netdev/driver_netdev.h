@@ -6,6 +6,8 @@
  * directory for more details.
  */
 
+#pragma once
+
 /**
  * @ingroup     drivers_test
  * @{
@@ -14,9 +16,6 @@
  *
  * @author      test_name <test_email>
  */
-
-#ifndef TEST_NETDEV_H
-#define TEST_NETDEV_H
 
 #include "net/netdev.h"
 
@@ -33,5 +32,4 @@ extern const netdev_driver_t test_driver;
 }
 #endif
 
-#endif /* TEST_NETDEV_H */
 /** @} */
