@@ -18,11 +18,10 @@ dependencies = [
 ]
 description = "riotgen: generator for RIOT source code."
 readme = "README.rst"
-license = { text="BSD" }
+license = "BSD-3-Clause"
 requires-python = ">=3.9"
 classifiers = [
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: BSD License",
     "Operating System :: MacOS",
     "Operating System :: POSIX :: Linux",
     "Operating System :: Microsoft :: Windows",
