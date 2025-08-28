@@ -10,6 +10,6 @@ FEATURES_REQUIRED += {{ feature }}
 {% endif %}
 {% if driver.packages|length > 0 %}
 {% for package in driver.packages %}
-USE_PKG += {{ package }}
+USEPKG += {{ package }}
 {% endfor %}
 {% endif %}
