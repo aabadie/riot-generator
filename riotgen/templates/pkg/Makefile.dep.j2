@@ -17,6 +17,6 @@ FEATURES_REQUIRED += {{ feature }}
 
 # required packages
 {% for package in pkg.packages %}
-USE_PKG += {{ package }}
+USEPKG += {{ package }}
 {% endfor %}
 {% endif %}
