@@ -1,9 +1,7 @@
-test
-====
+## test
 
 Describe here what the application is about.
 
-Usage
-=====
+## Usage
 
 Describe here how to use this application
