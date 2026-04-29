@@ -31,11 +31,11 @@ extern "C" {
  * @{
  */
 #ifndef TEST_PARAM_PARAM1
-#define TEST_PARAM_PARAM1
+#  define TEST_PARAM_PARAM1
 #endif
 
 #ifndef TEST_PARAMS
-#define TEST_PARAMS
+#  define TEST_PARAMS
 #endif
 /**@}*/
 
