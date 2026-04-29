@@ -1,14 +1,7 @@
 #!/usr/bin/env python3
 
-{% if global.license == "MIT" %}
-# MIT License
-#
-{% endif %}
-{% if global.license != "Apache2" %}
-# Copyright (C) {{ global.year }} {{ global.organization }}
-#
-{% endif %}
-{{ global.license_header }}
+# SPDX-FileCopyrightText: {{ global.year }} {{ global.organization }}
+# SPDX-License-Identifier: {{ global.license_header }}
 
 import sys
 

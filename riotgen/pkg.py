@@ -53,7 +53,7 @@ def generate_pkg(interactive, config, riotbase):
 
     # Generate the Kconfig file separately because of the different license
     # format
-    load_license(params, "# ")
+    load_license(params)
     render_source(params, group, {"Kconfig": None}, output_dir)
 
     click.echo(

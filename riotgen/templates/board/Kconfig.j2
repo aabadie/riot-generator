@@ -1,12 +1,5 @@
-{% if global.license == "MIT" %}
-# MIT License
-#
-{% endif %}
-{% if global.license != "Apache2" %}
-# Copyright (c) {{ global.year }} {{ global.organization }}
-#
-{% endif %}
-{{ global.license_header }}
+# SPDX-FileCopyrightText: {{ global.year }} {{ global.organization }}
+# SPDX-License-Identifier: {{ global.license_header }}
 
 config BOARD
     default "{{ board.name }}" if BOARD_{{ board.name | upper | replace("-", "_") }}
