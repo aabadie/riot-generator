@@ -9,7 +9,6 @@
  * @defgroup    drivers_test Test
  * @ingroup     drivers_netdev
  * @brief       test brief description
- *
  * @{
  *
  * @file

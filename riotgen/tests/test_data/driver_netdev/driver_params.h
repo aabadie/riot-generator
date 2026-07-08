@@ -7,8 +7,8 @@
 
 /**
  * @ingroup     drivers_test
- *
  * @{
+ *
  * @file
  * @brief       Default configuration
  *

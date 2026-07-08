@@ -6,6 +6,7 @@
 /**
  * @ingroup     drivers_test
  * @{
+ *
  * @file
  * @brief       Netdev adaptation for the Test driver
  *

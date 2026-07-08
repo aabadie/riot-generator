@@ -9,7 +9,6 @@
  * @defgroup    sys_test Test
  * @ingroup     sys
  * @brief       test brief description
- *
  * @{
  *
  * @file

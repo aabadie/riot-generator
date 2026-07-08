@@ -8,6 +8,7 @@
 /**
  * @ingroup     drivers_test
  * @{
+ *
  * @file
  * @brief       Netdev driver definitions for Test driver
  *

@@ -9,7 +9,6 @@
  * @defgroup    drivers_test Test
  * @ingroup     drivers_misc
  * @brief       test brief description
- *
  * @{
  *
  * @file
